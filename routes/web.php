@@ -6,22 +6,18 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Router.php";
 require_once ROOT_PATH . "/config/config.php";
 
-// Check if user is logged in for all routes except auth
+// Check if user is logged in for all routes except auth and home
 $url = isset($_GET['url']) ? $_GET['url'] : '';
 
-// Allow access to auth routes without login
-if(strpos($url, 'auth') === false && empty($_SESSION['username']) && !empty($url)) {
-    if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) === null) {
-        header("Location: /index.php?url=auth/login");
-    } else {
-        header("Location: /i_m_s/public/index.php?url=auth/login");
-    }
+// Allow access to auth and home routes without login
+if(strpos($url, 'auth') === false && strpos($url, 'home') === false && empty($_SESSION['username']) && !empty($url)) {
+    header("Location: /index.php?url=home/index");
     exit;
 }
 
 // Route requests
 if(empty($url)) {
-    $url = 'auth/login';
+    $url = 'home/index';
 }
 
 Router::route($url);
