@@ -11,13 +11,17 @@ $url = isset($_GET['url']) ? $_GET['url'] : '';
 
 // Allow access to auth routes without login
 if(strpos($url, 'auth') === false && empty($_SESSION['username']) && !empty($url)) {
-    header("Location: auth/login");
+    if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) === null) {
+        header("Location: /index.php?url=auth/login");
+    } else {
+        header("Location: /i_m_s/public/index.php?url=auth/login");
+    }
     exit;
 }
 
 // Route requests
 if(empty($url)) {
-    $url = 'dashboard/index';
+    $url = 'auth/login';
 }
 
 Router::route($url);

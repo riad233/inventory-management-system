@@ -4,13 +4,14 @@ if (!defined('ROOT_PATH')) {
 }
 
 require_once ROOT_PATH . "/core/Controller.php";
+require_once ROOT_PATH . "/config/database.php";
 
 class AuthController extends Controller {
     public function login() {
+        global $conn;
         $error = null;
         
         if(isset($_POST['login'])) {
-            global $conn;
             $username = $_POST['username'];
             $password = $_POST['password'];
 

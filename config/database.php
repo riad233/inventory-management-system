@@ -3,6 +3,9 @@ if (!defined('ROOT_PATH')) {
     define('ROOT_PATH', dirname(dirname(__FILE__)));
 }
 
+// Make connection global
+global $conn;
+
 $host = "localhost";
 $user = "root";
 $password = "riad23";

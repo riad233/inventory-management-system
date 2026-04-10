@@ -4,6 +4,7 @@ if (!defined('ROOT_PATH')) {
 }
 
 require_once ROOT_PATH . "/core/Controller.php";
+require_once ROOT_PATH . "/config/database.php";
 
 class AssignmentController extends Controller {
     
