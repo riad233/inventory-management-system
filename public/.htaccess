@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /i_m_s/public/
+    
+    # Don't rewrite actual files or directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Rewrite all requests to index.php with the request URI
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+</IfModule>
+
+# Prevent access to sensitive files
+<FilesMatch "\.(env|sql|json|yml|yaml)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

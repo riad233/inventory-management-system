@@ -1,0 +1,70 @@
+<?php
+if (!defined('ROOT_PATH')) {
+    define('ROOT_PATH', dirname(dirname(dirname(__FILE__))));
+}
+
+require_once ROOT_PATH . "/core/Controller.php";
+
+class AssignmentController extends Controller {
+    
+    public function index(){
+        $assignmentModel = $this->model('Assignment');
+        $assignments = $assignmentModel->getAll();
+        $this->view('assignment/view_assignment', ['assignments' => $assignments]);
+    }
+    
+    public function assign(){
+        if(isset($_POST['submit'])){
+            $assignmentModel = $this->model('Assignment');
+            
+            $data = [
+                'asset_id' => $_POST['asset_id'],
+                'user_id' => $_POST['user_id'],
+                'dept_id' => $_POST['dept_id'],
+                'exp_return_date' => $_POST['exp_return_date']
+            ];
+            
+            if($assignmentModel->create($data)){
+                header("Location: ../assignment/index.php?msg=Asset assigned successfully");
+            }
+        }
+        
+        $assetModel = $this->model('Asset');
+        $employeeModel = $this->model('Employee');
+        
+        $data = [
+            'assets' => $assetModel->getAll(),
+            'employees' => $employeeModel->getAll()
+        ];
+        
+        $this->view('assignment/assign_asset', $data);
+    }
+    
+    public function returnAsset(){
+        if(isset($_POST['submit'])){
+            $assignmentModel = $this->model('Assignment');
+            $id = $_POST['assignment_id'];
+            
+            $data = [
+                'condition' => $_POST['condition']
+            ];
+            
+            if($assignmentModel->returnAsset($id, $data)){
+                header("Location: ../assignment/index.php?msg=Asset returned successfully");
+            }
+        }
+        
+        $assignmentModel = $this->model('Assignment');
+        $assignments = $assignmentModel->getAll();
+        
+        $this->view('assignment/return_asset', ['assignments' => $assignments]);
+    }
+    
+    public function delete($id){
+        $assignmentModel = $this->model('Assignment');
+        if($assignmentModel->delete($id)){
+            header("Location: ../assignment/index.php?msg=Assignment deleted");
+        }
+    }
+}
+?>

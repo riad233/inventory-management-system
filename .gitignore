@@ -1,0 +1,83 @@
+# Git Ignore for Inventory Management System
+
+# System Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.env
+.env.local
+.htaccess.local
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+.eclipse
+.project
+
+# PHP & Debug
+*.log
+error_log
+debug.log
+.xdebug_profile
+
+# Database
+*.sql
+*.sql.gz
+backup/
+*.bak
+*.backup
+
+# Storage/Temp Files
+storage/logs/*
+storage/cache/*
+storage/temp/*
+temp/
+tmp/
+
+# Composer/Dependencies
+vendor/
+composer.lock
+
+# Node/Build
+node_modules/
+npm-debug.log
+bower_components/
+
+# PHP Tools
+.phpstorm.meta.php
+noinspection.xml
+
+# Application Specific
+public_html/
+www/
+.maintenance
+
+# Sensitive Files
+config/.env
+config/.env.local
+credentials.txt
+passwords.txt
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+._*
+
+# Tests
+phpunit.xml
+tests/coverage/
+
+# Build
+build/
+dist/
+
+#Local development
+local_config.php
+dev_settings.php
+test_data.sql
