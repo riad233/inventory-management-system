@@ -6,14 +6,18 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Router.php";
 require_once ROOT_PATH . "/config/config.php";
 
-// Check if user is logged in for all routes except auth and home
-$url = isset($_GET['url']) ? $_GET['url'] : '';
-
-// Allow access to auth and home routes without login
-if(strpos($url, 'auth') === false && strpos($url, 'home') === false && empty($_SESSION['username']) && !empty($url)) {
-    header("Location: /index.php?url=home/index");
-    exit;
+// Auto-login as default user if not already logged in
+if (empty($_SESSION['username'])) {
+    $_SESSION['username'] = 'user';
+    $_SESSION['user_id'] = 1;
+    $_SESSION['role'] = 'User';
 }
+
+// Clear any admin sessions
+$_SESSION['is_admin'] = false;
+
+// Get the URL
+$url = isset($_GET['url']) ? $_GET['url'] : '';
 
 // Route requests
 if(empty($url)) {

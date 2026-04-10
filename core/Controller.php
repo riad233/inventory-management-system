@@ -16,6 +16,18 @@ class Controller {
             die("View not found: $view");
         }
         
+        // Load layout with view
+        $layoutPath = ROOT_PATH . "/app/views/layout.php";
+        require_once $layoutPath;
+    }
+
+    public function viewPlain($view, $data = []) {
+        $viewPath = ROOT_PATH . "/app/views/" . $view . ".php";
+        
+        if (!file_exists($viewPath)) {
+            die("View not found: $view");
+        }
+        
         require_once $viewPath;
     }
 }

@@ -29,12 +29,12 @@ class AuthController extends Controller {
                 $error = "Invalid Login Credentials";
             }
         }
-        $this->view('auth/login', ['error' => $error]);
+        $this->viewPlain('auth/login', ['error' => $error]);
     }
 
     public function logout() {
         session_destroy();
-        header("Location: ?url=auth/login");
+        header("Location: ?url=home/index");
         exit;
     }
 }

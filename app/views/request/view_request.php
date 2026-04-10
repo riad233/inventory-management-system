@@ -1,5 +1,5 @@
 <?php
-session_start();
+// Session already started in layout
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +9,48 @@ session_start();
 <title>View Requests - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  .btn-action {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .btn-action-approve {
+    background-color: #27ae60;
+    color: white;
+  }
+  .btn-action-approve:hover {
+    background-color: #229954;
+    text-decoration: none;
+    color: white;
+  }
+  .btn-action-reject {
+    background-color: #e74c3c;
+    color: white;
+  }
+  .btn-action-reject:hover {
+    background-color: #c0392b;
+    text-decoration: none;
+    color: white;
+  }
+  .btn-action-delete {
+    background-color: #95a5a6;
+    color: white;
+  }
+  .btn-action-delete:hover {
+    background-color: #7f8c8d;
+    text-decoration: none;
+    color: white;
+  }
+</style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -65,10 +107,10 @@ session_start();
                 </td>
                 <td>
                   <?php if($req['Status'] == 'Pending'): ?>
-                    <a href="?url=request/approve/<?php echo $req['Request_ID']; ?>" class="btn btn-sm btn-success">Approve</a>
-                    <a href="?url=request/reject/<?php echo $req['Request_ID']; ?>" class="btn btn-sm btn-danger">Reject</a>
+                    <a href="?url=request/approve/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-approve" title="Approve">Approve</a>
+                    <a href="?url=request/reject/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-reject" title="Reject">Reject</a>
                   <?php endif; ?>
-                  <a href="?url=request/delete/<?php echo $req['Request_ID']; ?>" class="btn btn-sm btn-dark" onclick="return confirm('Delete this request?')">Delete</a>
+                  <a href="?url=request/delete/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-delete" onclick="return confirm('Delete this request?')" title="Delete">Delete</a>
                 </td>
               </tr>
             <?php endforeach; ?>

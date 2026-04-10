@@ -1,5 +1,5 @@
 <?php
-session_start();
+// Session already started in layout
 ?>
 <!DOCTYPE html>
 <html lang="en">

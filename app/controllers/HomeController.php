@@ -8,7 +8,7 @@ require_once ROOT_PATH . "/config/database.php";
 
 class HomeController extends Controller {
     public function index() {
-        $this->view('home/index');
+        $this->viewPlain('home/index');
     }
 }
 ?>

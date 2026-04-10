@@ -1,5 +1,5 @@
 <?php
-session_start();
+// Session already started in layout
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +9,30 @@ session_start();
 <title>View Maintenance - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  .btn-action {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .btn-action-delete {
+    background-color: #e74c3c;
+    color: white;
+  }
+  .btn-action-delete:hover {
+    background-color: #c0392b;
+    text-decoration: none;
+    color: white;
+  }
+</style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -57,7 +81,7 @@ session_start();
                 <td><span class="badge bg-warning"><?php echo $maint['Status']; ?></span></td>
                 <td><?php echo $maint['Cost']; ?></td>
                 <td>
-                  <a href="?url=maintenance/delete/<?php echo $maint['Maintenance_ID']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this maintenance record?')">
+                  <a href="?url=maintenance/delete/<?php echo $maint['Maintenance_ID']; ?>" class="btn-action btn-action-delete" onclick="return confirm('Delete this maintenance record?')" title="Delete">
                     <i class="fas fa-trash"></i> Delete
                   </a>
                 </td>

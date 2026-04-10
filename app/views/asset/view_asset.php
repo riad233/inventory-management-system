@@ -1,5 +1,5 @@
 <?php
-session_start();
+// Session already started in layout
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +9,39 @@ session_start();
 <title>View Assets - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  .btn-action {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .btn-action-edit {
+    background-color: #3498db;
+    color: white;
+  }
+  .btn-action-edit:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+    color: white;
+  }
+  .btn-action-delete {
+    background-color: #e74c3c;
+    color: white;
+  }
+  .btn-action-delete:hover {
+    background-color: #c0392b;
+    text-decoration: none;
+    color: white;
+  }
+</style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -58,10 +91,10 @@ session_start();
                 <td><?php echo $asset['Serial_Number']; ?></td>
                 <td><span class="badge bg-info"><?php echo $asset['Status']; ?></span></td>
                 <td>
-                  <a href="?url=asset/edit/<?php echo $asset['Asset_ID']; ?>" class="btn btn-sm btn-warning">
+                  <a href="?url=asset/edit/<?php echo $asset['Asset_ID']; ?>" class="btn-action btn-action-edit" title="Edit">
                     <i class="fas fa-edit"></i> Edit
                   </a>
-                  <a href="?url=asset/delete/<?php echo $asset['Asset_ID']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this asset?')">
+                  <a href="?url=asset/delete/<?php echo $asset['Asset_ID']; ?>" class="btn-action btn-action-delete" onclick="return confirm('Delete this asset?')" title="Delete">
                     <i class="fas fa-trash"></i> Delete
                   </a>
                 </td>

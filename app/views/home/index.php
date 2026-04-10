@@ -21,33 +21,6 @@
             flex-direction: column;
         }
         
-        /* Navbar */
-        .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-        }
-        
-        .navbar-brand {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: #667eea !important;
-        }
-        
-        .navbar-brand i {
-            margin-right: 8px;
-        }
-        
-        .nav-link {
-            margin-left: 20px;
-            color: #333 !important;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            color: #667eea !important;
-        }
-        
         /* Page Layout */
         .page-wrapper {
             flex: 1;
@@ -200,13 +173,24 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <!-- Navbar (Same as Dashboard) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="?url=home/index">
-                <i class="fas fa-boxes"></i>
-                IMS
+                <i class="fas fa-boxes"></i> IMS
             </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="?url=auth/login">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -245,8 +229,8 @@
 
             <!-- Login Button -->
             <div style="margin-top: 30px;">
-                <a href="?url=auth/login" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                <a href="?url=dashboard/index" class="btn-login">
+                    <i class="fas fa-arrow-right"></i> Go to Dashboard
                 </a>
             </div>
         </div>
