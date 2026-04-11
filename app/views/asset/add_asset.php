@@ -39,7 +39,7 @@
             <div class="mb-3">
               <label class="form-label">Category</label>
               <select name="category" class="form-control" required>
-                <option>Select Category</option>
+                <option value="">Select Category</option>
                 <option>Computer</option>
                 <option>Furniture</option>
                 <option>Equipment</option>

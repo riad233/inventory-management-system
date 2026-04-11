@@ -33,6 +33,30 @@ class RequestController extends Controller {
         $this->view('request/request_equipment', ['employees' => $employeeModel->getAll()]);
     }
     
+    public function edit($id){
+        $requestModel = $this->model('EquipmentRequest');
+        
+        if(isset($_POST['submit'])){
+            $data = [
+                'equipment_type' => $_POST['equipment_type'],
+                'description' => $_POST['description']
+            ];
+            
+            if($requestModel->update($id, $data)){
+                header("Location: ?url=request/index&msg=Request updated successfully");
+                exit;
+            }
+        }
+        
+        $request = $requestModel->getById($id);
+        $employeeModel = $this->model('Employee');
+        
+        $this->view('request/edit_request', [
+            'request' => $request, 
+            'employees' => $employeeModel->getAll()
+        ]);
+    }
+    
     public function approve($id){
         $requestModel = $this->model('EquipmentRequest');
         $approved_by = $_SESSION['user_id'] ?? 1;

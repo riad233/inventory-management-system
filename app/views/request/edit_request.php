@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Request Equipment- IMS</title>
+<title>Edit Equipment Request - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -28,41 +28,46 @@
     <div class="col-md-6">
       <div class="card shadow">
         <div class="card-header bg-primary text-white">
-          <h5 class="mb-0"><i class="fas fa-clipboard"></i> Request Equipment</h5>
+          <h5 class="mb-0"><i class="fas fa-edit"></i> Edit Equipment Request</h5>
         </div>
         <div class="card-body">
-          <form method="post" action="">
+            <?php if(!isset($data['request']) || empty($data['request'])): ?>
+                <div class="alert alert-danger">Request not found!</div>
+                <a href="?url=request/index" class="btn btn-secondary">Go Back</a>
+            <?php else: $req = $data['request']; ?>
+          <form method="post" action="?url=request/edit/<?php echo $req['Request_ID']; ?>">
+            
             <div class="mb-3">
               <label class="form-label">Employee</label>
-              <select name="user_id" class="form-control" required>
-                <option value="">Select Employee</option>
-                <?php if(isset($data['employees']) && is_array($data['employees'])): ?>
-                  <?php foreach($data['employees'] as $emp): ?>
-                    <option value="<?php echo $emp['User_ID']; ?>"><?php echo $emp['Name']; ?></option>
-                  <?php endforeach; ?>
-                <?php endif; ?>
-              </select>
+              <input type="text" class="form-control" value="<?php 
+                  foreach($data['employees'] as $emp) {
+                      if($emp['User_ID'] == $req['User_ID']) echo $emp['Name'];
+                  }
+              ?>" disabled>
+              <small class="text-muted">Employee cannot be changed once requested.</small>
             </div>
             <div class="mb-3">
               <label class="form-label">Equipment Type</label>
               <select name="equipment_type" class="form-control" required>
-                <option>Computer</option>
-                <option>Printer</option>
-                <option>Monitor</option>
-                <option>Keyboard/Mouse</option>
-                <option>Other</option>
+                <option value="">Select Equipment Type</option>
+                <option <?php echo ($req['Equipment_Type'] == 'Computer') ? 'selected' : ''; ?>>Computer</option>
+                <option <?php echo ($req['Equipment_Type'] == 'Printer') ? 'selected' : ''; ?>>Printer</option>
+                <option <?php echo ($req['Equipment_Type'] == 'Monitor') ? 'selected' : ''; ?>>Monitor</option>
+                <option <?php echo ($req['Equipment_Type'] == 'Keyboard/Mouse') ? 'selected' : ''; ?>>Keyboard/Mouse</option>
+                <option <?php echo ($req['Equipment_Type'] == 'Other') ? 'selected' : ''; ?>>Other</option>
               </select>
             </div>
             <div class="mb-3">
               <label class="form-label">Description</label>
-              <textarea name="description" class="form-control" rows="4" required></textarea>
+              <textarea name="description" class="form-control" rows="4" required><?php echo $req['Description']; ?></textarea>
             </div>
             <div class="text-end">
               <button type="submit" name="submit" class="btn btn-primary">
-                <i class="fas fa-paper-plane"></i> Submit Request
+                <i class="fas fa-save"></i> Update Request
               </button>
             </div>
           </form>
+          <?php endif; ?>
         </div>
       </div>
     </div>

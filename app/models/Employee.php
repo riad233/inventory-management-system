@@ -8,7 +8,7 @@ require_once ROOT_PATH . "/core/Model.php";
 class Employee extends Model {
 
     public function getAll(){
-        $sql = "SELECT * FROM employee";
+        $sql = "SELECT e.*, d.Department_Name FROM employee e LEFT JOIN department d ON e.Department_ID = d.Department_ID";
         $result = mysqli_query($this->conn, $sql);
         $employees = [];
         while($row = mysqli_fetch_assoc($result)){
@@ -24,8 +24,8 @@ class Employee extends Model {
     }
 
     public function create($data){
-        $sql = "INSERT INTO employee (User_ID, Name, Designation, Contact_Number, Email, Department_ID) 
-                VALUES ('{$data['user_id']}', '{$data['name']}', '{$data['designation']}', '{$data['contact']}', '{$data['email']}', '{$data['dept_id']}')";
+        $sql = "INSERT INTO employee (Name, Designation, Contact_Number, Email, Department_ID) 
+                VALUES ('{$data['name']}', '{$data['designation']}', '{$data['contact']}', '{$data['email']}', '{$data['dept_id']}')";
         return mysqli_query($this->conn, $sql);
     }
 

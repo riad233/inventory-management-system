@@ -35,7 +35,7 @@
             <div class="mb-3">
               <label class="form-label">Asset</label>
               <select name="asset_id" class="form-control" required>
-                <option>Select Asset</option>
+                <option value="">Select Asset</option>
                 <?php if(isset($data['assets']) && is_array($data['assets'])): ?>
                   <?php foreach($data['assets'] as $asset): ?>
                     <option value="<?php echo $asset['Asset_ID']; ?>"><?php echo $asset['Asset_Name']; ?></option>
@@ -46,7 +46,7 @@
             <div class="mb-3">
               <label class="form-label">Employee</label>
               <select name="user_id" class="form-control" required>
-                <option>Select Employee</option>
+                <option value="">Select Employee</option>
                 <?php if(isset($data['employees']) && is_array($data['employees'])): ?>
                   <?php foreach($data['employees'] as $emp): ?>
                     <option value="<?php echo $emp['User_ID']; ?>"><?php echo $emp['Name']; ?></option>

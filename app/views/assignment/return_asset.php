@@ -35,7 +35,7 @@
             <div class="mb-3">
               <label class="form-label">Select Assignment</label>
               <select name="assignment_id" class="form-control" required>
-                <option>Select Assignment</option>
+                <option value="">Select Assignment</option>
                 <?php if(isset($data['assignments']) && is_array($data['assignments'])): ?>
                   <?php foreach($data['assignments'] as $assign): ?>
                     <?php if($assign['Actual_Return_Date'] == null): ?>

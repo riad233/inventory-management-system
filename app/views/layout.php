@@ -688,6 +688,11 @@
                 </a>
             </li>
             <li>
+                <a href="?url=employee/index" class="<?php echo (strpos($_GET['url'] ?? '', 'employee') !== false) ? 'active' : ''; ?>">
+                    <i class="fas fa-users"></i> Employees
+                </a>
+            </li>
+            <li>
                 <a href="?url=vendor/index" class="<?php echo (strpos($_GET['url'] ?? '', 'vendor') !== false) ? 'active' : ''; ?>">
                     <i class="fas fa-store"></i> Vendors
                 </a>
@@ -713,13 +718,24 @@
                     <li><a href="?url=asset/index"><i class="fas fa-boxes"></i> Assets</a></li>
                     <li><a href="?url=assignment/index"><i class="fas fa-exchange-alt"></i> Assignments</a></li>
                     <li><a href="?url=maintenance/index"><i class="fas fa-wrench"></i> Maintenance</a></li>
+                    <li><a href="?url=employee/index"><i class="fas fa-users"></i> Employees</a></li>
                     <li><a href="?url=vendor/index"><i class="fas fa-building"></i> Vendors</a></li>
                 </ul>
             </div>
             <div class="top-navbar-right">
-                <div class="user-info">
-                    <div class="user-avatar"><?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?></div>
-                    <span><?php echo isset($_SESSION['username']) ? ucfirst($_SESSION['username']) : 'User'; ?></span>
+                <div class="user-info" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                    <div class="user-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2); border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 35px; height: 35px; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold;">
+                        <?php echo isset($_SESSION['username']) && !empty($_SESSION['username']) ? strtoupper(substr($_SESSION['username'], 0, 1)) : 'A'; ?>
+                    </div>
+                    <div style="display: flex; flex-direction: column; line-height: 1.1;">
+                        <span style="font-weight: 600; font-size: 14px; color: #333;">
+                            <?php echo isset($_SESSION['username']) && !empty($_SESSION['username']) ? ucfirst($_SESSION['username']) : 'Admin'; ?>
+                        </span>
+                        <small style="color: #6c757d; font-size: 11px;">
+                            <?php echo isset($_SESSION['role']) && !empty($_SESSION['role']) ? ucfirst($_SESSION['role']) : 'Administrator'; ?>
+                        </small>
+                    </div>
+                    <i class="fas fa-chevron-down" style="font-size: 10px; color: #adb5bd; margin-left: 5px;"></i>
                 </div>
             </div>
         </div>

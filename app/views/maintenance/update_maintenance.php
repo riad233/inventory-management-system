@@ -35,7 +35,7 @@
             <div class="mb-3">
               <label class="form-label">Select Maintenance Record</label>
               <select name="maintenance_id" class="form-control" required>
-                <option>Select Record</option>
+                <option value="">Select Record</option>
                 <?php if(isset($data['maintenance']) && is_array($data['maintenance'])): ?>
                   <?php foreach($data['maintenance'] as $maint): ?>
                     <option value="<?php echo $maint['Maintenance_ID']; ?>">

@@ -23,6 +23,15 @@
     font-weight: 500;
     text-decoration: none;
   }
+  .btn-action-edit {
+    background-color: #3498db;
+    color: white;
+  }
+  .btn-action-edit:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+    color: white;
+  }
   .btn-action-approve {
     background-color: #27ae60;
     color: white;
@@ -107,6 +116,7 @@
                 </td>
                 <td>
                   <?php if($req['Status'] == 'Pending'): ?>
+                    <a href="?url=request/edit/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-edit" title="Edit">Edit</a>
                     <a href="?url=request/approve/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-approve" title="Approve">Approve</a>
                     <a href="?url=request/reject/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-reject" title="Reject">Reject</a>
                   <?php endif; ?>
