@@ -25,7 +25,7 @@ class RequestController extends Controller {
             ];
             
             if($requestModel->create($data)){
-                header("Location: ../request/index.php?msg=Request submitted successfully");
+                header("Location: ?url=request/index&msg=Request submitted successfully");
             }
         }
         
@@ -38,7 +38,7 @@ class RequestController extends Controller {
         $approved_by = $_SESSION['user_id'] ?? 1;
         
         if($requestModel->approve($id, $approved_by)){
-            header("Location: ../request/index.php?msg=Request approved");
+            header("Location: ?url=request/index&msg=Request approved");
         }
     }
     
@@ -46,14 +46,14 @@ class RequestController extends Controller {
         $requestModel = $this->model('EquipmentRequest');
         
         if($requestModel->reject($id)){
-            header("Location: ../request/index.php?msg=Request rejected");
+            header("Location: ?url=request/index&msg=Request rejected");
         }
     }
     
     public function delete($id){
         $requestModel = $this->model('EquipmentRequest');
         if($requestModel->delete($id)){
-            header("Location: ../request/index.php?msg=Request deleted");
+            header("Location: ?url=request/index&msg=Request deleted");
         }
     }
 }

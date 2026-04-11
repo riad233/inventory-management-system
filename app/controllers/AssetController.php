@@ -30,7 +30,7 @@ class AssetController extends Controller {
             ];
             
             if($asset->add($data)){
-                header("Location: ../asset/index.php?msg=Asset added successfully");
+                header("Location: ?url=asset/index&msg=Asset added successfully");
             }
         }
         
@@ -53,7 +53,7 @@ class AssetController extends Controller {
             ];
             
             if($asset->update($id, $data)){
-                header("Location: ../asset/index.php?msg=Asset updated successfully");
+                header("Location: ?url=asset/index&msg=Asset updated successfully");
             }
         }
         
@@ -64,7 +64,7 @@ class AssetController extends Controller {
     public function delete($id){
         $asset = $this->model('Asset');
         if($asset->delete($id)){
-            header("Location: ../asset/index.php?msg=Asset deleted");
+            header("Location: ?url=asset/index&msg=Asset deleted");
         }
     }
 }

@@ -26,7 +26,7 @@ class AssignmentController extends Controller {
             ];
             
             if($assignmentModel->create($data)){
-                header("Location: ../assignment/index.php?msg=Asset assigned successfully");
+                header("Location: ?url=assignment/index&msg=Asset assigned successfully");
             }
         }
         
@@ -51,7 +51,7 @@ class AssignmentController extends Controller {
             ];
             
             if($assignmentModel->returnAsset($id, $data)){
-                header("Location: ../assignment/index.php?msg=Asset returned successfully");
+                header("Location: ?url=assignment/index&msg=Asset returned successfully");
             }
         }
         
@@ -64,7 +64,7 @@ class AssignmentController extends Controller {
     public function delete($id){
         $assignmentModel = $this->model('Assignment');
         if($assignmentModel->delete($id)){
-            header("Location: ../assignment/index.php?msg=Assignment deleted");
+            header("Location: ?url=assignment/index&msg=Assignment deleted");
         }
     }
 }

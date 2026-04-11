@@ -8,13 +8,13 @@ require_once ROOT_PATH . "/config/config.php";
 
 // Auto-login as default user if not already logged in
 if (empty($_SESSION['username'])) {
-    $_SESSION['username'] = 'user';
+    $_SESSION['username'] = 'admin';
     $_SESSION['user_id'] = 1;
-    $_SESSION['role'] = 'User';
+    $_SESSION['role'] = 'Admin';
 }
 
-// Clear any admin sessions
-$_SESSION['is_admin'] = false;
+// Clear any admin sessions (if needed, or maybe just set is_admin to true in this case)
+$_SESSION['is_admin'] = true;
 
 // Get the URL
 $url = isset($_GET['url']) ? $_GET['url'] : '';

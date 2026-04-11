@@ -24,7 +24,7 @@ class MaintenanceController extends Controller {
             ];
             
             if($maintenanceModel->create($data)){
-                header("Location: ../maintenance/index.php?msg=Maintenance record created");
+                header("Location: ?url=maintenance/index&msg=Maintenance record created");
             }
         }
         
@@ -40,7 +40,7 @@ class MaintenanceController extends Controller {
             $end_date = $_POST['end_date'];
             
             if($maintenanceModel->updateStatus($id, $status, $end_date)){
-                header("Location: ../maintenance/index.php?msg=Maintenance status updated");
+                header("Location: ?url=maintenance/index&msg=Maintenance status updated");
             }
         }
         
@@ -52,7 +52,7 @@ class MaintenanceController extends Controller {
     public function delete($id){
         $maintenanceModel = $this->model('Maintenance');
         if($maintenanceModel->delete($id)){
-            header("Location: ../maintenance/index.php?msg=Maintenance deleted");
+            header("Location: ?url=maintenance/index&msg=Maintenance deleted");
         }
     }
 }

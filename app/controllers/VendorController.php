@@ -27,7 +27,7 @@ class VendorController extends Controller {
             ];
             
             if($vendorModel->create($data)){
-                header("Location: ../vendor/index.php?msg=Vendor added successfully");
+                header("Location: ?url=vendor/index&msg=Vendor added successfully");
             }
         }
         
@@ -47,7 +47,7 @@ class VendorController extends Controller {
             ];
             
             if($vendorModel->update($id, $data)){
-                header("Location: ../vendor/index.php?msg=Vendor updated successfully");
+                header("Location: ?url=vendor/index&msg=Vendor updated successfully");
             }
         }
         
@@ -58,7 +58,7 @@ class VendorController extends Controller {
     public function delete($id){
         $vendorModel = $this->model('Vendor');
         if($vendorModel->delete($id)){
-            header("Location: ../vendor/index.php?msg=Vendor deleted");
+            header("Location: ?url=vendor/index&msg=Vendor deleted");
         }
     }
 }

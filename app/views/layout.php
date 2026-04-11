@@ -642,9 +642,15 @@
                 padding: 12px 16px;
             }
 
-            .sidebar-nav a {
-                padding: 15px 20px;
-            }
+        }
+        
+        .layout-footer {
+            background: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9em;
+            margin-top: auto;
         }
     </style>
 </head>
@@ -655,7 +661,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <i class="fas fa-cube fa-2x" style="color: #ffd700; margin-bottom: 10px;"></i>
+            <img src="img/logo.png" alt="IMS Logo" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
             <h4>IMS</h4>
             <small>Inventory System</small>
         </div>
@@ -729,6 +735,11 @@
                 echo "<div class='alert alert-danger'>View not found: $view</div>";
             }
             ?>
+        </div>
+        
+        <!-- Footer -->
+        <div class="layout-footer">
+            <p style="margin: 0;">&copy; 2026 Inventory Management System. All rights reserved.</p>
         </div>
     </div>
 

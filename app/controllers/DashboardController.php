@@ -10,7 +10,7 @@ class DashboardController extends Controller {
     
     public function index(){
         if(!isset($_SESSION['username'])){
-            header("Location: ../auth/login.php");
+            header("Location: ?url=auth/login");
         }
         
         $assetModel = $this->model('Asset');
