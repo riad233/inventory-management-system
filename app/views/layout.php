@@ -896,6 +896,19 @@
                     mainContent.style.marginLeft = (250 + pos) + 'px';
                 }
             }
+
+            // Automatically close success alert messages after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    if (window.bootstrap && bootstrap.Alert) {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    } else {
+                        alert.style.display = 'none';
+                    }
+                });
+            }, 5000);
         });
     </script>
 </body>
