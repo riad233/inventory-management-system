@@ -373,8 +373,19 @@
         }
 
         .table thead {
-            background-color: #f8f9fa;
             border-bottom: 2px solid #ddd;
+        }
+
+        .table thead:not(.table-dark) {
+            background-color: #f8f9fa;
+        }
+
+        .table thead.table-dark {
+            background-color: #1f2937;
+        }
+
+        .table thead.table-dark th {
+            color: #f9fafb;
         }
 
         .table th {

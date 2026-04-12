@@ -2,6 +2,19 @@
     <i class="fas fa-users"></i> Employees
 </div>
 
+<nav class="navbar navbar-expand-lg content-action-bar p-0">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse justify-content-end gap-2">
+            <div class="action-search">
+                <input type="text" id="searchInput" placeholder="Search employees...">
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="?url=employee/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Employee</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show">
         <?php echo e($_GET['msg']); ?>
@@ -10,13 +23,8 @@
 <?php endif; ?>
 
 <div class="table-container">
-    <div class="table-controls">
-        <a href="?url=employee/add" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Employee</a>
-        <input type="text" id="searchInput" placeholder="Search employees...">
-    </div>
-
-    <table class="table" id="employeeTable">
-        <thead>
+    <table class="table table-striped table-hover" id="employeeTable">
+        <thead class="table-dark">
             <tr>
                 <th>ID</th>
                 <th>Name</th>
