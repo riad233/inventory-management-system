@@ -35,19 +35,18 @@
 </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg content-action-bar p-0">
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=maintenance/add"><i class="fas fa-plus"></i> Add Maintenance</a></li>
-        <li class="nav-item"><a class="btn btn-outline-secondary btn-sm" href="?url=maintenance/updateStatus"><i class="fas fa-edit"></i> Update Status</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
 <div class="container-fluid mt-4">
-  <h2><i class="fas fa-tools"></i> Maintenance Records</h2>
+  <div class="page-title"><i class="fas fa-tools"></i> Maintenance Records</div>
+
+  <nav class="navbar navbar-expand-lg content-action-bar p-0">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=maintenance/add"><i class="fas fa-plus"></i> Add Maintenance</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   
   <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
