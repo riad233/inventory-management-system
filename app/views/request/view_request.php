@@ -62,13 +62,11 @@
 </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg content-action-bar p-0">
   <div class="container-fluid">
-    <a class="navbar-brand" href="?url=dashboard/index"><i class="fas fa-boxes\"></i> IMS</a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="?url=request/create">New Request</a></li>
-        <li class="nav-item"><a class="nav-link" href="?url=auth/logout">Logout</a></li>
+        <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=request/create"><i class="fas fa-plus"></i> New Request</a></li>
       </ul>
     </div>
   </div>

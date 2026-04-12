@@ -20,6 +20,7 @@ class AuthController extends Controller {
             $user = $userModel->login($username);
 
             if($user && password_verify($password, $user['Password'])) {
+                session_regenerate_id(true);
                 $_SESSION['username'] = $user['Username'];
                 $_SESSION['user_id'] = $user['User_ID'];
                 $_SESSION['role'] = $user['Role'];

@@ -35,14 +35,12 @@
 </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg content-action-bar p-0">
   <div class="container-fluid">
-    <a class="navbar-brand" href="?url=dashboard/index"><i class="fas fa-boxes"></i> IMS</a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="?url=assignment/assign">Assign Asset</a></li>
-        <li class="nav-item"><a class="nav-link" href="?url=assignment/returnAsset">Return Asset</a></li>
-        <li class="nav-item"><a class="nav-link" href="?url=auth/logout">Logout</a></li>
+        <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=assignment/assign"><i class="fas fa-plus"></i> Assign Asset</a></li>
+        <li class="nav-item"><a class="btn btn-outline-secondary btn-sm" href="?url=assignment/returnAsset"><i class="fas fa-undo"></i> Return Asset</a></li>
       </ul>
     </div>
   </div>

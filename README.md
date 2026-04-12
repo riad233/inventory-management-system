@@ -68,7 +68,7 @@ i_m_s/
 5. **Database Connection**
    - Host: `localhost`
    - User: `root`
-   - Password: `riad23`
+   - Password: ``
    - Database: `ims_db`
    - File: `config/database.php` (already configured)
 

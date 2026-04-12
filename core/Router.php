@@ -27,7 +27,8 @@ class Router {
                 exit;
             }
 
-            if (($_SESSION['role'] ?? '') !== 'Admin') {
+            $role = $_SESSION['role'] ?? '';
+            if (!in_array($role, ['Admin', 'Manager'], true)) {
                 http_response_code(403);
                 die('Forbidden');
             }

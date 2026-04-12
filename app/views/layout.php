@@ -309,6 +309,17 @@
             flex-shrink: 0;
         }
 
+        .content-action-bar {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .content-action-bar .navbar-nav .btn {
+            margin-left: 8px;
+        }
+
         /* Table Styling */
         .table-container {
             background: white;
