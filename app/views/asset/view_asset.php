@@ -10,12 +10,6 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
-  .content-action-bar {
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin-bottom: 16px;
-  }
   .btn-action {
     padding: 6px 10px;
     border-radius: 4px;
@@ -50,18 +44,18 @@
 </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg content-action-bar p-0">
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=asset/add"><i class="fas fa-plus"></i> Add Asset</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
 <div class="container-fluid mt-4">
-  <h2><i class="fas fa-cube"></i> Assets</h2>
+  <div class="page-title"><i class="fas fa-cube"></i> Assets</div>
+
+  <nav class="navbar navbar-expand-lg content-action-bar p-0">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=asset/add"><i class="fas fa-plus"></i> Add Asset</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   
   <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
