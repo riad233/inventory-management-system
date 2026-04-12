@@ -16,6 +16,7 @@ class RequestController extends Controller {
     
     public function create(){
         if(isset($_POST['submit'])){
+            require_csrf();
             $requestModel = $this->model('EquipmentRequest');
             
             $data = [
@@ -37,6 +38,7 @@ class RequestController extends Controller {
         $requestModel = $this->model('EquipmentRequest');
         
         if(isset($_POST['submit'])){
+            require_csrf();
             $data = [
                 'equipment_type' => $_POST['equipment_type'],
                 'description' => $_POST['description']
@@ -58,6 +60,11 @@ class RequestController extends Controller {
     }
     
     public function approve($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
         $requestModel = $this->model('EquipmentRequest');
         $approved_by = $_SESSION['user_id'] ?? 1;
         
@@ -67,6 +74,11 @@ class RequestController extends Controller {
     }
     
     public function reject($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
         $requestModel = $this->model('EquipmentRequest');
         
         if($requestModel->reject($id)){
@@ -75,6 +87,11 @@ class RequestController extends Controller {
     }
     
     public function delete($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
         $requestModel = $this->model('EquipmentRequest');
         if($requestModel->delete($id)){
             header("Location: ?url=request/index&msg=Request deleted");

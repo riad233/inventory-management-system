@@ -16,6 +16,7 @@ class AssetController extends Controller {
 
     public function add(){
         if(isset($_POST['submit'])){
+            require_csrf();
             $asset = $this->model('Asset');
             
             $data = [
@@ -41,6 +42,7 @@ class AssetController extends Controller {
         $asset = $this->model('Asset');
         
         if(isset($_POST['submit'])){
+            require_csrf();
             $data = [
                 'name' => $_POST['name'],
                 'category' => $_POST['category'],
@@ -62,6 +64,11 @@ class AssetController extends Controller {
     }
 
     public function delete($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
         $asset = $this->model('Asset');
         if($asset->delete($id)){
             header("Location: ?url=asset/index&msg=Asset deleted");

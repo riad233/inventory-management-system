@@ -237,7 +237,7 @@
 
   <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?php echo $_GET['msg']; ?>
+      <?php echo e($_GET['msg']); ?>
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   <?php endif; ?>
@@ -246,28 +246,28 @@
     <div class="metric-card">
       <div>
         <div class="label">Total Assets</div>
-        <p class="value"><?php echo isset($data['total_assets']) ? $data['total_assets'] : 0; ?></p>
+        <p class="value"><?php echo e(isset($data['total_assets']) ? $data['total_assets'] : 0); ?></p>
       </div>
       <div class="icon"><i class="fas fa-cube"></i></div>
     </div>
     <div class="metric-card">
       <div>
         <div class="label">Active Assignments</div>
-        <p class="value"><?php echo isset($data['total_assignments']) ? $data['total_assignments'] : 0; ?></p>
+        <p class="value"><?php echo e(isset($data['total_assignments']) ? $data['total_assignments'] : 0); ?></p>
       </div>
       <div class="icon"><i class="fas fa-people-carry"></i></div>
     </div>
     <div class="metric-card">
       <div>
         <div class="label">Pending Returns</div>
-        <p class="value"><?php echo isset($data['total_pending']) ? $data['total_pending'] : 0; ?></p>
+        <p class="value"><?php echo e(isset($data['total_pending']) ? $data['total_pending'] : 0); ?></p>
       </div>
       <div class="icon"><i class="fas fa-rotate-left"></i></div>
     </div>
     <div class="metric-card">
       <div>
         <div class="label">Maintenance Pending</div>
-        <p class="value"><?php echo isset($data['total_maintenance']) ? $data['total_maintenance'] : 0; ?></p>
+        <p class="value"><?php echo e(isset($data['total_maintenance']) ? $data['total_maintenance'] : 0); ?></p>
       </div>
       <div class="icon"><i class="fas fa-screwdriver-wrench"></i></div>
     </div>

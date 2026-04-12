@@ -16,6 +16,7 @@ class AssignmentController extends Controller {
     
     public function assign(){
         if(isset($_POST['submit'])){
+            require_csrf();
             $assignmentModel = $this->model('Assignment');
             
             $data = [
@@ -43,6 +44,7 @@ class AssignmentController extends Controller {
     
     public function returnAsset(){
         if(isset($_POST['submit'])){
+            require_csrf();
             $assignmentModel = $this->model('Assignment');
             $id = $_POST['assignment_id'];
             
@@ -62,6 +64,11 @@ class AssignmentController extends Controller {
     }
     
     public function delete($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
         $assignmentModel = $this->model('Assignment');
         if($assignmentModel->delete($id)){
             header("Location: ?url=assignment/index&msg=Assignment deleted");

@@ -159,8 +159,8 @@
             <ol>
                 <li>Ensure all system requirements show "OK" status</li>
                 <li>Fix any "ERROR" items before proceeding</li>
-                <li>If no admin user exists, create one using:
-                    <code>INSERT INTO users (Username, Password, Email, Role) VALUES ('admin', 'password123', 'admin@ims.local', 'Admin');</code>
+                <li>If no admin user exists, create one with a hashed password:
+                    <code>php -r "echo password_hash('admin123', PASSWORD_DEFAULT);"</code> then insert the hash into <code>users.Password</code>.
                 </li>
                 <li>Once all checks pass, proceed to <a href="/">IMS Login Page</a></li>
             </ol>

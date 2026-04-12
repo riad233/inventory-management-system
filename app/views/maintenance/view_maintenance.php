@@ -53,7 +53,7 @@
   
   <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?php echo $_GET['msg']; ?>
+      <?php echo e($_GET['msg']); ?>
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   <?php endif; ?>
@@ -75,15 +75,18 @@
           <?php if(isset($data['maintenance']) && is_array($data['maintenance'])): ?>
             <?php foreach($data['maintenance'] as $maint): ?>
               <tr>
-                <td><?php echo $maint['Maintenance_ID']; ?></td>
-                <td><?php echo $maint['Asset_Name'] ?? 'N/A'; ?></td>
-                <td><?php echo $maint['Reported_Date']; ?></td>
-                <td><span class="badge bg-warning"><?php echo $maint['Status']; ?></span></td>
-                <td><?php echo $maint['Cost']; ?></td>
+                <td><?php echo e($maint['Maintenance_ID']); ?></td>
+                <td><?php echo e($maint['Asset_Name'] ?? 'N/A'); ?></td>
+                <td><?php echo e($maint['Reported_Date']); ?></td>
+                <td><span class="badge bg-warning"><?php echo e($maint['Status']); ?></span></td>
+                <td><?php echo e($maint['Cost']); ?></td>
                 <td>
-                  <a href="?url=maintenance/delete/<?php echo $maint['Maintenance_ID']; ?>" class="btn-action btn-action-delete" onclick="return confirm('Delete this maintenance record?')" title="Delete">
-                    <i class="fas fa-trash"></i> Delete
-                  </a>
+                  <form method="post" action="?url=maintenance/delete/<?php echo e($maint['Maintenance_ID']); ?>" style="display:inline;">
+                    <?php echo csrf_field(); ?>
+                    <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this maintenance record?')" title="Delete">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </form>
                 </td>
               </tr>
             <?php endforeach; ?>

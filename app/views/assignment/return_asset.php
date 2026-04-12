@@ -32,6 +32,7 @@
         </div>
         <div class="card-body">
           <form method="post" action="">
+            <?php echo csrf_field(); ?>
             <div class="mb-3">
               <label class="form-label">Select Assignment</label>
               <select name="assignment_id" class="form-control" required>
@@ -39,8 +40,8 @@
                 <?php if(isset($data['assignments']) && is_array($data['assignments'])): ?>
                   <?php foreach($data['assignments'] as $assign): ?>
                     <?php if($assign['Actual_Return_Date'] == null): ?>
-                      <option value="<?php echo $assign['Assignment_ID']; ?>">
-                        <?php echo $assign['Asset_Name'] . ' - ' . $assign['Name']; ?>
+                      <option value="<?php echo e($assign['Assignment_ID']); ?>">
+                        <?php echo e(($assign['Asset_Name'] ?? '') . ' - ' . ($assign['Name'] ?? '')); ?>
                       </option>
                     <?php endif; ?>
                   <?php endforeach; ?>

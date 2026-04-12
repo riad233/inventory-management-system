@@ -731,17 +731,24 @@
             <div class="top-navbar-right">
                 <div class="user-info" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
                     <div class="user-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2); border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 35px; height: 35px; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold;">
-                        <?php echo isset($_SESSION['username']) && !empty($_SESSION['username']) ? strtoupper(substr($_SESSION['username'], 0, 1)) : 'A'; ?>
+                        <?php
+                        $username = isset($_SESSION['username']) ? (string)$_SESSION['username'] : '';
+                        echo e($username !== '' ? strtoupper(substr($username, 0, 1)) : 'A');
+                        ?>
                     </div>
                     <div style="display: flex; flex-direction: column; line-height: 1.1;">
                         <span style="font-weight: 600; font-size: 14px; color: #333;">
-                            <?php echo isset($_SESSION['username']) && !empty($_SESSION['username']) ? ucfirst($_SESSION['username']) : 'Admin'; ?>
+                            <?php echo e($username !== '' ? ucfirst($username) : 'Admin'); ?>
                         </span>
                         <small style="color: #6c757d; font-size: 11px;">
-                            <?php echo isset($_SESSION['role']) && !empty($_SESSION['role']) ? ucfirst($_SESSION['role']) : 'Administrator'; ?>
+                            <?php echo e(isset($_SESSION['role']) && !empty($_SESSION['role']) ? ucfirst((string)$_SESSION['role']) : 'Administrator'); ?>
                         </small>
                     </div>
                     <i class="fas fa-chevron-down" style="font-size: 10px; color: #adb5bd; margin-left: 5px;"></i>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="?url=auth/changePassword" class="btn btn-outline-secondary btn-sm">Change Password</a>
+                    <a href="?url=auth/logout" class="btn btn-outline-danger btn-sm">Logout</a>
                 </div>
             </div>
         </div>

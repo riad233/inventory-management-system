@@ -35,13 +35,14 @@
                 <div class="alert alert-danger">Request not found!</div>
                 <a href="?url=request/index" class="btn btn-secondary">Go Back</a>
             <?php else: $req = $data['request']; ?>
-          <form method="post" action="?url=request/edit/<?php echo $req['Request_ID']; ?>">
+          <form method="post" action="?url=request/edit/<?php echo e($req['Request_ID']); ?>">
+            <?php echo csrf_field(); ?>
             
             <div class="mb-3">
               <label class="form-label">Employee</label>
               <input type="text" class="form-control" value="<?php 
                   foreach($data['employees'] as $emp) {
-                      if($emp['User_ID'] == $req['User_ID']) echo $emp['Name'];
+                      if($emp['User_ID'] == $req['User_ID']) echo e($emp['Name']);
                   }
               ?>" disabled>
               <small class="text-muted">Employee cannot be changed once requested.</small>
@@ -59,7 +60,7 @@
             </div>
             <div class="mb-3">
               <label class="form-label">Description</label>
-              <textarea name="description" class="form-control" rows="4" required><?php echo $req['Description']; ?></textarea>
+              <textarea name="description" class="form-control" rows="4" required><?php echo e($req['Description']); ?></textarea>
             </div>
             <div class="text-end">
               <button type="submit" name="submit" class="btn btn-primary">

@@ -8,7 +8,7 @@ global $conn;
 
 $host = "localhost";
 $user = "root";
-$password = "riad23";
+$password = "";
 $database = "ims_db";
 
 $conn = mysqli_connect($host, $user, $password, $database);

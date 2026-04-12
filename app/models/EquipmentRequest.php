@@ -18,37 +18,50 @@ class EquipmentRequest extends Model {
     }
 
     public function getById($id){
-        $sql = "SELECT * FROM equipment_request WHERE Request_ID = '$id'";
-        $result = mysqli_query($this->conn, $sql);
-        return mysqli_fetch_assoc($result);
+        $sql = "SELECT * FROM equipment_request WHERE Request_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
     public function create($data){
         $request_date = date('Y-m-d');
         $sql = "INSERT INTO equipment_request (User_ID, Equipment_Type, Description, Request_Date, Status) 
-                VALUES ('{$data['user_id']}', '{$data['equipment_type']}', '{$data['description']}', '$request_date', 'Pending')";
-        return mysqli_query($this->conn, $sql);
+                VALUES (?, ?, ?, ?, 'Pending')";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("isss", $data['user_id'], $data['equipment_type'], $data['description'], $request_date);
+        return $stmt->execute();
     }
 
     public function approve($id, $approved_by){
         $approval_date = date('Y-m-d');
-        $sql = "UPDATE equipment_request SET Status='Approved', Approval_Date='$approval_date', Approved_By='$approved_by' WHERE Request_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE equipment_request SET Status = 'Approved', Approval_Date = ?, Approved_By = ? WHERE Request_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sii", $approval_date, $approved_by, $id);
+        return $stmt->execute();
     }
 
     public function reject($id){
-        $sql = "UPDATE equipment_request SET Status='Rejected' WHERE Request_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE equipment_request SET Status = 'Rejected' WHERE Request_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 
     public function update($id, $data){
-        $sql = "UPDATE equipment_request SET Equipment_Type='{$data['equipment_type']}', Description='{$data['description']}' WHERE Request_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE equipment_request SET Equipment_Type = ?, Description = ? WHERE Request_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssi", $data['equipment_type'], $data['description'], $id);
+        return $stmt->execute();
     }
 
     public function delete($id){
-        $sql = "DELETE FROM equipment_request WHERE Request_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "DELETE FROM equipment_request WHERE Request_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
 ?>

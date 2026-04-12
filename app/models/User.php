@@ -7,10 +7,10 @@ require_once ROOT_PATH . "/core/Model.php";
 
 class User extends Model {
 
-    public function login($username, $password){
-        $sql = "SELECT * FROM users WHERE Username=? AND Password=?";
+    public function login($username){
+        $sql = "SELECT * FROM users WHERE Username = ? LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ss", $username, $password);
+        $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_assoc();
@@ -27,24 +27,42 @@ class User extends Model {
     }
 
     public function getById($id){
-        $sql = "SELECT * FROM users WHERE User_ID = '$id'";
-        $result = mysqli_query($this->conn, $sql);
-        return mysqli_fetch_assoc($result);
+        $sql = "SELECT * FROM users WHERE User_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
     public function create($data){
-        $sql = "INSERT INTO users (Username, Password, Email, Role) VALUES ('{$data['username']}', '{$data['password']}', '{$data['email']}', '{$data['role']}')";
-        return mysqli_query($this->conn, $sql);
+        $hash = password_hash($data['password'], PASSWORD_DEFAULT);
+        $sql = "INSERT INTO users (Username, Password, Email, Role) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssss", $data['username'], $hash, $data['email'], $data['role']);
+        return $stmt->execute();
     }
 
     public function update($id, $data){
-        $sql = "UPDATE users SET Username='{$data['username']}', Email='{$data['email']}', Role='{$data['role']}' WHERE User_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE users SET Username = ?, Email = ?, Role = ? WHERE User_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sssi", $data['username'], $data['email'], $data['role'], $id);
+        return $stmt->execute();
+    }
+
+    public function updatePassword($id, $password){
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "UPDATE users SET Password = ? WHERE User_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("si", $hash, $id);
+        return $stmt->execute();
     }
 
     public function delete($id){
-        $sql = "DELETE FROM users WHERE User_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "DELETE FROM users WHERE User_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
 ?>

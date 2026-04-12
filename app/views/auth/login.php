@@ -32,15 +32,16 @@
                 <div class="card-body p-4">
                     <?php if(isset($data['error'])): ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <?php echo $data['error']; ?>
+                            <?php echo e($data['error']); ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     <?php endif; ?>
                     
                     <form method="post" action="">
+                        <?php echo csrf_field(); ?>
                         <div class="mb-3">
-                            <label class="form-label">Admin</label>
-                            <input type="text" name="admin" class="form-control" required autofocus>
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" required autofocus>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>

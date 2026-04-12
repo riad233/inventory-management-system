@@ -15,9 +15,23 @@ class Router {
             $parts = ['dashboard', 'index'];
         }
         
+        $controllerKey = strtolower($parts[0]);
         $controllerName = ucfirst($parts[0]) . 'Controller';
         $method = $parts[1] ?? 'index';
         $params = array_slice($parts, 2);
+
+        $publicControllers = ['auth', 'home'];
+        if (!in_array($controllerKey, $publicControllers, true)) {
+            if (empty($_SESSION['username'])) {
+                header("Location: ?url=auth/login");
+                exit;
+            }
+
+            if (($_SESSION['role'] ?? '') !== 'Admin') {
+                http_response_code(403);
+                die('Forbidden');
+            }
+        }
 
         $controllerPath = ROOT_PATH . "/app/controllers/$controllerName.php";
         

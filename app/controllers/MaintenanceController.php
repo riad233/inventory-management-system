@@ -16,6 +16,7 @@ class MaintenanceController extends Controller {
     
     public function add(){
         if(isset($_POST['submit'])){
+            require_csrf();
             $maintenanceModel = $this->model('Maintenance');
             
             $data = [
@@ -34,6 +35,7 @@ class MaintenanceController extends Controller {
     
     public function updateStatus(){
         if(isset($_POST['submit'])){
+            require_csrf();
             $maintenanceModel = $this->model('Maintenance');
             $id = $_POST['maintenance_id'];
             $status = $_POST['status'];
@@ -50,6 +52,11 @@ class MaintenanceController extends Controller {
     }
     
     public function delete($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
         $maintenanceModel = $this->model('Maintenance');
         if($maintenanceModel->delete($id)){
             header("Location: ?url=maintenance/index&msg=Maintenance deleted");

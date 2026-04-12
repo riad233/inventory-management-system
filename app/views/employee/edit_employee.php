@@ -12,10 +12,11 @@
             <div class="alert alert-danger">Employee not found!</div>
             <a href="?url=employee/index" class="btn btn-secondary">Go Back</a>
         <?php else: $emp = $data['employee']; ?>
-        <form method="post" action="?url=employee/edit/<?php echo $emp['User_ID']; ?>">
+        <form method="post" action="?url=employee/edit/<?php echo e($emp['User_ID']); ?>">
+            <?php echo csrf_field(); ?>
             <div class="mb-3">
                 <label class="form-label">Name</label>
-                <input type="text" name="name" class="form-control" value="<?php echo $emp['Name']; ?>" required>
+                <input type="text" name="name" class="form-control" value="<?php echo e($emp['Name']); ?>" required>
             </div>
             
             <div class="mb-3">
@@ -35,8 +36,8 @@
                     <option value="">Select Department</option>
                     <?php if(isset($data['departments']) && is_array($data['departments'])): ?>
                         <?php foreach($data['departments'] as $dept): ?>
-                            <option value="<?php echo $dept['Department_ID']; ?>" <?php echo ($dept['Department_ID'] == $emp['Department_ID']) ? 'selected' : ''; ?>>
-                                <?php echo $dept['Department_Name']; ?>
+                            <option value="<?php echo e($dept['Department_ID']); ?>" <?php echo ($dept['Department_ID'] == $emp['Department_ID']) ? 'selected' : ''; ?>>
+                                <?php echo e($dept['Department_Name']); ?>
                             </option>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -45,12 +46,12 @@
             
             <div class="mb-3">
                 <label class="form-label">Contact Number</label>
-                <input type="text" name="contact" class="form-control" value="<?php echo $emp['Contact_Number']; ?>" required>
+                <input type="text" name="contact" class="form-control" value="<?php echo e($emp['Contact_Number']); ?>" required>
             </div>
             
             <div class="mb-3">
                 <label class="form-label">Email Address</label>
-                <input type="email" name="email" class="form-control" value="<?php echo $emp['Email']; ?>" required>
+                <input type="email" name="email" class="form-control" value="<?php echo e($emp['Email']); ?>" required>
             </div>
             
             <div class="text-end mt-4">

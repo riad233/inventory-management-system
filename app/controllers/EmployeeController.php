@@ -16,6 +16,7 @@ class EmployeeController extends Controller {
     
     public function add(){
         if(isset($_POST['submit'])){
+            require_csrf();
             $employeeModel = $this->model('Employee');
             
             $data = [
@@ -46,6 +47,7 @@ class EmployeeController extends Controller {
         $employeeModel = $this->model('Employee');
         
         if(isset($_POST['submit'])){
+            require_csrf();
             $data = [
                 'name' => $_POST['name'],
                 'designation' => $_POST['designation'],
@@ -73,6 +75,11 @@ class EmployeeController extends Controller {
     }
     
     public function delete($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
         $employeeModel = $this->model('Employee');
         if($employeeModel->delete($id)){
             header("Location: ?url=employee/index&msg=Employee deleted");

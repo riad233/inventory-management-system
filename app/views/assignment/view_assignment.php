@@ -53,7 +53,7 @@
   
   <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?php echo $_GET['msg']; ?>
+      <?php echo e($_GET['msg']); ?>
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   <?php endif; ?>
@@ -76,11 +76,11 @@
           <?php if(isset($data['assignments']) && is_array($data['assignments'])): ?>
             <?php foreach($data['assignments'] as $assign): ?>
               <tr>
-                <td><?php echo $assign['Assignment_ID']; ?></td>
-                <td><?php echo $assign['Asset_Name'] ?? 'N/A'; ?></td>
-                <td><?php echo $assign['Name'] ?? 'N/A'; ?></td>
-                <td><?php echo $assign['Assigned_Date']; ?></td>
-                <td><?php echo $assign['Expected_Return_Date']; ?></td>
+                <td><?php echo e($assign['Assignment_ID']); ?></td>
+                <td><?php echo e($assign['Asset_Name'] ?? 'N/A'); ?></td>
+                <td><?php echo e($assign['Name'] ?? 'N/A'); ?></td>
+                <td><?php echo e($assign['Assigned_Date']); ?></td>
+                <td><?php echo e($assign['Expected_Return_Date']); ?></td>
                 <td>
                   <?php if($assign['Actual_Return_Date'] == null): ?>
                     <span class="badge bg-success">Assigned</span>
@@ -89,9 +89,12 @@
                   <?php endif; ?>
                 </td>
                 <td>
-                  <a href="?url=assignment/delete/<?php echo $assign['Assignment_ID']; ?>" class="btn-action btn-action-delete" onclick="return confirm('Delete this assignment?')" title="Delete">
-                    <i class="fas fa-trash"></i> Delete
-                  </a>
+                  <form method="post" action="?url=assignment/delete/<?php echo e($assign['Assignment_ID']); ?>" style="display:inline;">
+                    <?php echo csrf_field(); ?>
+                    <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this assignment?')" title="Delete">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </form>
                 </td>
               </tr>
             <?php endforeach; ?>

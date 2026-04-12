@@ -17,25 +17,55 @@ class Asset extends Model {
     }
 
     public function getById($id){
-        $sql = "SELECT * FROM asset WHERE Asset_ID = '$id'";
-        $result = mysqli_query($this->conn, $sql);
-        return mysqli_fetch_assoc($result);
+        $sql = "SELECT * FROM asset WHERE Asset_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
     public function add($data) {
         $sql = "INSERT INTO asset (Asset_Name, Category, Brand, Model, Serial_Number, Purchase_Date, Warranty_Expiry, Status)
-                VALUES ('{$data['name']}', '{$data['category']}', '{$data['brand']}', '{$data['model']}', '{$data['serial']}', '{$data['purchase_date']}', '{$data['warranty']}', '{$data['status']}')";
-        return mysqli_query($this->conn, $sql);
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param(
+            "ssssssss",
+            $data['name'],
+            $data['category'],
+            $data['brand'],
+            $data['model'],
+            $data['serial'],
+            $data['purchase_date'],
+            $data['warranty'],
+            $data['status']
+        );
+        return $stmt->execute();
     }
 
     public function update($id, $data){
-        $sql = "UPDATE asset SET Asset_Name='{$data['name']}', Category='{$data['category']}', Brand='{$data['brand']}', Model='{$data['model']}', Serial_Number='{$data['serial']}', Purchase_Date='{$data['purchase_date']}', Warranty_Expiry='{$data['warranty']}', Status='{$data['status']}' WHERE Asset_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE asset SET Asset_Name = ?, Category = ?, Brand = ?, Model = ?, Serial_Number = ?, Purchase_Date = ?, Warranty_Expiry = ?, Status = ? WHERE Asset_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param(
+            "ssssssssi",
+            $data['name'],
+            $data['category'],
+            $data['brand'],
+            $data['model'],
+            $data['serial'],
+            $data['purchase_date'],
+            $data['warranty'],
+            $data['status'],
+            $id
+        );
+        return $stmt->execute();
     }
 
     public function delete($id){
-        $sql = "DELETE FROM asset WHERE Asset_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "DELETE FROM asset WHERE Asset_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
 ?>

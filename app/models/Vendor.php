@@ -18,25 +18,34 @@ class Vendor extends Model {
     }
 
     public function getById($id){
-        $sql = "SELECT * FROM vendor WHERE Vendor_ID = '$id'";
-        $result = mysqli_query($this->conn, $sql);
-        return mysqli_fetch_assoc($result);
+        $sql = "SELECT * FROM vendor WHERE Vendor_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
     public function create($data){
         $sql = "INSERT INTO vendor (Vendor_Name, Contact_Person, Contact_Number, Email, Address) 
-                VALUES ('{$data['vendor_name']}', '{$data['contact_person']}', '{$data['contact_number']}', '{$data['email']}', '{$data['address']}')";
-        return mysqli_query($this->conn, $sql);
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sssss", $data['vendor_name'], $data['contact_person'], $data['contact_number'], $data['email'], $data['address']);
+        return $stmt->execute();
     }
 
     public function update($id, $data){
-        $sql = "UPDATE vendor SET Vendor_Name='{$data['vendor_name']}', Contact_Person='{$data['contact_person']}', Contact_Number='{$data['contact_number']}', Email='{$data['email']}', Address='{$data['address']}' WHERE Vendor_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE vendor SET Vendor_Name = ?, Contact_Person = ?, Contact_Number = ?, Email = ?, Address = ? WHERE Vendor_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sssssi", $data['vendor_name'], $data['contact_person'], $data['contact_number'], $data['email'], $data['address'], $id);
+        return $stmt->execute();
     }
 
     public function delete($id){
-        $sql = "DELETE FROM vendor WHERE Vendor_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "DELETE FROM vendor WHERE Vendor_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
 ?>

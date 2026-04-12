@@ -32,9 +32,10 @@
         </div>
         <div class="card-body">
           <form method="post" action="">
+            <?php echo csrf_field(); ?>
             <div class="mb-3">
               <label class="form-label">Asset Name</label>
-              <input type="text" name="name" class="form-control" value="<?php echo isset($data['asset']) ? $data['asset']['Asset_Name'] : ''; ?>" required>
+              <input type="text" name="name" class="form-control" value="<?php echo isset($data['asset']) ? e($data['asset']['Asset_Name']) : ''; ?>" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Category</label>
@@ -47,23 +48,23 @@
             </div>
             <div class="mb-3">
               <label class="form-label">Brand</label>
-              <input type="text" name="brand" class="form-control" value="<?php echo isset($data['asset']) ? $data['asset']['Brand'] : ''; ?>" required>
+              <input type="text" name="brand" class="form-control" value="<?php echo isset($data['asset']) ? e($data['asset']['Brand']) : ''; ?>" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Model</label>
-              <input type="text" name="model" class="form-control" value="<?php echo isset($data['asset']) ? $data['asset']['Model'] : ''; ?>" required>
+              <input type="text" name="model" class="form-control" value="<?php echo isset($data['asset']) ? e($data['asset']['Model']) : ''; ?>" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Serial Number</label>
-              <input type="text" name="serial" class="form-control" value="<?php echo isset($data['asset']) ? $data['asset']['Serial_Number'] : ''; ?>" required>
+              <input type="text" name="serial" class="form-control" value="<?php echo isset($data['asset']) ? e($data['asset']['Serial_Number']) : ''; ?>" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Purchase Date</label>
-              <input type="date" name="purchase_date" class="form-control" value="<?php echo isset($data['asset']) ? $data['asset']['Purchase_Date'] : ''; ?>" required>
+              <input type="date" name="purchase_date" class="form-control" value="<?php echo isset($data['asset']) ? e($data['asset']['Purchase_Date']) : ''; ?>" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Warranty Expiry</label>
-              <input type="date" name="warranty" class="form-control" value="<?php echo isset($data['asset']) ? $data['asset']['Warranty_Expiry'] : ''; ?>" required>
+              <input type="date" name="warranty" class="form-control" value="<?php echo isset($data['asset']) ? e($data['asset']['Warranty_Expiry']) : ''; ?>" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Status</label>

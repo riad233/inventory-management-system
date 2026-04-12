@@ -79,7 +79,7 @@
   
   <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?php echo $_GET['msg']; ?>
+      <?php echo e($_GET['msg']); ?>
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   <?php endif; ?>
@@ -101,10 +101,10 @@
           <?php if(isset($data['requests']) && is_array($data['requests'])): ?>
             <?php foreach($data['requests'] as $req): ?>
               <tr>
-                <td><?php echo $req['Request_ID']; ?></td>
-                <td><?php echo $req['Name'] ?? 'N/A'; ?></td>
-                <td><?php echo $req['Equipment_Type']; ?></td>
-                <td><?php echo $req['Request_Date']; ?></td>
+                <td><?php echo e($req['Request_ID']); ?></td>
+                <td><?php echo e($req['Name'] ?? 'N/A'); ?></td>
+                <td><?php echo e($req['Equipment_Type']); ?></td>
+                <td><?php echo e($req['Request_Date']); ?></td>
                 <td>
                   <?php if($req['Status'] == 'Pending'): ?>
                     <span class="badge bg-warning">Pending</span>
@@ -116,11 +116,20 @@
                 </td>
                 <td>
                   <?php if($req['Status'] == 'Pending'): ?>
-                    <a href="?url=request/edit/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-edit" title="Edit">Edit</a>
-                    <a href="?url=request/approve/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-approve" title="Approve">Approve</a>
-                    <a href="?url=request/reject/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-reject" title="Reject">Reject</a>
+                    <a href="?url=request/edit/<?php echo e($req['Request_ID']); ?>" class="btn-action btn-action-edit" title="Edit">Edit</a>
+                    <form method="post" action="?url=request/approve/<?php echo e($req['Request_ID']); ?>" style="display:inline;">
+                      <?php echo csrf_field(); ?>
+                      <button type="submit" class="btn-action btn-action-approve" title="Approve">Approve</button>
+                    </form>
+                    <form method="post" action="?url=request/reject/<?php echo e($req['Request_ID']); ?>" style="display:inline;">
+                      <?php echo csrf_field(); ?>
+                      <button type="submit" class="btn-action btn-action-reject" title="Reject">Reject</button>
+                    </form>
                   <?php endif; ?>
-                  <a href="?url=request/delete/<?php echo $req['Request_ID']; ?>" class="btn-action btn-action-delete" onclick="return confirm('Delete this request?')" title="Delete">Delete</a>
+                  <form method="post" action="?url=request/delete/<?php echo e($req['Request_ID']); ?>" style="display:inline;">
+                    <?php echo csrf_field(); ?>
+                    <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this request?')" title="Delete">Delete</button>
+                  </form>
                 </td>
               </tr>
             <?php endforeach; ?>

@@ -61,7 +61,7 @@
   
   <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?php echo $_GET['msg']; ?>
+      <?php echo e($_GET['msg']); ?>
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   <?php endif; ?>
@@ -84,19 +84,22 @@
           <?php if(isset($data['assets']) && is_array($data['assets'])): ?>
             <?php foreach($data['assets'] as $asset): ?>
               <tr>
-                <td><?php echo $asset['Asset_ID']; ?></td>
-                <td><?php echo $asset['Asset_Name']; ?></td>
-                <td><?php echo $asset['Category']; ?></td>
-                <td><?php echo $asset['Brand']; ?></td>
-                <td><?php echo $asset['Serial_Number']; ?></td>
-                <td><span class="badge bg-info"><?php echo $asset['Status']; ?></span></td>
+                <td><?php echo e($asset['Asset_ID']); ?></td>
+                <td><?php echo e($asset['Asset_Name']); ?></td>
+                <td><?php echo e($asset['Category']); ?></td>
+                <td><?php echo e($asset['Brand']); ?></td>
+                <td><?php echo e($asset['Serial_Number']); ?></td>
+                <td><span class="badge bg-info"><?php echo e($asset['Status']); ?></span></td>
                 <td>
-                  <a href="?url=asset/edit/<?php echo $asset['Asset_ID']; ?>" class="btn-action btn-action-edit" title="Edit">
+                  <a href="?url=asset/edit/<?php echo e($asset['Asset_ID']); ?>" class="btn-action btn-action-edit" title="Edit">
                     <i class="fas fa-edit"></i> Edit
                   </a>
-                  <a href="?url=asset/delete/<?php echo $asset['Asset_ID']; ?>" class="btn-action btn-action-delete" onclick="return confirm('Delete this asset?')" title="Delete">
-                    <i class="fas fa-trash"></i> Delete
-                  </a>
+                  <form method="post" action="?url=asset/delete/<?php echo e($asset['Asset_ID']); ?>" style="display:inline;">
+                    <?php echo csrf_field(); ?>
+                    <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this asset?')" title="Delete">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </form>
                 </td>
               </tr>
             <?php endforeach; ?>

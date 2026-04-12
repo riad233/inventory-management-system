@@ -21,32 +21,50 @@ class Assignment extends Model {
     }
 
     public function getById($id){
-        $sql = "SELECT * FROM assignment WHERE Assignment_ID = '$id'";
-        $result = mysqli_query($this->conn, $sql);
-        return mysqli_fetch_assoc($result);
+        $sql = "SELECT * FROM assignment WHERE Assignment_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
     public function create($data){
         $assigned_date = date('Y-m-d');
         $sql = "INSERT INTO assignment (Asset_ID, User_ID, Department_ID, Assigned_Date, Expected_Return_Date) 
-                VALUES ('{$data['asset_id']}', '{$data['user_id']}', '{$data['dept_id']}', '$assigned_date', '{$data['exp_return_date']}')";
-        return mysqli_query($this->conn, $sql);
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param(
+            "iiiss",
+            $data['asset_id'],
+            $data['user_id'],
+            $data['dept_id'],
+            $assigned_date,
+            $data['exp_return_date']
+        );
+        return $stmt->execute();
     }
 
     public function returnAsset($id, $data){
         $actual_return = date('Y-m-d');
-        $sql = "UPDATE assignment SET Actual_Return_Date='$actual_return', Condition_on_Return='{$data['condition']}' WHERE Assignment_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE assignment SET Actual_Return_Date = ?, Condition_on_Return = ? WHERE Assignment_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssi", $actual_return, $data['condition'], $id);
+        return $stmt->execute();
     }
 
     public function update($id, $data){
-        $sql = "UPDATE assignment SET Asset_ID='{$data['asset_id']}', User_ID='{$data['user_id']}', Department_ID='{$data['dept_id']}', Expected_Return_Date='{$data['exp_return_date']}' WHERE Assignment_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE assignment SET Asset_ID = ?, User_ID = ?, Department_ID = ?, Expected_Return_Date = ? WHERE Assignment_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iiisi", $data['asset_id'], $data['user_id'], $data['dept_id'], $data['exp_return_date'], $id);
+        return $stmt->execute();
     }
 
     public function delete($id){
-        $sql = "DELETE FROM assignment WHERE Assignment_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "DELETE FROM assignment WHERE Assignment_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
 ?>

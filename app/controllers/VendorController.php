@@ -16,6 +16,7 @@ class VendorController extends Controller {
     
     public function add(){
         if(isset($_POST['submit'])){
+            require_csrf();
             $vendorModel = $this->model('Vendor');
             
             $data = [
@@ -38,6 +39,7 @@ class VendorController extends Controller {
         $vendorModel = $this->model('Vendor');
         
         if(isset($_POST['submit'])){
+            require_csrf();
             $data = [
                 'vendor_name' => $_POST['vendor_name'],
                 'contact_person' => $_POST['contact_person'],
@@ -56,6 +58,11 @@ class VendorController extends Controller {
     }
     
     public function delete($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
         $vendorModel = $this->model('Vendor');
         if($vendorModel->delete($id)){
             header("Location: ?url=vendor/index&msg=Vendor deleted");

@@ -9,6 +9,7 @@
 <div class="card shadow" style="max-width: 600px;">
     <div class="card-body">
         <form method="post" action="?url=employee/add">
+            <?php echo csrf_field(); ?>
             <div class="mb-3">
                 <label class="form-label">Name</label>
                 <input type="text" name="name" class="form-control" required>
@@ -31,7 +32,7 @@
                     <option value="">Select Department</option>
                     <?php if(isset($data['departments']) && is_array($data['departments'])): ?>
                         <?php foreach($data['departments'] as $dept): ?>
-                            <option value="<?php echo $dept['Department_ID']; ?>"><?php echo $dept['Department_Name']; ?></option>
+                            <option value="<?php echo e($dept['Department_ID']); ?>"><?php echo e($dept['Department_Name']); ?></option>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </select>

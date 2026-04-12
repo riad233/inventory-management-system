@@ -32,6 +32,7 @@
         </div>
         <div class="card-body">
           <form method="post" action="">
+            <?php echo csrf_field(); ?>
             <div class="mb-3">
               <label class="form-label">Asset Name</label>
               <input type="text" name="name" class="form-control" required>

@@ -18,31 +18,42 @@ class Maintenance extends Model {
     }
 
     public function getById($id){
-        $sql = "SELECT * FROM maintenance WHERE Maintenance_ID = '$id'";
-        $result = mysqli_query($this->conn, $sql);
-        return mysqli_fetch_assoc($result);
+        $sql = "SELECT * FROM maintenance WHERE Maintenance_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
     public function create($data){
         $reported_date = date('Y-m-d');
         $sql = "INSERT INTO maintenance (Asset_ID, Reported_Date, Status, Cost) 
-                VALUES ('{$data['asset_id']}', '$reported_date', 'Pending', '{$data['cost']}')";
-        return mysqli_query($this->conn, $sql);
+                VALUES (?, ?, 'Pending', ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("isd", $data['asset_id'], $reported_date, $data['cost']);
+        return $stmt->execute();
     }
 
     public function updateStatus($id, $status, $end_date){
-        $sql = "UPDATE maintenance SET Status='$status', Repair_End_Date='$end_date' WHERE Maintenance_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE maintenance SET Status = ?, Repair_End_Date = ? WHERE Maintenance_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssi", $status, $end_date, $id);
+        return $stmt->execute();
     }
 
     public function update($id, $data){
-        $sql = "UPDATE maintenance SET Asset_ID='{$data['asset_id']}', Cost='{$data['cost']}' WHERE Maintenance_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "UPDATE maintenance SET Asset_ID = ?, Cost = ? WHERE Maintenance_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("idi", $data['asset_id'], $data['cost'], $id);
+        return $stmt->execute();
     }
 
     public function delete($id){
-        $sql = "DELETE FROM maintenance WHERE Maintenance_ID = '$id'";
-        return mysqli_query($this->conn, $sql);
+        $sql = "DELETE FROM maintenance WHERE Maintenance_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
 ?>

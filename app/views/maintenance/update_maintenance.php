@@ -32,14 +32,15 @@
         </div>
         <div class="card-body">
           <form method="post" action="">
+            <?php echo csrf_field(); ?>
             <div class="mb-3">
               <label class="form-label">Select Maintenance Record</label>
               <select name="maintenance_id" class="form-control" required>
                 <option value="">Select Record</option>
                 <?php if(isset($data['maintenance']) && is_array($data['maintenance'])): ?>
                   <?php foreach($data['maintenance'] as $maint): ?>
-                    <option value="<?php echo $maint['Maintenance_ID']; ?>">
-                      <?php echo $maint['Asset_Name'] . ' (' . $maint['Maintenance_ID'] . ')'; ?>
+                    <option value="<?php echo e($maint['Maintenance_ID']); ?>">
+                      <?php echo e(($maint['Asset_Name'] ?? '') . ' (' . $maint['Maintenance_ID'] . ')'); ?>
                     </option>
                   <?php endforeach; ?>
                 <?php endif; ?>
