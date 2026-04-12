@@ -67,8 +67,11 @@
 
   <nav class="navbar navbar-expand-lg content-action-bar p-0">
     <div class="container-fluid">
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
+      <div class="collapse navbar-collapse justify-content-end gap-2">
+        <div class="action-search">
+          <input type="text" id="requestSearchInput" placeholder="Search requests...">
+        </div>
+        <ul class="navbar-nav">
           <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=request/create"><i class="fas fa-plus"></i> New Request</a></li>
         </ul>
       </div>
@@ -84,7 +87,7 @@
 
   <div class="card shadow">
     <div class="card-body">
-      <table class="table table-striped table-hover">
+      <table class="table table-striped table-hover" id="requestTable">
         <thead class="table-dark">
           <tr>
             <th>Request ID</th>
@@ -143,5 +146,16 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById('requestSearchInput').addEventListener('keyup', function() {
+  let filter = this.value.toLowerCase();
+  let rows = document.getElementById('requestTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+  for (let i = 0; i < rows.length; i++) {
+    let text = rows[i].textContent || rows[i].innerText;
+    rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+  }
+});
+</script>
 </body>
 </html>
