@@ -15,8 +15,14 @@
             </div>
             
             <div class="mb-3">
-                <label class="form-label">Designation</label>
-                <input type="text" name="designation" class="form-control" required>
+                <label class="form-label">Employee Category</label>
+                <select name="designation" class="form-control" required>
+                    <option value="">Select Category</option>
+                    <option value="Administration">Administration</option>
+                    <option value="Faculty">Faculty</option>
+                    <option value="Staff">Staff</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
             
             <div class="mb-3">

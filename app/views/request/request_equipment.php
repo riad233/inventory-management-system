@@ -36,11 +36,9 @@
               <label class="form-label">Employee</label>
               <select name="user_id" class="form-control" required>
                 <option value="">Select Employee</option>
-                <?php if(isset($data['employees']) && is_array($data['employees'])): ?>
-                  <?php foreach($data['employees'] as $emp): ?>
-                    <option value="<?php echo $emp['User_ID']; ?>"><?php echo $emp['Name']; ?></option>
-                  <?php endforeach; ?>
-                <?php endif; ?>
+                <option value="1">Administration</option>
+                <option value="2">Faculty</option>
+                <option value="3">Staff</option>
               </select>
             </div>
             <div class="mb-3">

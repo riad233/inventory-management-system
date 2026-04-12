@@ -19,8 +19,14 @@
             </div>
             
             <div class="mb-3">
-                <label class="form-label">Designation</label>
-                <input type="text" name="designation" class="form-control" value="<?php echo $emp['Designation']; ?>" required>
+                <label class="form-label">Employee Category</label>
+                <select name="designation" class="form-control" required>
+                    <option value="">Select Category</option>
+                    <option value="Administration" <?php echo ($emp['Designation'] == 'Administration') ? 'selected' : ''; ?>>Administration</option>
+                    <option value="Faculty" <?php echo ($emp['Designation'] == 'Faculty') ? 'selected' : ''; ?>>Faculty</option>
+                    <option value="Staff" <?php echo ($emp['Designation'] == 'Staff') ? 'selected' : ''; ?>>Staff</option>
+                    <option value="Other" <?php echo ($emp['Designation'] == 'Other') ? 'selected' : ''; ?>>Other</option>
+                </select>
             </div>
             
             <div class="mb-3">

@@ -20,7 +20,7 @@
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Designation</th>
+                <th>Category</th>
                 <th>Department</th>
                 <th>Contact</th>
                 <th>Email</th>
@@ -33,7 +33,7 @@
                 <tr>
                     <td data-label="ID"><?php echo $emp['User_ID']; ?></td>
                     <td data-label="Name"><strong><?php echo $emp['Name']; ?></strong></td>
-                    <td data-label="Designation"><?php echo $emp['Designation']; ?></td>
+                    <td data-label="Category"><?php echo $emp['Designation']; ?></td>
                     <td data-label="Department"><?php echo isset($emp['Department_Name']) ? $emp['Department_Name'] : 'N/A'; ?></td>
                     <td data-label="Contact"><?php echo $emp['Contact_Number']; ?></td>
                     <td data-label="Email"><?php echo $emp['Email']; ?></td>

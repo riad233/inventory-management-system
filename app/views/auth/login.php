@@ -39,8 +39,8 @@
                     
                     <form method="post" action="">
                         <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="text" name="username" class="form-control" required autofocus>
+                            <label class="form-label">Admin</label>
+                            <input type="text" name="admin" class="form-control" required autofocus>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
