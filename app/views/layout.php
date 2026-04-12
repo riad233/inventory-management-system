@@ -678,6 +678,11 @@
                 </a>
             </li>
             <li>
+                <a href="?url=product/index" class="<?php echo (strpos($_GET['url'] ?? '', 'product') !== false) ? 'active' : ''; ?>">
+                    <i class="fas fa-box-open"></i> Products
+                </a>
+            </li>
+            <li>
                 <a href="?url=assignment/index" class="<?php echo (strpos($_GET['url'] ?? '', 'assignment') !== false) ? 'active' : ''; ?>">
                     <i class="fas fa-exchange-alt"></i> Assignments
                 </a>
@@ -716,6 +721,7 @@
                 <ul class="top-navbar-nav">
                     <li><a href="?url=dashboard/index"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                     <li><a href="?url=asset/index"><i class="fas fa-boxes"></i> Assets</a></li>
+                    <li><a href="?url=product/index"><i class="fas fa-box-open"></i> Products</a></li>
                     <li><a href="?url=assignment/index"><i class="fas fa-exchange-alt"></i> Assignments</a></li>
                     <li><a href="?url=maintenance/index"><i class="fas fa-wrench"></i> Maintenance</a></li>
                     <li><a href="?url=employee/index"><i class="fas fa-users"></i> Employees</a></li>
