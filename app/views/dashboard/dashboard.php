@@ -176,6 +176,27 @@
     padding: 6px 12px;
   }
 
+  .grid-actions .btn-secondary {
+    background: #f3f4f6;
+    border-color: #d8dce5;
+    color: #4b5563;
+  }
+
+  .modal-detail-table {
+    width: 100%;
+  }
+
+  .modal-detail-table td {
+    padding: 6px 0;
+    vertical-align: top;
+  }
+
+  .modal-detail-table td:first-child {
+    width: 40%;
+    color: #6b7280;
+    font-weight: 600;
+  }
+
   .ag-theme-quartz {
     --ag-font-family: 'Source Sans 3', sans-serif;
     --ag-font-size: 13px;
@@ -269,6 +290,8 @@
         </div>
       </div>
       <div class="grid-actions">
+        <button type="button" class="btn btn-secondary grid-save-view" data-grid="asset">Save View</button>
+        <button type="button" class="btn btn-secondary grid-reset-view" data-grid="asset">Reset View</button>
         <button type="button" class="btn btn-outline-secondary grid-export" data-grid="asset">Export CSV</button>
         <button type="button" class="btn btn-outline-secondary grid-export" data-grid="asset" data-format="excel">Export Excel (CSV)</button>
       </div>
@@ -291,6 +314,8 @@
         </div>
       </div>
       <div class="grid-actions">
+        <button type="button" class="btn btn-secondary grid-save-view" data-grid="assignment">Save View</button>
+        <button type="button" class="btn btn-secondary grid-reset-view" data-grid="assignment">Reset View</button>
         <button type="button" class="btn btn-outline-secondary grid-export" data-grid="assignment">Export CSV</button>
         <button type="button" class="btn btn-outline-secondary grid-export" data-grid="assignment" data-format="excel">Export Excel (CSV)</button>
       </div>
@@ -314,11 +339,31 @@
         </div>
       </div>
       <div class="grid-actions">
+        <button type="button" class="btn btn-secondary grid-save-view" data-grid="maintenance">Save View</button>
+        <button type="button" class="btn btn-secondary grid-reset-view" data-grid="maintenance">Reset View</button>
         <button type="button" class="btn btn-outline-secondary grid-export" data-grid="maintenance">Export CSV</button>
         <button type="button" class="btn btn-outline-secondary grid-export" data-grid="maintenance" data-format="excel">Export Excel (CSV)</button>
       </div>
     </div>
     <div id="maintenanceGrid" class="ag-theme-quartz grid-height"></div>
+  </div>
+</div>
+
+<div class="modal fade" id="rowDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rowDetailTitle">Row Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="modal-detail-table" id="rowDetailBody"></table>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-outline-secondary" id="rowDetailSecondary">View</a>
+        <a href="#" class="btn btn-primary" id="rowDetailPrimary">Edit</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -332,6 +377,7 @@
     defaultColDef: {
       sortable: true,
       filter: true,
+      floatingFilter: true,
       resizable: true,
       minWidth: 110
     },
@@ -390,14 +436,41 @@
         maxWidth: 160,
         sortable: false,
         filter: false,
-        cellRenderer: () => {
-          return '<a class="btn btn-sm btn-outline-secondary" href="?url=assignment/index">View</a>';
+        cellRenderer: params => {
+          if (!params.data || !params.data.Assignment_ID) {
+            return '';
+          }
+          const viewUrl = '?url=assignment/index';
+          const returnUrl = '?url=assignment/returnAsset';
+          return `
+            <div style="display:flex;gap:6px;">
+              <a class="btn btn-sm btn-outline-secondary" href="${viewUrl}">View</a>
+              <a class="btn btn-sm btn-outline-secondary" href="${returnUrl}">Return</a>
+            </div>
+          `;
         }
       }
     ],
     rowData: assignmentsData,
-    onRowClicked: () => {
-      window.location.href = '?url=assignment/index';
+    onRowClicked: event => {
+      if (event.data) {
+        openDetailModal({
+          title: 'Assignment Details',
+          rows: {
+            'Assignment ID': event.data.Assignment_ID || '-',
+            'Asset': event.data.Asset_Name || '-',
+            'Employee': event.data.Name || '-',
+            'Assigned Date': event.data.Assigned_Date || '-',
+            'Expected Return': event.data.Expected_Return_Date || '-',
+            'Actual Return': event.data.Actual_Return_Date || '-',
+            'Return Status': event.data.Actual_Return_Date ? 'Returned' : 'Assigned'
+          },
+          primaryLabel: 'Go to Assignments',
+          primaryUrl: '?url=assignment/index',
+          secondaryLabel: 'Return Asset',
+          secondaryUrl: '?url=assignment/returnAsset'
+        });
+      }
     }
   };
 
@@ -415,18 +488,83 @@
         maxWidth: 180,
         sortable: false,
         filter: false,
-        cellRenderer: () => {
+        cellRenderer: params => {
+          if (!params.data || !params.data.Maintenance_ID) {
+            return '';
+          }
           return '<a class="btn btn-sm btn-outline-secondary" href="?url=maintenance/updateStatus">Update</a>';
         }
       }
     ],
     rowData: maintenanceData,
-    onRowClicked: () => {
-      window.location.href = '?url=maintenance/updateStatus';
+    onRowClicked: event => {
+      if (event.data) {
+        openDetailModal({
+          title: 'Maintenance Details',
+          rows: {
+            'Maintenance ID': event.data.Maintenance_ID || '-',
+            'Asset': event.data.Asset_Name || '-',
+            'Reported Date': event.data.Reported_Date || '-',
+            'Repair End Date': event.data.Repair_End_Date || '-',
+            'Status': event.data.Status || '-',
+            'Cost': event.data.Cost || '-'
+          },
+          primaryLabel: 'Update Status',
+          primaryUrl: '?url=maintenance/updateStatus',
+          secondaryLabel: 'View Maintenance',
+          secondaryUrl: '?url=maintenance/index'
+        });
+      }
     }
   };
 
   const grids = {};
+  const gridViewStorageKey = (gridKey) => `ims_grid_view_${gridKey}`;
+
+  const saveGridView = (gridKey) => {
+    const grid = grids[gridKey];
+    if (!grid) {
+      return;
+    }
+    const payload = {
+      columnState: grid.columnApi.getColumnState(),
+      filterModel: grid.api.getFilterModel(),
+      sortModel: grid.api.getSortModel()
+    };
+    localStorage.setItem(gridViewStorageKey(gridKey), JSON.stringify(payload));
+  };
+
+  const loadGridView = (gridKey) => {
+    const grid = grids[gridKey];
+    if (!grid) {
+      return;
+    }
+    const raw = localStorage.getItem(gridViewStorageKey(gridKey));
+    if (!raw) {
+      return;
+    }
+    const payload = JSON.parse(raw);
+    if (payload.columnState) {
+      grid.columnApi.applyColumnState({ state: payload.columnState, applyOrder: true });
+    }
+    if (payload.filterModel) {
+      grid.api.setFilterModel(payload.filterModel);
+    }
+    if (payload.sortModel) {
+      grid.api.setSortModel(payload.sortModel);
+    }
+  };
+
+  const resetGridView = (gridKey) => {
+    const grid = grids[gridKey];
+    if (!grid) {
+      return;
+    }
+    localStorage.removeItem(gridViewStorageKey(gridKey));
+    grid.columnApi.resetColumnState();
+    grid.api.setFilterModel(null);
+    grid.api.setSortModel(null);
+  };
 
   const applyChipFilter = (gridKey, value) => {
     const grid = grids[gridKey];
@@ -451,10 +589,40 @@
     });
   };
 
+  const openDetailModal = ({ title, rows, primaryLabel, primaryUrl, secondaryLabel, secondaryUrl }) => {
+    const titleEl = document.getElementById('rowDetailTitle');
+    const bodyEl = document.getElementById('rowDetailBody');
+    const primaryEl = document.getElementById('rowDetailPrimary');
+    const secondaryEl = document.getElementById('rowDetailSecondary');
+
+    if (!titleEl || !bodyEl || !primaryEl || !secondaryEl) {
+      return;
+    }
+
+    titleEl.textContent = title;
+    bodyEl.innerHTML = '';
+
+    Object.entries(rows).forEach(([label, value]) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${label}</td><td>${value}</td>`;
+      bodyEl.appendChild(row);
+    });
+
+    primaryEl.textContent = primaryLabel;
+    primaryEl.href = primaryUrl;
+    secondaryEl.textContent = secondaryLabel;
+    secondaryEl.href = secondaryUrl;
+
+    const modal = new bootstrap.Modal(document.getElementById('rowDetailModal'));
+    modal.show();
+  };
+
   const registerToolbar = (gridKey) => {
     const searchInput = document.querySelector(`.grid-quick-filter[data-grid="${gridKey}"]`);
     const chipGroup = document.querySelector(`.chip-group[data-grid="${gridKey}"]`);
     const exportButtons = document.querySelectorAll(`.grid-export[data-grid="${gridKey}"]`);
+    const saveButtons = document.querySelectorAll(`.grid-save-view[data-grid="${gridKey}"]`);
+    const resetButtons = document.querySelectorAll(`.grid-reset-view[data-grid="${gridKey}"]`);
 
     if (searchInput) {
       searchInput.addEventListener('input', (event) => {
@@ -481,9 +649,25 @@
       button.addEventListener('click', () => {
         const grid = grids[gridKey];
         if (grid) {
+          if (button.dataset.format === 'excel') {
+            if (typeof grid.api.exportDataAsExcel === 'function') {
+              grid.api.exportDataAsExcel();
+            } else {
+              grid.api.exportDataAsCsv();
+            }
+            return;
+          }
           grid.api.exportDataAsCsv();
         }
       });
+    });
+
+    saveButtons.forEach(button => {
+      button.addEventListener('click', () => saveGridView(gridKey));
+    });
+
+    resetButtons.forEach(button => {
+      button.addEventListener('click', () => resetGridView(gridKey));
     });
   };
 
@@ -495,16 +679,19 @@
     if (assetGrid) {
       grids.asset = agGrid.createGrid(assetGrid, assetGridOptions);
       registerToolbar('asset');
+      loadGridView('asset');
     }
 
     if (assignmentGrid) {
       grids.assignment = agGrid.createGrid(assignmentGrid, assignmentGridOptions);
       registerToolbar('assignment');
+      loadGridView('assignment');
     }
 
     if (maintenanceGrid) {
       grids.maintenance = agGrid.createGrid(maintenanceGrid, maintenanceGridOptions);
       registerToolbar('maintenance');
+      loadGridView('maintenance');
     }
   });
 </script>
