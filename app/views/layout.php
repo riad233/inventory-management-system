@@ -245,6 +245,30 @@
             white-space: nowrap;
         }
 
+        .user-menu {
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+            padding: 10px;
+            display: none;
+            min-width: 170px;
+            z-index: 1000;
+        }
+
+        .user-dropdown.show {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
         .user-avatar {
             width: 35px;
             height: 35px;
@@ -751,7 +775,8 @@
                 </ul>
             </div>
             <div class="top-navbar-right">
-                <div class="user-info" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                <div class="user-menu">
+                    <div class="user-info" id="userMenuToggle" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
                     <div class="user-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2); border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 35px; height: 35px; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold;">
                         <?php
                         $username = isset($_SESSION['username']) ? (string)$_SESSION['username'] : '';
@@ -767,10 +792,11 @@
                         </small>
                     </div>
                     <i class="fas fa-chevron-down" style="font-size: 10px; color: #adb5bd; margin-left: 5px;"></i>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <a href="?url=auth/changePassword" class="btn btn-outline-secondary btn-sm">Change Password</a>
-                    <a href="?url=auth/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="?url=auth/changePassword" class="btn btn-outline-secondary btn-sm">Change Password</a>
+                        <a href="?url=auth/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -944,6 +970,24 @@
                     }
                 });
             }, 5000);
+
+            const userMenuToggle = document.getElementById('userMenuToggle');
+            const userDropdown = document.getElementById('userDropdown');
+
+            if (userMenuToggle && userDropdown) {
+                userMenuToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('show');
+                });
+
+                document.addEventListener('click', function() {
+                    userDropdown.classList.remove('show');
+                });
+
+                userDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
         });
     </script>
 </body>
