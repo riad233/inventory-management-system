@@ -1,1 +1,17 @@
-RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /i_m_s/
+    
+    # If the requested file is not an actual file or directory
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Rewrite to public/index.php
+    RewriteRule ^(.*)$ public/index.php?url=$1 [QSA,L]
+</IfModule>
+
+# Prevent direct access to sensitive files
+<FilesMatch "\.(env|sql|json)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
