@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMS - Inventory Management System | Modern Asset Tracking</title>
+    <title>IMS - Comprehensive Inventory Management System | Track & Control Assets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -72,19 +72,11 @@
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div>
                     <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                        Modern Asset <span class="gradient-text">Management</span> System
+                        Inventory <span class="gradient-text">Management</span> System
                     </h1>
                     <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                        Streamline your inventory operations with our intelligent asset management platform. Track, assign, and maintain your equipment with precision and ease.
+                        Complete control over your inventory. Track assets, managed equipment assignments, monitor maintenance, and optimize vendor relationships all in one powerful platform.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="?url=dashboard/index" class="btn-primary text-white px-8 py-4 rounded-lg font-semibold text-center inline-block">
-                            Start Now <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                        <a href="?url=auth/login" class="border-2 border-gray-300 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:border-gray-900 transition text-center">
-                            Login to Account
-                        </a>
-                    </div>
                 </div>
                 <div class="hidden md:block">
                     <div class="relative">
@@ -102,23 +94,23 @@
     <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Powerful Features</h2>
-                <p class="text-xl text-gray-600">Everything you need to manage your inventory efficiently</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Complete Inventory Control</h2>
+                <p class="text-xl text-gray-600">All the tools you need for professional inventory and asset management</p>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="feature-card bg-white border border-gray-100 rounded-xl p-8 shadow-sm hover:shadow-lg">
                     <div class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-cube text-2xl text-purple-600"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Asset Management</h3>
-                    <p class="text-gray-600 leading-relaxed">Track and manage all your inventory assets in real-time with complete visibility and control over your equipment lifecycle.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Inventory Tracking</h3>
+                    <p class="text-gray-600 leading-relaxed">Comprehensive real-time tracking of all your inventory items and assets with complete visibility into location, status, and lifecycle management.</p>
                 </div>
                 <div class="feature-card bg-white border border-gray-100 rounded-xl p-8 shadow-sm hover:shadow-lg">
                     <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-handshake text-2xl text-blue-600"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Assignments</h3>
-                    <p class="text-gray-600 leading-relaxed">Assign equipment to employees effortlessly with our intuitive interface and automated workflow system.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Equipment Distribution</h3>
+                    <p class="text-gray-600 leading-relaxed">Efficiently allocate inventory and equipment to employees with real-time tracking of who has what and when it needs to be returned.</p>
                 </div>
                 <div class="feature-card bg-white border border-gray-100 rounded-xl p-8 shadow-sm hover:shadow-lg">
                     <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6">
@@ -156,29 +148,29 @@
     <section id="how-it-works" class="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">How It Works</h2>
-                <p class="text-xl text-gray-600">Get started in minutes with our intuitive setup process</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Manage Your Inventory in 4 Steps</h2>
+                <p class="text-xl text-gray-600">From setup to daily operations - streamlined inventory management</p>
             </div>
             <div class="grid md:grid-cols-4 gap-8">
                 <div class="text-center">
                     <div class="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">1</div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Login</h3>
-                    <p class="text-gray-600">Access your account with secure credentials and start managing immediately.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Setup</h3>
+                    <p class="text-gray-600">Configure your inventory system, add departments, and set up user accounts for your teams.</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">2</div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Add Assets</h3>
-                    <p class="text-gray-600">Register your equipment and inventory items with detailed specifications and tracking information.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Catalog</h3>
+                    <p class="text-gray-600">Register all your inventory items and assets with detailed specifications and tracking information.</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">3</div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Assign & Track</h3>
-                    <p class="text-gray-600">Distribute assets to employees and track their location and status in real-time.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Distribute</h3>
+                    <p class="text-gray-600">Assign inventory and equipment to employees and departments with real-time tracking.</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">4</div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Monitor & Report</h3>
-                    <p class="text-gray-600">Generate reports, monitor maintenance, and optimize your inventory management.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Optimize</h3>
+                    <p class="text-gray-600">Monitor inventory levels, track maintenance, and generate insights to optimize operations.</p>
                 </div>
             </div>
         </div>
@@ -188,35 +180,35 @@
     <section id="use-cases" class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Perfect For</h2>
-                <p class="text-xl text-gray-600">Trusted by organizations across all industries</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Make Inventory Management Easy</h2>
+                <p class="text-xl text-gray-600">Whether you're a small team or large enterprise, we have the right inventory solution</p>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-8 border border-blue-200">
                     <i class="fas fa-building text-4xl text-blue-600 mb-4"></i>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Enterprises</h3>
-                    <p class="text-gray-700">Manage complex multi-departmental asset inventories with centralized control and reporting.</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Large Enterprises</h3>
+                    <p class="text-gray-700">Manage large-scale multi-departmental inventories with advanced controls, reports, and compliance tracking.</p>
                     <div class="mt-6 flex flex-wrap gap-2">
-                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Scalable</span>
-                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Multi-user</span>
+                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Enterprise Grade</span>
+                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Multi-location</span>
                     </div>
                 </div>
                 <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-8 border border-green-200">
                     <i class="fas fa-industry text-4xl text-green-600 mb-4"></i>
                     <h3 class="text-2xl font-bold text-gray-900 mb-3">Manufacturing</h3>
-                    <p class="text-gray-700">Track equipment maintenance, manage production assets, and optimize plant operations efficiently.</p>
+                    <p class="text-gray-700">Optimize production asset inventory, track equipment maintenance schedules, and manage plant operations efficiently.</p>
                     <div class="mt-6 flex flex-wrap gap-2">
-                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Maintenance</span>
-                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Tracking</span>
+                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Preventive Maintenance</span>
+                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Plant Assets</span>
                     </div>
                 </div>
                 <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-8 border border-purple-200">
                     <i class="fas fa-laptop text-4xl text-purple-600 mb-4"></i>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">IT Departments</h3>
-                    <p class="text-gray-700">Manage computers, networks, and IT equipment with comprehensive tracking and maintenance schedules.</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">IT & Tech Teams</h3>
+                    <p class="text-gray-700">Manage computer inventory, network equipment, software licenses, and track IT assets across your organization.</p>
                     <div class="mt-6 flex flex-wrap gap-2">
-                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">IT Assets</span>
-                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Licenses</span>
+                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Hardware Tracking</span>
+                        <span class="bg-white px-3 py-1 rounded-full text-sm text-gray-700">Deployments</span>
                     </div>
                 </div>
             </div>
@@ -226,8 +218,8 @@
     <!-- CTA Section -->
     <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-blue-600">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl font-bold text-white mb-6">Ready to Transform Your Inventory Management?</h2>
-            <p class="text-xl text-purple-100 mb-8">Start managing your assets more efficiently today.</p>
+            <h2 class="text-4xl font-bold text-white mb-6">Take Control of Your Inventory Today</h2>
+            <p class="text-xl text-purple-100 mb-8">Start managing your complete inventory operations with intelligence and efficiency.</p>
             <a href="?url=dashboard/index" class="bg-white text-purple-600 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition inline-block">
                 Get Started Now <i class="fas fa-arrow-right ml-2"></i>
             </a>
