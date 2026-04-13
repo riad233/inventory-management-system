@@ -177,7 +177,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="?url=home/index" style="display: flex; align-items: center; gap: 10px;">
-                <img src="img/logo.png" alt="IMS Logo" style="width: 30px; height: 30px; border-radius: 5px;"> IMS
+                <img src="img/ims.png" alt="IMS Logo" style="width: 30px; height: 30px; border-radius: 5px;"> IMS
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -199,7 +199,7 @@
         <div class="hero-section">
             <!-- Icon / Logo -->
             <div class="hero-icon">
-                <img src="img/logo.png" alt="IMS Logo" style="width: 120px; height: 120px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <img src="img/ims.png" alt="IMS Logo" style="width: 120px; height: 120px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
             </div>
 
             <!-- Title -->

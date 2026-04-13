@@ -707,9 +707,9 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <img src="img/logo.png" alt="IMS Logo" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+            <img src="img/ims.png" alt="IMS Logo" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
             <h4>IMS</h4>
-            <small>Inventory System</small>
+            <small>Inventory Management System</small>
         </div>
 
         <ul class="sidebar-nav">
