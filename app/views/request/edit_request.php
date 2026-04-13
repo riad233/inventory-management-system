@@ -1,5 +1,6 @@
 <?php
 // Session already started in layout
+require_once __DIR__ . '/../../../config/dropdown_helper.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,11 +50,7 @@
               <label class="form-label">Equipment Type</label>
               <select name="equipment_type" class="form-control" required>
                 <option value="">Select Equipment Type</option>
-                <option <?php echo ($req['Equipment_Type'] == 'Computer') ? 'selected' : ''; ?>>Computer</option>
-                <option <?php echo ($req['Equipment_Type'] == 'Printer') ? 'selected' : ''; ?>>Printer</option>
-                <option <?php echo ($req['Equipment_Type'] == 'Monitor') ? 'selected' : ''; ?>>Monitor</option>
-                <option <?php echo ($req['Equipment_Type'] == 'Keyboard/Mouse') ? 'selected' : ''; ?>>Keyboard/Mouse</option>
-                <option <?php echo ($req['Equipment_Type'] == 'Other') ? 'selected' : ''; ?>>Other</option>
+                <?php echo DropdownHelper::renderOptions('asset_categories', $req['Equipment_Type']); ?>
               </select>
             </div>
             <div class="mb-3">
@@ -72,7 +69,5 @@
     </div>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

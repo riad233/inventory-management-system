@@ -33,10 +33,12 @@ class AssignmentController extends Controller {
         
         $assetModel = $this->model('Asset');
         $employeeModel = $this->model('Employee');
+        $departmentModel = $this->model('Department');
         
         $data = [
             'assets' => $assetModel->getAll(),
-            'employees' => $employeeModel->getAll()
+            'employees' => $employeeModel->getAll(),
+            'departments' => $departmentModel->getAll()
         ];
         
         $this->view('assignment/assign_asset', $data);

@@ -2,11 +2,13 @@
     <a href="?url=employee/index">Employees</a> &gt; <span>Edit Employee</span>
 </div>
 
+<?php require_once __DIR__ . '/../../../config/dropdown_helper.php'; ?>
+
 <div class="page-title">
     <i class="fas fa-user-edit"></i> Edit Employee
 </div>
 
-<div class="card shadow" style="max-width: 600px;">
+<div class="card shadow card-max-600">
     <div class="card-body">
         <?php if(!isset($data['employee']) || empty($data['employee'])): ?>
             <div class="alert alert-danger">Employee not found!</div>
@@ -34,13 +36,7 @@
                 <label class="form-label">Department</label>
                 <select name="dept_id" class="form-control" required>
                     <option value="">Select Department</option>
-                    <?php if(isset($data['departments']) && is_array($data['departments'])): ?>
-                        <?php foreach($data['departments'] as $dept): ?>
-                            <option value="<?php echo e($dept['Department_ID']); ?>" <?php echo ($dept['Department_ID'] == $emp['Department_ID']) ? 'selected' : ''; ?>>
-                                <?php echo e($dept['Department_Name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php echo DropdownHelper::renderOptions('departments', $emp['Department_ID']); ?>
                 </select>
             </div>
             

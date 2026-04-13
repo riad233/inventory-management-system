@@ -68,16 +68,16 @@
                 <td>
                   <?php if($req['Status'] == 'Pending'): ?>
                     <a href="?url=request/edit/<?php echo e($req['Request_ID']); ?>" class="btn-action btn-action-edit" title="Edit">Edit</a>
-                    <form method="post" action="?url=request/approve/<?php echo e($req['Request_ID']); ?>" style="display:inline;">
+                    <form method="post" action="?url=request/approve/<?php echo e($req['Request_ID']); ?>" class="d-inline">
                       <?php echo csrf_field(); ?>
                       <button type="submit" class="btn-action btn-action-approve" title="Approve">Approve</button>
                     </form>
-                    <form method="post" action="?url=request/reject/<?php echo e($req['Request_ID']); ?>" style="display:inline;">
+                    <form method="post" action="?url=request/reject/<?php echo e($req['Request_ID']); ?>" class="d-inline">
                       <?php echo csrf_field(); ?>
                       <button type="submit" class="btn-action btn-action-reject" title="Reject">Reject</button>
                     </form>
                   <?php endif; ?>
-                  <form method="post" action="?url=request/delete/<?php echo e($req['Request_ID']); ?>" style="display:inline;">
+                  <form method="post" action="?url=request/delete/<?php echo e($req['Request_ID']); ?>" class="d-inline">
                     <?php echo csrf_field(); ?>
                     <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this request?')" title="Delete">Delete</button>
                   </form>

@@ -1,5 +1,6 @@
 <?php
 // Session already started in layout
+require_once __DIR__ . '/../../../config/dropdown_helper.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,6 +41,13 @@
                     <option value="<?php echo e($asset['Asset_ID']); ?>"><?php echo e($asset['Asset_Name']); ?></option>
                   <?php endforeach; ?>
                 <?php endif; ?>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Maintenance Status</label>
+              <select name="maintenance_status" class="form-control" required>
+                <option value="">Select Status</option>
+                <?php echo DropdownHelper::renderOptions('maintenance_status'); ?>
               </select>
             </div>
             <div class="mb-3">

@@ -63,7 +63,7 @@
                   <a href="?url=asset/edit/<?php echo e($asset['Asset_ID']); ?>" class="btn-action btn-action-edit" title="Edit">
                     <i class="fas fa-edit"></i> Edit
                   </a>
-                  <form method="post" action="?url=asset/delete/<?php echo e($asset['Asset_ID']); ?>" style="display:inline;">
+                  <form method="post" action="?url=asset/delete/<?php echo e($asset['Asset_ID']); ?>" class="d-inline">
                     <?php echo csrf_field(); ?>
                     <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this asset?')" title="Delete">
                       <i class="fas fa-trash"></i> Delete

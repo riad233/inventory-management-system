@@ -1,5 +1,6 @@
 <?php
 // Session already started in layout
+require_once __DIR__ . '/../../../config/dropdown_helper.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,9 +50,8 @@
             <div class="mb-3">
               <label class="form-label">Condition on Return</label>
               <select name="condition" class="form-control" required>
-                <option>Good</option>
-                <option>Fair</option>
-                <option>Damaged</option>
+                <option value="">Select Condition</option>
+                <?php echo DropdownHelper::renderOptions('return_conditions'); ?>
               </select>
             </div>
             <div class="text-end">
@@ -65,7 +65,5 @@
     </div>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 // Session already started in layout
+require_once __DIR__ . '/../../../config/dropdown_helper.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,10 +39,8 @@
             <div class="mb-3">
               <label class="form-label">Category</label>
               <select name="category" class="form-control" required>
-                <option>Computer</option>
-                <option>Furniture</option>
-                <option>Equipment</option>
-                <option>Other</option>
+                <option value="">Select Category</option>
+                <?php echo DropdownHelper::renderOptions('asset_categories', isset($data['asset']) ? $data['asset']['Category'] : null); ?>
               </select>
             </div>
             <div class="mb-3">
@@ -67,10 +66,8 @@
             <div class="mb-3">
               <label class="form-label">Status</label>
               <select name="status" class="form-control" required>
-                <option>Available</option>
-                <option>In Use</option>
-                <option>Maintenance</option>
-                <option>Disposed</option>
+                <option value="">Select Status</option>
+                <?php echo DropdownHelper::renderOptions('asset_status', isset($data['asset']) ? $data['asset']['Status'] : null); ?>
               </select>
             </div>
             <div class="text-end">
@@ -84,7 +81,5 @@
     </div>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

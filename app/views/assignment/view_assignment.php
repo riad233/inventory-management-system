@@ -67,7 +67,7 @@
                   <?php endif; ?>
                 </td>
                 <td>
-                  <form method="post" action="?url=assignment/delete/<?php echo e($assign['Assignment_ID']); ?>" style="display:inline;">
+                  <form method="post" action="?url=assignment/delete/<?php echo e($assign['Assignment_ID']); ?>" class="d-inline">
                     <?php echo csrf_field(); ?>
                     <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this assignment?')" title="Delete">
                       <i class="fas fa-trash"></i> Delete

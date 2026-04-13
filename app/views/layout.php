@@ -16,7 +16,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <img src="img/ims.png" alt="IMS Logo" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+            <img src="img/ims.png" alt="IMS Logo" class="sidebar-logo">
             <h4>IMS</h4>
             <small>Inventory Management System</small>
         </div>
@@ -85,22 +85,22 @@
             </div>
             <div class="top-navbar-right">
                 <div class="user-menu">
-                    <div class="user-info" id="userMenuToggle" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
-                    <div class="user-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2); border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 35px; height: 35px; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold;">
+                    <div class="user-info user-menu-toggle" id="userMenuToggle">
+                    <div class="user-avatar user-avatar-gradient">
                         <?php
                         $username = isset($_SESSION['username']) ? (string)$_SESSION['username'] : '';
                         echo e($username !== '' ? strtoupper(substr($username, 0, 1)) : 'A');
                         ?>
                     </div>
-                    <div style="display: flex; flex-direction: column; line-height: 1.1;">
-                        <span style="font-weight: 600; font-size: 14px; color: #333;">
+                    <div class="user-meta">
+                        <span class="user-name">
                             <?php echo e($username !== '' ? ucfirst($username) : 'Admin'); ?>
                         </span>
-                        <small style="color: #6c757d; font-size: 11px;">
+                        <small class="user-role">
                             <?php echo e(isset($_SESSION['role']) && !empty($_SESSION['role']) ? ucfirst((string)$_SESSION['role']) : 'Administrator'); ?>
                         </small>
                     </div>
-                    <i class="fas fa-chevron-down" style="font-size: 10px; color: #adb5bd; margin-left: 5px;"></i>
+                    <i class="fas fa-chevron-down user-caret"></i>
                     </div>
                     <div class="user-dropdown" id="userDropdown">
                         <a href="?url=auth/changePassword" class="btn btn-outline-secondary btn-sm">Change Password</a>
@@ -125,7 +125,7 @@
         
         <!-- Footer -->
         <div class="layout-footer">
-            <p style="margin: 0;">&copy; 2026 Inventory Management System. All rights reserved.</p>
+            <p class="layout-footer-text">&copy; 2026 Inventory Management System. All rights reserved.</p>
         </div>
     </div>
 

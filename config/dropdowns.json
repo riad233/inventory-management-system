@@ -1,0 +1,42 @@
+{
+  "departments": [
+    { "id": 1, "name": "IT" },
+    { "id": 2, "name": "Finance" },
+    { "id": 3, "name": "HR" },
+    { "id": 4, "name": "Operations" }
+  ],
+  "asset_categories": [
+    { "id": "Laptop", "name": "Laptop" },
+    { "id": "Desktop", "name": "Desktop" },
+    { "id": "Printer", "name": "Printer" },
+    { "id": "Router", "name": "Router" },
+    { "id": "UPS", "name": "UPS" },
+    { "id": "Projector", "name": "Projector" },
+    { "id": "Scanner", "name": "Scanner" }
+  ],
+  "asset_status": [
+    { "id": "Available", "name": "Available" },
+    { "id": "Assigned", "name": "Assigned" },
+    { "id": "Under Repair", "name": "Under Repair" },
+    { "id": "Damaged", "name": "Damaged" },
+    { "id": "Disposed", "name": "Disposed" }
+  ],
+  "maintenance_status": [
+    { "id": "Pending", "name": "Pending" },
+    { "id": "In Progress", "name": "In Progress" },
+    { "id": "Completed", "name": "Completed" }
+  ],
+  "disposal_reasons": [
+    { "id": "End of Life", "name": "End of Life" },
+    { "id": "Damaged", "name": "Damaged" },
+    { "id": "Obsolete", "name": "Obsolete" },
+    { "id": "Lost", "name": "Lost" },
+    { "id": "Replacement", "name": "Replacement" }
+  ],
+  "return_conditions": [
+    { "id": "Good", "name": "Good" },
+    { "id": "Fair", "name": "Fair" },
+    { "id": "Damaged", "name": "Damaged" },
+    { "id": "Not Working", "name": "Not Working" }
+  ]
+}

@@ -58,7 +58,7 @@
                 <td><span class="badge bg-warning"><?php echo e($maint['Status']); ?></span></td>
                 <td><?php echo e($maint['Cost']); ?></td>
                 <td>
-                  <form method="post" action="?url=maintenance/delete/<?php echo e($maint['Maintenance_ID']); ?>" style="display:inline;">
+                  <form method="post" action="?url=maintenance/delete/<?php echo e($maint['Maintenance_ID']); ?>" class="d-inline">
                     <?php echo csrf_field(); ?>
                     <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this maintenance record?')" title="Delete">
                       <i class="fas fa-trash"></i> Delete

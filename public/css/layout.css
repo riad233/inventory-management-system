@@ -63,6 +63,14 @@ body {
     margin-top: 4px;
 }
 
+.sidebar-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
 .sidebar-nav {
     list-style: none;
     padding: 10px 0;
@@ -236,6 +244,13 @@ body {
     white-space: nowrap;
 }
 
+.user-menu-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .user-menu {
     position: relative;
 }
@@ -272,6 +287,35 @@ body {
     font-weight: 700;
     flex-shrink: 0;
     font-size: 0.9em;
+}
+
+.user-avatar-gradient {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.user-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.user-role {
+    color: #6c757d;
+    font-size: 11px;
+}
+
+.user-caret {
+    font-size: 10px;
+    color: #adb5bd;
+    margin-left: 5px;
 }
 
 /* Page Content */
@@ -687,4 +731,16 @@ body {
     padding: 15px;
     font-size: 0.9em;
     margin-top: auto;
+}
+
+.layout-footer-text {
+    margin: 0;
+}
+
+.card-max-520 {
+    max-width: 520px;
+}
+
+.card-max-600 {
+    max-width: 600px;
 }

@@ -47,7 +47,7 @@
                     <td data-label="Email"><?php echo e($emp['Email']); ?></td>
                     <td data-label="Actions">
                         <a href="?url=employee/edit/<?php echo e($emp['User_ID']); ?>" class="btn-action btn-action-edit" title="Edit"><i class="fas fa-edit"></i></a>
-                        <form method="post" action="?url=employee/delete/<?php echo e($emp['User_ID']); ?>" style="display:inline;">
+                        <form method="post" action="?url=employee/delete/<?php echo e($emp['User_ID']); ?>" class="d-inline">
                             <?php echo csrf_field(); ?>
                             <button type="submit" class="btn-action btn-action-delete" title="Delete" onclick="return confirm('Are you sure you want to delete this employee?');"><i class="fas fa-trash"></i></button>
                         </form>

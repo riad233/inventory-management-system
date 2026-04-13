@@ -1,5 +1,6 @@
 <?php
 // Session already started in layout
+require_once __DIR__ . '/../../../config/dropdown_helper.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,9 +48,8 @@
             <div class="mb-3">
               <label class="form-label">Status</label>
               <select name="status" class="form-control" required>
-                <option>Pending</option>
-                <option>In Progress</option>
-                <option>Completed</option>
+                <option value="">Select Status</option>
+                <?php echo DropdownHelper::renderOptions('maintenance_status'); ?>
               </select>
             </div>
             <div class="mb-3">

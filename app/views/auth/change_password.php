@@ -20,7 +20,7 @@
     </div>
 <?php endif; ?>
 
-<div class="card shadow" style="max-width: 520px;">
+<div class="card shadow card-max-520">
     <div class="card-body">
         <form method="post" action="?url=auth/changePassword">
             <?php echo csrf_field(); ?>

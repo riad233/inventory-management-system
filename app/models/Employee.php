@@ -27,10 +27,26 @@ class Employee extends Model {
     }
 
     public function create($data){
-        $sql = "INSERT INTO employee (Name, Designation, Contact_Number, Email, Department_ID) 
-                VALUES (?, ?, ?, ?, ?)";
+        // First create a user account for the employee
+        $username = strtolower(str_replace(' ', '.', $data['name']));
+        $default_password = password_hash('password123', PASSWORD_BCRYPT);
+        
+        $userSql = "INSERT INTO users (Username, Password, Email, Role) VALUES (?, ?, ?, 'Employee')";
+        $userStmt = $this->conn->prepare($userSql);
+        $userStmt->bind_param("sss", $username, $default_password, $data['email']);
+        
+        if(!$userStmt->execute()) {
+            return false;
+        }
+        
+        // Get the newly created user ID
+        $userId = $this->conn->insert_id;
+        
+        // Now create the employee record with the new user ID
+        $sql = "INSERT INTO employee (User_ID, Name, Designation, Contact_Number, Email, Department_ID) 
+                VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssssi", $data['name'], $data['designation'], $data['contact'], $data['email'], $data['dept_id']);
+        $stmt->bind_param("issssi", $userId, $data['name'], $data['designation'], $data['contact'], $data['email'], $data['dept_id']);
         return $stmt->execute();
     }
 
