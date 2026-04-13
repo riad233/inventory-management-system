@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="collapse navbar-collapse justify-content-end gap-2">
             <div class="action-search">
-                <input type="text" id="searchInput" placeholder="Search employees...">
+                <input type="text" id="employeeSearchInput" data-search-table="employeeTable" placeholder="Search employees...">
             </div>
             <ul class="navbar-nav">
                 <li class="nav-item"><a href="?url=employee/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Employee</a></li>
@@ -59,18 +59,3 @@
     </table>
 </div>
 
-<script>
-document.getElementById('searchInput').addEventListener('keyup', function() {
-    let filter = this.value.toLowerCase();
-    let rows = document.getElementById('employeeTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-    
-    for (let i = 0; i < rows.length; i++) {
-        let text = rows[i].textContent || rows[i].innerText;
-        if (text.toLowerCase().indexOf(filter) > -1) {
-            rows[i].style.display = "";
-        } else {
-            rows[i].style.display = "none";
-        }
-    }
-});
-</script>

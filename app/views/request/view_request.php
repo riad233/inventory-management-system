@@ -9,57 +9,7 @@
 <title>View Requests - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<style>
-  .btn-action {
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.85em;
-    font-weight: 500;
-    text-decoration: none;
-  }
-  .btn-action-edit {
-    background-color: #3498db;
-    color: white;
-  }
-  .btn-action-edit:hover {
-    background-color: #2980b9;
-    text-decoration: none;
-    color: white;
-  }
-  .btn-action-approve {
-    background-color: #27ae60;
-    color: white;
-  }
-  .btn-action-approve:hover {
-    background-color: #229954;
-    text-decoration: none;
-    color: white;
-  }
-  .btn-action-reject {
-    background-color: #e74c3c;
-    color: white;
-  }
-  .btn-action-reject:hover {
-    background-color: #c0392b;
-    text-decoration: none;
-    color: white;
-  }
-  .btn-action-delete {
-    background-color: #95a5a6;
-    color: white;
-  }
-  .btn-action-delete:hover {
-    background-color: #7f8c8d;
-    text-decoration: none;
-    color: white;
-  }
-</style>
+<link href="css/list-actions.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid mt-4">
@@ -69,7 +19,7 @@
     <div class="container-fluid">
       <div class="collapse navbar-collapse justify-content-end gap-2">
         <div class="action-search">
-          <input type="text" id="requestSearchInput" placeholder="Search requests...">
+          <input type="text" id="requestSearchInput" data-search-table="requestTable" placeholder="Search requests...">
         </div>
         <ul class="navbar-nav">
           <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=request/create"><i class="fas fa-plus"></i> New Request</a></li>
@@ -146,16 +96,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.getElementById('requestSearchInput').addEventListener('keyup', function() {
-  let filter = this.value.toLowerCase();
-  let rows = document.getElementById('requestTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-  for (let i = 0; i < rows.length; i++) {
-    let text = rows[i].textContent || rows[i].innerText;
-    rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
-  }
-});
-</script>
+<script src="js/table-search.js"></script>
+<script src="js/list-search-init.js"></script>
 </body>
 </html>

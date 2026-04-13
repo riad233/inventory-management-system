@@ -9,30 +9,7 @@
 <title>View Assignments - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<style>
-  .btn-action {
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.85em;
-    font-weight: 500;
-    text-decoration: none;
-  }
-  .btn-action-delete {
-    background-color: #e74c3c;
-    color: white;
-  }
-  .btn-action-delete:hover {
-    background-color: #c0392b;
-    text-decoration: none;
-    color: white;
-  }
-</style>
+<link href="css/list-actions.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid mt-4">
@@ -42,7 +19,7 @@
     <div class="container-fluid">
       <div class="collapse navbar-collapse justify-content-end gap-2">
         <div class="action-search">
-          <input type="text" id="assignmentSearchInput" placeholder="Search assignments...">
+          <input type="text" id="assignmentSearchInput" data-search-table="assignmentTable" placeholder="Search assignments...">
         </div>
         <ul class="navbar-nav">
           <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=assignment/assign"><i class="fas fa-plus"></i> Assign Asset</a></li>
@@ -111,16 +88,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.getElementById('assignmentSearchInput').addEventListener('keyup', function() {
-  let filter = this.value.toLowerCase();
-  let rows = document.getElementById('assignmentTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-  for (let i = 0; i < rows.length; i++) {
-    let text = rows[i].textContent || rows[i].innerText;
-    rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
-  }
-});
-</script>
+<script src="js/table-search.js"></script>
+<script src="js/list-search-init.js"></script>
 </body>
 </html>
