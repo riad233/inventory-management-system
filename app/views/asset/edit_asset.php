@@ -70,6 +70,22 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
                 <?php echo DropdownHelper::renderOptions('asset_status', isset($data['asset']) ? $data['asset']['Status'] : null); ?>
               </select>
             </div>
+            <div class="mb-3">
+              <label class="form-label">Vendor</label>
+              <select name="vendor_id" class="form-control">
+                <option value="">Select Vendor</option>
+                <option value="1" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 1 ? 'selected' : ''; ?>>Tech Solutions Ltd</option>
+                <option value="2" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 2 ? 'selected' : ''; ?>>Global IT Suppliers</option>
+                <option value="3" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 3 ? 'selected' : ''; ?>>Digital World Bangladesh</option>
+                <option value="4" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 4 ? 'selected' : ''; ?>>Office Solutions Inc</option>
+                <option value="5" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 5 ? 'selected' : ''; ?>>Enterprise Systems Ltd</option>
+                <option value="6" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 6 ? 'selected' : ''; ?>>Future Tech Co</option>
+                <option value="7" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 7 ? 'selected' : ''; ?>>Premium Services Group</option>
+                <option value="8" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 8 ? 'selected' : ''; ?>>Regional IT Partners</option>
+                <option value="9" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 9 ? 'selected' : ''; ?>>Growth Solutions</option>
+                <option value="10" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 10 ? 'selected' : ''; ?>>Smart Systems Bangladesh</option>
+              </select>
+            </div>
             <div class="text-end">
               <button type="submit" name="submit" class="btn btn-warning">
                 <i class="fas fa-save"></i> Update Asset

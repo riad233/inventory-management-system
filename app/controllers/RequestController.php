@@ -22,7 +22,8 @@ class RequestController extends Controller {
             $data = [
                 'user_id' => $_POST['user_id'],
                 'equipment_type' => $_POST['equipment_type'],
-                'description' => $_POST['description']
+                'description' => $_POST['description'],
+                'vendor_id' => $_POST['vendor_id'] ?? null
             ];
             
             if($requestModel->create($data)){
@@ -41,7 +42,8 @@ class RequestController extends Controller {
             require_csrf();
             $data = [
                 'equipment_type' => $_POST['equipment_type'],
-                'description' => $_POST['description']
+                'description' => $_POST['description'],
+                'vendor_id' => $_POST['vendor_id'] ?? null
             ];
             
             if($requestModel->update($id, $data)){

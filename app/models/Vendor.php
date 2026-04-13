@@ -27,17 +27,17 @@ class Vendor extends Model {
     }
 
     public function create($data){
-        $sql = "INSERT INTO vendor (Vendor_Name, Contact_Person, Contact_Number, Email, Address) 
-                VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO vendor (Vendor_Name, Contact_Person, Contact_Number, Email, Address, Vendor_Type, Vendor_Status) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sssss", $data['vendor_name'], $data['contact_person'], $data['contact_number'], $data['email'], $data['address']);
+        $stmt->bind_param("sssssss", $data['vendor_name'], $data['contact_person'], $data['contact_number'], $data['email'], $data['address'], $data['vendor_type'], $data['vendor_status']);
         return $stmt->execute();
     }
 
     public function update($id, $data){
-        $sql = "UPDATE vendor SET Vendor_Name = ?, Contact_Person = ?, Contact_Number = ?, Email = ?, Address = ? WHERE Vendor_ID = ?";
+        $sql = "UPDATE vendor SET Vendor_Name = ?, Contact_Person = ?, Contact_Number = ?, Email = ?, Address = ?, Vendor_Type = ?, Vendor_Status = ? WHERE Vendor_ID = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sssssi", $data['vendor_name'], $data['contact_person'], $data['contact_number'], $data['email'], $data['address'], $id);
+        $stmt->bind_param("sssssssi", $data['vendor_name'], $data['contact_person'], $data['contact_number'], $data['email'], $data['address'], $data['vendor_type'], $data['vendor_status'], $id);
         return $stmt->execute();
     }
 

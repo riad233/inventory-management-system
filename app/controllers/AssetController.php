@@ -51,7 +51,8 @@ class AssetController extends Controller {
                 'serial' => $_POST['serial'],
                 'purchase_date' => $_POST['purchase_date'],
                 'warranty' => $_POST['warranty'],
-                'status' => $_POST['status']
+                'status' => $_POST['status'],
+                'vendor_id' => $_POST['vendor_id'] ?? null
             ];
             
             if($asset->update($id, $data)){

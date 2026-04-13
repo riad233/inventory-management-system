@@ -28,10 +28,11 @@ class EquipmentRequest extends Model {
 
     public function create($data){
         $request_date = date('Y-m-d');
-        $sql = "INSERT INTO equipment_request (User_ID, Equipment_Type, Description, Request_Date, Status) 
-                VALUES (?, ?, ?, ?, 'Pending')";
+        $sql = "INSERT INTO equipment_request (User_ID, Equipment_Type, Description, Request_Date, Status, Vendor_ID) 
+                VALUES (?, ?, ?, ?, 'Pending', ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("isss", $data['user_id'], $data['equipment_type'], $data['description'], $request_date);
+        $vendor_id = $data['vendor_id'] ?? null;
+        $stmt->bind_param("isssi", $data['user_id'], $data['equipment_type'], $data['description'], $request_date, $vendor_id);
         return $stmt->execute();
     }
 
@@ -51,9 +52,10 @@ class EquipmentRequest extends Model {
     }
 
     public function update($id, $data){
-        $sql = "UPDATE equipment_request SET Equipment_Type = ?, Description = ? WHERE Request_ID = ?";
+        $sql = "UPDATE equipment_request SET Equipment_Type = ?, Description = ?, Vendor_ID = ? WHERE Request_ID = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssi", $data['equipment_type'], $data['description'], $id);
+        $vendor_id = $data['vendor_id'] ?? null;
+        $stmt->bind_param("ssii", $data['equipment_type'], $data['description'], $vendor_id, $id);
         return $stmt->execute();
     }
 

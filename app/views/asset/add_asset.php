@@ -70,6 +70,22 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
                 <?php echo DropdownHelper::renderOptions('asset_status'); ?>
               </select>
             </div>
+            <div class="mb-3">
+              <label class="form-label">Vendor</label>
+              <select name="vendor_id" class="form-control">
+                <option value="">Select Vendor</option>
+                <option value="1">Tech Solutions Ltd</option>
+                <option value="2">Global IT Suppliers</option>
+                <option value="3">Digital World Bangladesh</option>
+                <option value="4">Office Solutions Inc</option>
+                <option value="5">Enterprise Systems Ltd</option>
+                <option value="6">Future Tech Co</option>
+                <option value="7">Premium Services Group</option>
+                <option value="8">Regional IT Partners</option>
+                <option value="9">Growth Solutions</option>
+                <option value="10">Smart Systems Bangladesh</option>
+              </select>
+            </div>
             <div class="text-end">
               <button type="submit" name="submit" class="btn btn-primary">
                 <i class="fas fa-save"></i> Add Asset

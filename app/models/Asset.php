@@ -26,26 +26,10 @@ class Asset extends Model {
     }
 
     public function add($data) {
-        $sql = "INSERT INTO asset (Asset_Name, Category, Brand, Model, Serial_Number, Purchase_Date, Warranty_Expiry, Status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO asset (Asset_Name, Category, Brand, Model, Serial_Number, Purchase_Date, Warranty_Expiry, Status, Vendor_ID)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param(
-            "ssssssss",
-            $data['name'],
-            $data['category'],
-            $data['brand'],
-            $data['model'],
-            $data['serial'],
-            $data['purchase_date'],
-            $data['warranty'],
-            $data['status']
-        );
-        return $stmt->execute();
-    }
-
-    public function update($id, $data){
-        $sql = "UPDATE asset SET Asset_Name = ?, Category = ?, Brand = ?, Model = ?, Serial_Number = ?, Purchase_Date = ?, Warranty_Expiry = ?, Status = ? WHERE Asset_ID = ?";
-        $stmt = $this->conn->prepare($sql);
+        $vendor_id = $data['vendor_id'] ?? null;
         $stmt->bind_param(
             "ssssssssi",
             $data['name'],
@@ -56,6 +40,26 @@ class Asset extends Model {
             $data['purchase_date'],
             $data['warranty'],
             $data['status'],
+            $vendor_id
+        );
+        return $stmt->execute();
+    }
+
+    public function update($id, $data){
+        $sql = "UPDATE asset SET Asset_Name = ?, Category = ?, Brand = ?, Model = ?, Serial_Number = ?, Purchase_Date = ?, Warranty_Expiry = ?, Status = ?, Vendor_ID = ? WHERE Asset_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $vendor_id = $data['vendor_id'] ?? null;
+        $stmt->bind_param(
+            "ssssssssii",
+            $data['name'],
+            $data['category'],
+            $data['brand'],
+            $data['model'],
+            $data['serial'],
+            $data['purchase_date'],
+            $data['warranty'],
+            $data['status'],
+            $vendor_id,
             $id
         );
         return $stmt->execute();

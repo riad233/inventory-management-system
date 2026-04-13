@@ -21,7 +21,9 @@ class MaintenanceController extends Controller {
             
             $data = [
                 'asset_id' => $_POST['asset_id'],
-                'cost' => $_POST['cost']
+                'maintenance_status' => $_POST['maintenance_status'],
+                'cost' => $_POST['cost'],
+                'vendor_id' => $_POST['vendor_id'] ?? null
             ];
             
             if($maintenanceModel->create($data)){
@@ -40,6 +42,7 @@ class MaintenanceController extends Controller {
             $id = $_POST['maintenance_id'];
             $status = $_POST['status'];
             $end_date = $_POST['end_date'];
+            $vendor_id = $_POST['vendor_id'] ?? null;
             
             if($maintenanceModel->updateStatus($id, $status, $end_date)){
                 header("Location: ?url=maintenance/index&msg=Maintenance status updated");

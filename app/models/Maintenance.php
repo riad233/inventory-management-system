@@ -28,10 +28,12 @@ class Maintenance extends Model {
 
     public function create($data){
         $reported_date = date('Y-m-d');
-        $sql = "INSERT INTO maintenance (Asset_ID, Reported_Date, Status, Cost) 
-                VALUES (?, ?, 'Pending', ?)";
+        $status = $data['maintenance_status'] ?? 'Pending';
+        $sql = "INSERT INTO maintenance (Asset_ID, Reported_Date, Status, Cost, Vendor_ID) 
+                VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("isd", $data['asset_id'], $reported_date, $data['cost']);
+        $vendor_id = $data['vendor_id'] ?? null;
+        $stmt->bind_param("issdi", $data['asset_id'], $reported_date, $status, $data['cost'], $vendor_id);
         return $stmt->execute();
     }
 

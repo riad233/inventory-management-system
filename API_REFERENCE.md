@@ -104,6 +104,7 @@ Handles maintenance records for assets.
 ```php
 [
     'asset_id' => int,
+    'maintenance_status' => string, // 'Pending', 'In Progress', 'Completed'
     'cost' => decimal
 ]
 ```
@@ -214,12 +215,15 @@ Asset assignment tracking.
 Asset maintenance records.
 
 **Methods:**
-- `getAll()` - Get all maintenance records
+- `getAll()` - Get all maintenance records with asset names
 - `getById($id)` - Get specific maintenance record
 - `create($data)` - Create maintenance record
-- `updateStatus($id, $status, $end_date)` - Update status
-- `update($id, $data)` - Update record
-- `delete($id)` - Delete record
+  - Requires: asset_id, cost
+  - Optional: maintenance_status (defaults to 'Pending')
+  - Sets Reported_Date automatically to current date
+- `updateStatus($id, $status, $end_date)` - Update maintenance status and end date
+- `update($id, $data)` - Update maintenance record
+- `delete($id)` - Delete maintenance record
 
 ---
 
@@ -239,9 +243,12 @@ Vendor management.
 Employee information management.
 
 **Methods:**
-- `getAll()` - Get all employees
+- `getAll()` - Get all employees with department names
 - `getById($id)` - Get specific employee
-- `create($data)` - Create employee
+- `create($data)` - Create employee and associated user account
+  - Automatically creates a user with default password 'password123'
+  - Username is generated from employee name
+  - Assigns 'Employee' role to the user
 - `update($id, $data)` - Update employee
 - `delete($id)` - Delete employee
 
@@ -302,6 +309,78 @@ Equipment request handling.
 
 ---
 
+## Utility Classes
+
+### DropdownHelper
+Centralized dropdown management for consistent form options across the system.
+
+**Location:** `config/dropdown_helper.php`
+
+**Methods:**
+
+#### `DropdownHelper::load()`
+Loads dropdown data from JSON file into memory.
+```php
+$data = DropdownHelper::load();
+// Returns: array with all dropdown categories
+```
+
+#### `DropdownHelper::get($key)`
+Get a specific dropdown array by key.
+```php
+$departments = DropdownHelper::get('departments');
+// Returns: [
+//   ['id' => 1, 'name' => 'IT'],
+//   ['id' => 2, 'name' => 'Finance'],
+//   ...
+// ]
+```
+
+#### `DropdownHelper::renderOptions($key, $selected = null)`
+Render HTML `<option>` elements for a select field.
+```php
+// Basic usage
+<?php echo DropdownHelper::renderOptions('departments'); ?>
+
+// With pre-selected value
+<?php echo DropdownHelper::renderOptions('departments', $emp['Department_ID']); ?>
+```
+
+#### `DropdownHelper::getName($key, $id)`
+Get the display name of an option by ID.
+```php
+$name = DropdownHelper::getName('departments', 1);
+// Returns: "IT"
+```
+
+**Configuration File:** `config/dropdowns.json`
+
+**Available Dropdowns:**
+- `departments` - Organizational departments (IT, Finance, HR, Operations)
+- `asset_categories` - Asset types (Laptop, Desktop, Printer, Router, UPS, Projector, Scanner)
+- `asset_status` - Asset status values (Available, Assigned, Under Repair, Damaged, Disposed)
+- `maintenance_status` - Maintenance states (Pending, In Progress, Completed)
+- `disposal_reasons` - Asset disposal reasons (End of Life, Damaged, Obsolete, Lost, Replacement)
+- `return_conditions` - Asset return condition (Good, Fair, Damaged, Not Working)
+- `vendors` - Vendor list (10 vendors)
+
+**Usage Example in Forms:**
+```php
+<?php require_once __DIR__ . '/../../../config/dropdown_helper.php'; ?>
+
+<select name="dept_id" class="form-control" required>
+  <option value="">Select Department</option>
+  <?php echo DropdownHelper::renderOptions('departments'); ?>
+</select>
+
+<select name="vendor_id" class="form-control">
+  <option value="">Select Vendor</option>
+  <?php echo DropdownHelper::renderOptions('vendors', $current_vendor_id); ?>
+</select>
+```
+
+---
+
 ## Global Functions
 
 ### Router::route($url)
@@ -335,6 +414,21 @@ $this->view('asset/view_asset', ['assets' => $assets]);
 | `?url=asset/add` | AssetController | add() |
 | `?url=asset/edit/5` | AssetController | edit(5) |
 | `?url=asset/delete/5` | AssetController | delete(5) |
+| `?url=assignment/index` | AssignmentController | index() |
+| `?url=assignment/assign` | AssignmentController | assign() |
+| `?url=assignment/returnAsset` | AssignmentController | returnAsset() |
+| `?url=employee/index` | EmployeeController | index() |
+| `?url=employee/add` | EmployeeController | add() |
+| `?url=employee/edit/3` | EmployeeController | edit(3) |
+| `?url=maintenance/index` | MaintenanceController | index() |
+| `?url=maintenance/add` | MaintenanceController | add() |
+| `?url=maintenance/updateStatus` | MaintenanceController | updateStatus() |
+| `?url=vendor/index` | VendorController | index() |
+| `?url=vendor/add` | VendorController | add() |
+| `?url=vendor/edit/5` | VendorController | edit(5) |
+| `?url=vendor/delete/5` | VendorController | delete(5) |
+| `?url=request/index` | RequestController | index() |
+| `?url=request/create` | RequestController | create() |
 | `?url=auth/login` | AuthController | login() |
 | `?url=auth/logout` | AuthController | logout() |
 
@@ -342,4 +436,5 @@ $this->view('asset/view_asset', ['assets' => $assets]);
 
 **Note**: All URL parameters are passed as function parameters. For data modification, use POST parameters.
 
-**Version**: 1.0 | **Last Updated**: April 2026
+**Version**: 1.1 | **Last Updated**: April 13, 2026
+**Latest Updates**: Added DropdownHelper class, vendor dropdown support, employee auto-user creation

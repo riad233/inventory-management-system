@@ -24,7 +24,9 @@ class VendorController extends Controller {
                 'contact_person' => $_POST['contact_person'],
                 'contact_number' => $_POST['contact_number'],
                 'email' => $_POST['email'],
-                'address' => $_POST['address']
+                'address' => $_POST['address'],
+                'vendor_type' => $_POST['vendor_type'],
+                'vendor_status' => $_POST['vendor_status']
             ];
             
             if($vendorModel->create($data)){
@@ -45,7 +47,9 @@ class VendorController extends Controller {
                 'contact_person' => $_POST['contact_person'],
                 'contact_number' => $_POST['contact_number'],
                 'email' => $_POST['email'],
-                'address' => $_POST['address']
+                'address' => $_POST['address'],
+                'vendor_type' => $_POST['vendor_type'],
+                'vendor_status' => $_POST['vendor_status']
             ];
             
             if($vendorModel->update($id, $data)){

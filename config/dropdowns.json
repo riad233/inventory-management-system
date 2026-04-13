@@ -38,5 +38,29 @@
     { "id": "Fair", "name": "Fair" },
     { "id": "Damaged", "name": "Damaged" },
     { "id": "Not Working", "name": "Not Working" }
+  ],
+  "vendors": [
+    { "id": 1, "name": "Tech Solutions Ltd." },
+    { "id": 2, "name": "Global IT Suppliers" },
+    { "id": 3, "name": "Digital World Bangladesh" },
+    { "id": 4, "name": "Star Tech & Engineering Ltd." },
+    { "id": 5, "name": "Ryans Computers Ltd." },
+    { "id": 6, "name": "Computer Source Ltd." },
+    { "id": 7, "name": "Smart Technologies BD" },
+    { "id": 8, "name": "ABC Electronics" },
+    { "id": 9, "name": "Future IT Solutions" },
+    { "id": 10, "name": "National Computer Traders" }
+  ],
+  "vendor_types": [
+    { "id": "Hardware", "name": "Hardware" },
+    { "id": "Software", "name": "Software" },
+    { "id": "Services", "name": "Services" },
+    { "id": "IT Support", "name": "IT Support" },
+    { "id": "Maintenance", "name": "Maintenance" }
+  ],
+  "vendor_status": [
+    { "id": "Active", "name": "Active" },
+    { "id": "Inactive", "name": "Inactive" },
+    { "id": "Suspended", "name": "Suspended" }
   ]
 }
