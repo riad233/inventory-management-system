@@ -9,17 +9,16 @@
 <title>View Assets - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="css/list-actions.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid mt-4">
   <div class="page-title"><i class="fas fa-cube"></i> Assets</div>
 
-  <nav class="navbar navbar-expand-lg content-action-bar p-0">
+  <nav class="navbar navbar-expand-lg p-0" style="margin-bottom: 1rem;">
     <div class="container-fluid">
       <div class="collapse navbar-collapse justify-content-end gap-2">
-        <div class="action-search">
-          <input type="text" id="assetSearchInput" data-search-table="assetTable" placeholder="Search assets...">
+        <div style="margin-right: 1rem;">
+          <input type="text" id="assetSearchInput" data-search-table="assetTable" placeholder="Search assets..." style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px;">
         </div>
         <ul class="navbar-nav">
           <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=asset/add"><i class="fas fa-plus"></i> Add Asset</a></li>
@@ -46,7 +45,6 @@
             <th>Brand</th>
             <th>Serial #</th>
             <th>Status</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -59,22 +57,11 @@
                 <td><?php echo e($asset['Brand']); ?></td>
                 <td><?php echo e($asset['Serial_Number']); ?></td>
                 <td><span class="badge bg-info"><?php echo e($asset['Status']); ?></span></td>
-                <td>
-                  <a href="?url=asset/edit/<?php echo e($asset['Asset_ID']); ?>" class="btn-action btn-action-edit" title="Edit">
-                    <i class="fas fa-edit"></i> Edit
-                  </a>
-                  <form method="post" action="?url=asset/delete/<?php echo e($asset['Asset_ID']); ?>" class="d-inline">
-                    <?php echo csrf_field(); ?>
-                    <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this asset?')" title="Delete">
-                      <i class="fas fa-trash"></i> Delete
-                    </button>
-                  </form>
-                </td>
               </tr>
             <?php endforeach; ?>
           <?php else: ?>
             <tr>
-              <td colspan="7" class="text-center py-4">No assets found</td>
+              <td colspan="6" class="text-center py-4">No assets found</td>
             </tr>
           <?php endif; ?>
         </tbody>

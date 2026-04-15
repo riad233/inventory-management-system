@@ -9,17 +9,16 @@
 <title>View Assignments - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="css/list-actions.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid mt-4">
   <div class="page-title"><i class="fas fa-hand-holding-box"></i> Asset Assignments</div>
 
-  <nav class="navbar navbar-expand-lg content-action-bar p-0">
+  <nav class="navbar navbar-expand-lg p-0" style="margin-bottom: 1rem;">
     <div class="container-fluid">
       <div class="collapse navbar-collapse justify-content-end gap-2">
-        <div class="action-search">
-          <input type="text" id="assignmentSearchInput" data-search-table="assignmentTable" placeholder="Search assignments...">
+        <div style="margin-right: 1rem;">
+          <input type="text" id="assignmentSearchInput" data-search-table="assignmentTable" placeholder="Search assignments..." style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px;">
         </div>
         <ul class="navbar-nav">
           <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=assignment/assign"><i class="fas fa-plus"></i> Assign Asset</a></li>
@@ -47,7 +46,6 @@
             <th>Assigned Date</th>
             <th>Expected Return</th>
             <th>Status</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -66,19 +64,11 @@
                     <span class="badge bg-secondary">Returned</span>
                   <?php endif; ?>
                 </td>
-                <td>
-                  <form method="post" action="?url=assignment/delete/<?php echo e($assign['Assignment_ID']); ?>" class="d-inline">
-                    <?php echo csrf_field(); ?>
-                    <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this assignment?')" title="Delete">
-                      <i class="fas fa-trash"></i> Delete
-                    </button>
-                  </form>
-                </td>
               </tr>
             <?php endforeach; ?>
           <?php else: ?>
             <tr>
-              <td colspan="7" class="text-center py-4">No assignments found</td>
+              <td colspan="6" class="text-center py-4">No assignments found</td>
             </tr>
           <?php endif; ?>
         </tbody>

@@ -2,11 +2,11 @@
     <i class="fas fa-users"></i> Employees
 </div>
 
-<nav class="navbar navbar-expand-lg content-action-bar p-0">
+<nav class="navbar navbar-expand-lg p-0" style="margin-bottom: 1rem;">
     <div class="container-fluid">
         <div class="collapse navbar-collapse justify-content-end gap-2">
-            <div class="action-search">
-                <input type="text" id="employeeSearchInput" data-search-table="employeeTable" placeholder="Search employees...">
+            <div style="margin-right: 1rem;">
+                <input type="text" id="employeeSearchInput" data-search-table="employeeTable" placeholder="Search employees..." style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px;">
             </div>
             <ul class="navbar-nav">
                 <li class="nav-item"><a href="?url=employee/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Employee</a></li>
@@ -32,7 +32,6 @@
                 <th>Department</th>
                 <th>Contact</th>
                 <th>Email</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -45,13 +44,6 @@
                     <td data-label="Department"><?php echo e(isset($emp['Department_Name']) ? $emp['Department_Name'] : 'N/A'); ?></td>
                     <td data-label="Contact"><?php echo e($emp['Contact_Number']); ?></td>
                     <td data-label="Email"><?php echo e($emp['Email']); ?></td>
-                    <td data-label="Actions">
-                        <a href="?url=employee/edit/<?php echo e($emp['User_ID']); ?>" class="btn-action btn-action-edit" title="Edit"><i class="fas fa-edit"></i></a>
-                        <form method="post" action="?url=employee/delete/<?php echo e($emp['User_ID']); ?>" class="d-inline">
-                            <?php echo csrf_field(); ?>
-                            <button type="submit" class="btn-action btn-action-delete" title="Delete" onclick="return confirm('Are you sure you want to delete this employee?');"><i class="fas fa-trash"></i></button>
-                        </form>
-                    </td>
                 </tr>
                 <?php endforeach; ?>
             <?php endif; ?>

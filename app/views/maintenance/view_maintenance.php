@@ -9,17 +9,16 @@
 <title>View Maintenance - IMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="css/list-actions.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid mt-4">
   <div class="page-title"><i class="fas fa-tools"></i> Maintenance Records</div>
 
-  <nav class="navbar navbar-expand-lg content-action-bar p-0">
+  <nav class="navbar navbar-expand-lg p-0" style="margin-bottom: 1rem;">
     <div class="container-fluid">
       <div class="collapse navbar-collapse justify-content-end gap-2">
-        <div class="action-search">
-          <input type="text" id="maintenanceSearchInput" data-search-table="maintenanceTable" placeholder="Search maintenance...">
+        <div style="margin-right: 1rem;">
+          <input type="text" id="maintenanceSearchInput" data-search-table="maintenanceTable" placeholder="Search maintenance..." style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px;">
         </div>
         <ul class="navbar-nav">
           <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=maintenance/add"><i class="fas fa-plus"></i> Add Maintenance</a></li>
@@ -45,7 +44,6 @@
             <th>Reported</th>
             <th>Status</th>
             <th>Cost</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -57,19 +55,11 @@
                 <td><?php echo e($maint['Reported_Date']); ?></td>
                 <td><span class="badge bg-warning"><?php echo e($maint['Status']); ?></span></td>
                 <td><?php echo e($maint['Cost']); ?></td>
-                <td>
-                  <form method="post" action="?url=maintenance/delete/<?php echo e($maint['Maintenance_ID']); ?>" class="d-inline">
-                    <?php echo csrf_field(); ?>
-                    <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Delete this maintenance record?')" title="Delete">
-                      <i class="fas fa-trash"></i> Delete
-                    </button>
-                  </form>
-                </td>
               </tr>
             <?php endforeach; ?>
           <?php else: ?>
             <tr>
-              <td colspan="6" class="text-center py-4">No maintenance records found</td>
+              <td colspan="5" class="text-center py-4">No maintenance records found</td>
             </tr>
           <?php endif; ?>
         </tbody>

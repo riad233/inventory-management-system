@@ -12,16 +12,6 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg content-action-bar p-0">
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="btn btn-outline-secondary btn-sm" href="?url=request/index"><i class="fas fa-arrow-left"></i> Back to Requests</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-md-6">
