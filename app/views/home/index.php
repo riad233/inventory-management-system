@@ -55,6 +55,10 @@
                     <span class="text-2xl font-bold text-gray-900">IMS</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
+                    <a href="?url=home/index" class="text-gray-600 hover:text-gray-900 transition flex items-center space-x-1">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
                     <a href="#features" class="text-gray-600 hover:text-gray-900 transition">Features</a>
                     <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition">How it Works</a>
                     <a href="#use-cases" class="text-gray-600 hover:text-gray-900 transition">Use Cases</a>
@@ -82,7 +86,7 @@
                     <div class="relative">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-400 rounded-2xl blur-3xl opacity-20"></div>
                         <div class="relative bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl p-8 h-96 flex items-center justify-center">
-                            <i class="fas fa-boxes text-9xl text-purple-300 opacity-50"></i>
+                            <img src="/i_m_s/public/img/ims1.webp" alt="IMS Dashboard" class="w-full h-full object-cover rounded-xl">
                         </div>
                     </div>
                 </div>
