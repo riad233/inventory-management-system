@@ -744,3 +744,164 @@ body {
 .card-max-600 {
     max-width: 600px;
 }
+
+/* Stock Alerts */
+.stock-alerts-dropdown {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.alert-badge {
+    position: relative;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 1.3em;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.alert-badge:hover {
+    transform: scale(1.1);
+}
+
+.alert-badge-danger {
+    background-color: #ffe5e5;
+    color: #dc3545;
+}
+
+.alert-badge-danger:hover {
+    background-color: #ffd9d9;
+    border-color: #dc3545;
+}
+
+.alert-badge-warning {
+    background-color: #fff3cd;
+    color: #ff9800;
+}
+
+.alert-badge-warning:hover {
+    background-color: #ffe0a0;
+    border-color: #ff9800;
+}
+
+.alert-badge .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: inherit;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
+    font-weight: bold;
+    border: 2px solid white;
+}
+
+.alert-badge-danger .badge {
+    background-color: #dc3545;
+}
+
+.alert-badge-warning .badge {
+    background-color: #ff9800;
+}
+
+/* Stock Alert List */
+.stock-alert-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f9f9f9;
+    border-left: 4px solid #ff9800;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.stock-alert-item:hover {
+    background: #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stock-alert-item.out-of-stock {
+    border-left-color: #dc3545;
+}
+
+.stock-alert-item.low-stock {
+    border-left-color: #ff9800;
+}
+
+.stock-alert-info {
+    flex: 1;
+}
+
+.stock-alert-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.stock-alert-details {
+    font-size: 0.9em;
+    color: #666;
+    display: flex;
+    gap: 15px;
+}
+
+.stock-alert-quantity {
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: white;
+    border: 2px solid #ff9800;
+    color: #ff9800;
+    min-width: 80px;
+    text-align: center;
+}
+
+.stock-alert-item.out-of-stock .stock-alert-quantity {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.stock-alert-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 15px;
+}
+
+.stock-alert-actions a {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.stock-alert-actions .btn-edit {
+    background: #3498db;
+    color: white;
+}
+
+.stock-alert-actions .btn-edit:hover {
+    background: #2980b9;
+}
+
+.stock-alert-actions .btn-request {
+    background: #667eea;
+    color: white;
+}
+
+.stock-alert-actions .btn-request:hover {
+    background: #764ba2;
+}

@@ -16,10 +16,12 @@ class DashboardController extends Controller {
         $assetModel = $this->model('Asset');
         $assignmentModel = $this->model('Assignment');
         $maintenanceModel = $this->model('Maintenance');
+        $inventoryModel = $this->model('Inventory');
         
         $assets = $assetModel->getAll();
         $assignments = $assignmentModel->getAll();
         $maintenance = $maintenanceModel->getAll();
+        $stockAlerts = $inventoryModel->getLowAndOutStock(10);
         
         $total_assets = count($assets);
         $total_pending = 0;
@@ -44,10 +46,31 @@ class DashboardController extends Controller {
             'total_maintenance' => $total_maintenance,
             'assets' => $assets,
             'assignments' => $assignments,
-            'maintenance' => $maintenance
+            'maintenance' => $maintenance,
+            'stock_alerts' => $stockAlerts
         ];
         
         $this->view('dashboard/dashboard', $data);
+    }
+    
+    /**
+     * Display full stock alerts page
+     */
+    public function stockAlerts() {
+        if (!isset($_SESSION['username'])) {
+            header("Location: ?url=auth/login");
+            exit;
+        }
+        
+        $inventoryModel = $this->model('Inventory');
+        $stockAlerts = $inventoryModel->getLowAndOutStock(10);
+        
+        $data = [
+            'stock_alerts' => $stockAlerts,
+            'title' => 'Stock Alerts'
+        ];
+        
+        $this->view('dashboard/stock_alerts', $data);
     }
 }
 ?>

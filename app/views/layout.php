@@ -84,6 +84,40 @@
                 </ul>
             </div>
             <div class="top-navbar-right">
+                <!-- Stock Alerts Bell -->
+                <?php if (isset($data['stock_alerts']) && ($data['stock_alerts']['total_low'] > 0 || $data['stock_alerts']['total_out'] > 0)): ?>
+                <div class="stock-alerts-dropdown">
+                    <div class="alert-badge alert-badge-danger" data-bs-toggle="dropdown" title="Stock Alerts">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge"><?php echo e($data['stock_alerts']['total_out'] + $data['stock_alerts']['total_low']); ?></span>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 350px;">
+                        <li><h6 class="dropdown-header"><i class="fas fa-exclamation-circle"></i> Stock Alerts</h6></li>
+                        
+                        <?php if ($data['stock_alerts']['total_out'] > 0): ?>
+                        <li><h6 class="dropdown-header" style="font-size: 0.85rem; color: #dc3545;">🚨 Out of Stock (Qty < 3)</h6></li>
+                        <?php foreach (array_slice($data['stock_alerts']['out_items'], 0, 3) as $item): ?>
+                        <li><a class="dropdown-item" href="?url=dashboard/stockAlerts">
+                            <small><i class="fas fa-times-circle" style="color: #dc3545;"></i> <?php echo e($item['Item_Name']); ?> (Qty: <?php echo e($item['Quantity']); ?>)</small>
+                        </a></li>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <?php if ($data['stock_alerts']['total_low'] > 0): ?>
+                        <li><h6 class="dropdown-header" style="font-size: 0.85rem; color: #ff9800;">⚠️ Low Stock (3-10)</h6></li>
+                        <?php foreach (array_slice($data['stock_alerts']['low_items'], 0, 3) as $item): ?>
+                        <li><a class="dropdown-item" href="?url=dashboard/stockAlerts">
+                            <small><i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> <?php echo e($item['Item_Name']); ?> (Qty: <?php echo e($item['Quantity']); ?>)</small>
+                        </a></li>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-center" href="?url=dashboard/stockAlerts">View All Alerts</a></li>
+                    </ul>
+                </div>
+                <?php endif; ?>
+                
                 <div class="user-menu">
                     <div class="user-info user-menu-toggle" id="userMenuToggle">
                     <div class="user-avatar user-avatar-gradient">
@@ -133,5 +167,63 @@
     <script src="js/table-search.js"></script>
     <script src="js/list-search-init.js"></script>
     <script src="js/layout.js"></script>
+    
+    <!-- Stock Alert Notifications -->
+    <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+    
+    <script>
+        // Check for stock alerts and show notifications
+        <?php if (isset($data['stock_alerts'])): ?>
+            const stockAlerts = <?php echo json_encode($data['stock_alerts']); ?>;
+            
+            function showNotification(title, message, type = 'warning', icon = 'fas fa-bell') {
+                const container = document.getElementById('notificationContainer');
+                const toastId = 'alert-' + Date.now();
+                
+                const toastHtml = `
+                    <div id="${toastId}" class="toast" role="alert" style="min-width: 350px; border-left: 5px solid ${type === 'danger' ? '#dc3545' : '#ff9800'};">
+                        <div class="toast-header bg-light">
+                            <i class="fas ${icon}" style="color: ${type === 'danger' ? '#dc3545' : '#ff9800'}; margin-right: 8px;"></i>
+                            <strong class="me-auto">${title}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                `;
+                
+                container.insertAdjacentHTML('beforeend', toastHtml);
+                const toastElement = document.getElementById(toastId);
+                const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 10000 });
+                toast.show();
+                
+                // Remove from DOM after hiding
+                toastElement.addEventListener('hidden.bs.toast', () => {
+                    toastElement.remove();
+                });
+            }
+            
+            // Show emergency alert if out of stock items exist
+            if (stockAlerts.total_out > 0) {
+                showNotification(
+                    '🚨 EMERGENCY ALERT',
+                    `${stockAlerts.total_out} item(s) are out of stock (Qty < 3). Immediate action required! <br><a href="?url=dashboard/stockAlerts" style="color: #dc3545; font-weight: bold;">View & Request Now</a>`,
+                    'danger',
+                    'fa-bell'
+                );
+            }
+            
+            // Show low stock alert if applicable
+            if (stockAlerts.total_low > 0 && stockAlerts.total_out === 0) {
+                showNotification(
+                    '⚠️ LOW STOCK WARNING',
+                    `${stockAlerts.total_low} item(s) are running low (Qty 3-10). <br><a href="?url=dashboard/stockAlerts" style="color: #ff9800; font-weight: bold;">View & Request Now</a>`,
+                    'warning',
+                    'fa-exclamation-triangle'
+                );
+            }
+        <?php endif; ?>
+    </script>
 </body>
 </html>
