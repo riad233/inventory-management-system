@@ -51,7 +51,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-2">
-                    <i class="fas fa-boxes text-2xl gradient-text"></i>
+                    <img src="/i_m_s/public/img/ims.png" alt="IMS Logo" style="height: 40px;">
                     <span class="text-2xl font-bold text-gray-900">IMS</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
@@ -86,7 +86,7 @@
                     <div class="relative">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-400 rounded-2xl blur-3xl opacity-20"></div>
                         <div class="relative bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl p-8 h-96 flex items-center justify-center">
-                            <img src="/i_m_s/public/img/ims1.webp" alt="IMS Dashboard" class="w-full h-full object-cover rounded-xl">
+                            <img src="/i_m_s/public/img/ims.png" alt="IMS Dashboard" class="w-full h-full object-cover rounded-xl">
                         </div>
                     </div>
                 </div>
@@ -219,24 +219,13 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-blue-600">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl font-bold text-white mb-6">Take Control of Your Inventory Today</h2>
-            <p class="text-xl text-purple-100 mb-8">Start managing your complete inventory operations with intelligence and efficiency.</p>
-            <a href="?url=dashboard/index" class="bg-white text-purple-600 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition inline-block">
-                Get Started Now <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center space-x-2 mb-4">
-                        <i class="fas fa-boxes text-2xl text-purple-400"></i>
+                        <img src="/i_m_s/public/img/ims.png" alt="IMS Logo" style="height: 40px;">
                         <span class="text-xl font-bold text-white">IMS</span>
                     </div>
                     <p class="text-gray-500">Modern asset management for enterprises.</p>

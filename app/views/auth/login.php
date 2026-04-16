@@ -14,7 +14,8 @@
         <div class="col-md-4">
             <div class="card login-card">
                 <div class="card-header bg-primary text-white text-center py-3">
-                    <h4><i class="fas fa-boxes"></i> IMS Login</h4>
+                    <img src="/i_m_s/public/img/ims.png" alt="IMS Logo" class="login-logo mb-2" style="height:48px;">
+                    <h4>IMS Login</h4>
                 </div>
                 <div class="card-body p-4">
                     <?php if(isset($data['error'])): ?>
