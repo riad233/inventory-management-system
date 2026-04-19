@@ -4,15 +4,26 @@ if (!defined('ROOT_PATH')) {
 }
 
 require_once ROOT_PATH . "/core/Model.php";
+require_once ROOT_PATH . "/config/logger.php";
 
 class EquipmentRequest extends Model {
 
     public function getAll(){
-        $sql = "SELECT r.*, e.Name FROM equipment_request r LEFT JOIN employee e ON r.User_ID = e.User_ID";
-        $result = mysqli_query($this->conn, $sql);
+        $sql = "SELECT r.*, e.Name FROM equipment_request r LEFT JOIN employee e ON r.User_ID = e.User_ID ORDER BY r.Request_ID DESC";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            Logger::error("Query prepare failed", ['error' => $this->conn->error]);
+            return [];
+        }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
         $requests = [];
-        while($row = mysqli_fetch_assoc($result)){
-            $requests[] = $row;
+        
+        if ($result) {
+            while($row = $result->fetch_assoc()){
+                $requests[] = $row;
+            }
         }
         return $requests;
     }

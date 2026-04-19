@@ -3,6 +3,9 @@ if (!defined('ROOT_PATH')) {
     define('ROOT_PATH', dirname(dirname(__FILE__)));
 }
 
+// Load authorization helper
+require_once ROOT_PATH . "/config/authorization.php";
+
 class Controller {
     public function model($model) {
         require_once ROOT_PATH . "/app/models/" . $model . ".php";

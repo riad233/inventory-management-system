@@ -60,10 +60,24 @@ i_m_s/
    ```
 
 4. **Create Default User (Optional)**
+   
+   To create a secure admin user, use the provided hash generation script:
+   
+   ```php
+   <?php
+   // Use password_hash to generate secure password
+   $hashedPassword = password_hash('password123', PASSWORD_DEFAULT);
+   echo "INSERT INTO users (Username, Password, Email, Role) VALUES ('admin', '$hashedPassword', 'admin@example.com', 'Admin');";
+   ?>
+   ```
+   
+   Or generate the hash online and insert:
    ```sql
    INSERT INTO users (Username, Password, Email, Role) 
-   VALUES ('admin', 'password123', 'admin@example.com', 'Admin');
+   VALUES ('admin', '$2y$10$hash_here', 'admin@example.com', 'Admin');
    ```
+   
+   **Security Note**: Always use `password_hash()` for password storage. Never store plaintext passwords.
 
 5. **Database Connection**
    - Host: `localhost`

@@ -4,15 +4,27 @@ if (!defined('ROOT_PATH')) {
 }
 
 require_once ROOT_PATH . "/core/Model.php";
+require_once ROOT_PATH . "/config/logger.php";
 
 class Asset extends Model {
     public function getAll() {
-        $sql = "SELECT * FROM asset";
-        $result = mysqli_query($this->conn, $sql);
-        $assets = [];
-        while($row = mysqli_fetch_assoc($result)) {
-            $assets[] = $row;
+        $sql = "SELECT * FROM asset ORDER BY Asset_ID DESC";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            Logger::error("Query prepare failed", ['error' => $this->conn->error]);
+            return [];
         }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $assets = [];
+        
+        if ($result) {
+            while($row = $result->fetch_assoc()) {
+                $assets[] = $row;
+            }
+        }
+        
         return $assets;
     }
 

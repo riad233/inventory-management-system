@@ -2,6 +2,13 @@
 // Define root path for absolute path resolution
 define('ROOT_PATH', dirname(dirname(__FILE__)));
 
+// Debug mode - set to true for development
+define('DEBUG_MODE', false);
+
+// Include helper classes
+require_once ROOT_PATH . '/config/logger.php';
+require_once ROOT_PATH . '/config/validator.php';
+
 session_start();
 date_default_timezone_set('Asia/Dhaka');
 

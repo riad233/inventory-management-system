@@ -5,8 +5,21 @@ if (!defined('ROOT_PATH')) {
 
 require_once ROOT_PATH . "/core/Controller.php";
 require_once ROOT_PATH . "/config/database.php";
+require_once ROOT_PATH . "/config/validator.php";
+require_once ROOT_PATH . "/config/logger.php";
 
 class RequestController extends Controller {
+    
+    private function validateRequest($data) {
+        Validator::reset();
+        Validator::required('user_id', $data['user_id'] ?? '', 'Employee');
+        Validator::integer('user_id', $data['user_id'] ?? '', 'Employee ID');
+        Validator::required('equipment_type', $data['equipment_type'] ?? '', 'Equipment Type');
+        Validator::maxLength('equipment_type', $data['equipment_type'] ?? '', 255, 'Equipment Type');
+        Validator::required('description', $data['description'] ?? '', 'Description');
+        Validator::maxLength('description', $data['description'] ?? '', 1000, 'Description');
+        return Validator::passes();
+    }
     
     public function index(){
         $requestModel = $this->model('EquipmentRequest');
@@ -15,24 +28,38 @@ class RequestController extends Controller {
     }
     
     public function create(){
+        $errors = [];
         if(isset($_POST['submit'])){
             require_csrf();
-            $requestModel = $this->model('EquipmentRequest');
-            
             $data = [
-                'user_id' => $_POST['user_id'],
-                'equipment_type' => $_POST['equipment_type'],
-                'description' => $_POST['description'],
+                'user_id' => $_POST['user_id'] ?? '',
+                'equipment_type' => $_POST['equipment_type'] ?? '',
+                'description' => $_POST['description'] ?? '',
                 'vendor_id' => $_POST['vendor_id'] ?? null
             ];
-            
-            if($requestModel->create($data)){
-                header("Location: ?url=request/index&msg=Request submitted successfully");
+            $data['user_id'] = Validator::sanitizeInt($data['user_id']);
+            $data['equipment_type'] = Validator::sanitizeString($data['equipment_type']);
+            $data['description'] = Validator::sanitizeString($data['description']);
+            if($this->validateRequest($data)) {
+                try {
+                    $requestModel = $this->model('EquipmentRequest');
+                    if($requestModel->create($data)){
+                        Logger::info("Equipment request created", ['user_id' => $data['user_id']]);
+                        header("Location: ?url=request/index&msg=Request submitted successfully");
+                        exit;
+                    } else { 
+                        $errors['general'] = "Failed to submit request"; 
+                    }
+                } catch (Exception $e) {
+                    Logger::error("Error creating request", ['error' => $e->getMessage()]);
+                    $errors['general'] = "An error occurred";
+                }
+            } else { 
+                $errors = Validator::getErrors(); 
             }
         }
-        
         $employeeModel = $this->model('Employee');
-        $this->view('request/request_equipment', ['employees' => $employeeModel->getAll()]);
+        $this->view('request/request_equipment', ['employees' => $employeeModel->getAll(), 'errors' => $errors]);
     }
     
     public function edit($id){
