@@ -13,29 +13,24 @@ class Product extends Model {
      * @return array Products data from database
      */
     public function getAll() {
-        $sql = "SELECT i.Item_ID as id, 
-                       COALESCE(a.Asset_Name, 'Unknown') as name, 
-                       COALESCE(a.Category, 'N/A') as category, 
-                       i.Quantity as quantity, 
-                       i.Location as location,
-                       COALESCE(a.Serial_Number, '') as sku
-                FROM inventory_items i
-                LEFT JOIN asset a ON i.Asset_ID = a.Asset_ID
-                ORDER BY i.Quantity ASC";
+        $sql = "SELECT Item_ID as id, 
+                       Quantity as quantity, 
+                       Location as location,
+                       Last_Updated as last_updated
+                FROM inventory_items
+                ORDER BY Quantity ASC";
         
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) {
             Logger::error("Query prepare failed", ['error' => $this->conn->error]);
-            // Fallback: simple query without joins
-            $fallbackSql = "SELECT Item_ID as id, Quantity as quantity, Location as location FROM inventory_items ORDER BY Quantity ASC";
-            $stmt = $this->conn->prepare($fallbackSql);
-            if (!$stmt) {
-                Logger::error("Fallback query failed", ['error' => $this->conn->error]);
-                return [];
-            }
+            return [];
         }
         
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            Logger::error("Query execution failed", ['error' => $stmt->error]);
+            return [];
+        }
+        
         $result = $stmt->get_result();
         $products = [];
         
@@ -54,26 +49,17 @@ class Product extends Model {
      * @return array Product data or null
      */
     public function getById($id) {
-        $sql = "SELECT i.Item_ID as id, 
-                       COALESCE(a.Asset_Name, 'Unknown') as name, 
-                       COALESCE(a.Category, 'N/A') as category, 
-                       i.Quantity as quantity, 
-                       i.Location as location,
-                       COALESCE(a.Serial_Number, '') as sku
-                FROM inventory_items i
-                LEFT JOIN asset a ON i.Asset_ID = a.Asset_ID
-                WHERE i.Item_ID = ?";
+        $sql = "SELECT Item_ID as id, 
+                       Quantity as quantity, 
+                       Location as location,
+                       Last_Updated as last_updated
+                FROM inventory_items
+                WHERE Item_ID = ?";
         
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) {
             Logger::error("Query prepare failed", ['error' => $this->conn->error]);
-            // Fallback: simple query without joins
-            $fallbackSql = "SELECT Item_ID as id, Quantity as quantity, Location as location FROM inventory_items WHERE Item_ID = ?";
-            $stmt = $this->conn->prepare($fallbackSql);
-            if (!$stmt) {
-                Logger::error("Fallback query failed", ['error' => $this->conn->error]);
-                return null;
-            }
+            return null;
         }
         
         $stmt->bind_param("i", $id);
@@ -205,48 +191,54 @@ class Product extends Model {
         ];
         
         // OUT OF STOCK: quantity = 0
-        $sqlOut = "SELECT i.Item_ID as id, 
-                          COALESCE(a.Asset_Name, 'Unknown') as name,
-                          i.Quantity as quantity, 
-                          i.Location as location,
+        $sqlOut = "SELECT Item_ID as id, 
+                          Quantity as quantity, 
+                          Location as location,
                           'out_of_stock' as alert_type
-                   FROM inventory_items i
-                   LEFT JOIN asset a ON i.Asset_ID = a.Asset_ID
-                   WHERE i.Quantity = 0
-                   ORDER BY i.Last_Updated DESC";
+                   FROM inventory_items
+                   WHERE Quantity = 0
+                   ORDER BY Last_Updated DESC";
         
         $stmtOut = $this->conn->prepare($sqlOut);
         if ($stmtOut) {
-            $stmtOut->execute();
-            $resultOut = $stmtOut->get_result();
-            if ($resultOut) {
-                while ($row = $resultOut->fetch_assoc()) {
-                    $alerts['out_of_stock'][] = $row;
+            if ($stmtOut->execute()) {
+                $resultOut = $stmtOut->get_result();
+                if ($resultOut) {
+                    while ($row = $resultOut->fetch_assoc()) {
+                        $alerts['out_of_stock'][] = $row;
+                    }
                 }
+            } else {
+                Logger::error("Failed to get out of stock alerts", ['error' => $stmtOut->error]);
             }
+        } else {
+            Logger::error("Failed to prepare out of stock query", ['error' => $this->conn->error]);
         }
         $alerts['total_out'] = count($alerts['out_of_stock']);
         
         // LOW STOCK: 0 < quantity < 10
-        $sqlLow = "SELECT i.Item_ID as id, 
-                          COALESCE(a.Asset_Name, 'Unknown') as name,
-                          i.Quantity as quantity, 
-                          i.Location as location,
+        $sqlLow = "SELECT Item_ID as id, 
+                          Quantity as quantity, 
+                          Location as location,
                           'low_stock' as alert_type
-                   FROM inventory_items i
-                   LEFT JOIN asset a ON i.Asset_ID = a.Asset_ID
-                   WHERE i.Quantity > 0 AND i.Quantity < 10
-                   ORDER BY i.Quantity ASC";
+                   FROM inventory_items
+                   WHERE Quantity > 0 AND Quantity < 10
+                   ORDER BY Quantity ASC";
         
         $stmtLow = $this->conn->prepare($sqlLow);
         if ($stmtLow) {
-            $stmtLow->execute();
-            $resultLow = $stmtLow->get_result();
-            if ($resultLow) {
-                while ($row = $resultLow->fetch_assoc()) {
-                    $alerts['low_stock'][] = $row;
+            if ($stmtLow->execute()) {
+                $resultLow = $stmtLow->get_result();
+                if ($resultLow) {
+                    while ($row = $resultLow->fetch_assoc()) {
+                        $alerts['low_stock'][] = $row;
+                    }
                 }
+            } else {
+                Logger::error("Failed to get low stock alerts", ['error' => $stmtLow->error]);
             }
+        } else {
+            Logger::error("Failed to prepare low stock query", ['error' => $this->conn->error]);
         }
         $alerts['total_low'] = count($alerts['low_stock']);
         

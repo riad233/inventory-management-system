@@ -32,11 +32,6 @@
                 </a>
             </li>
             <li>
-                <a href="?url=product/index" class="<?php echo (strpos($_GET['url'] ?? '', 'product') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-box-open"></i> Products
-                </a>
-            </li>
-            <li>
                 <a href="?url=assignment/index" class="<?php echo (strpos($_GET['url'] ?? '', 'assignment') !== false) ? 'active' : ''; ?>">
                     <i class="fas fa-exchange-alt"></i> Assignments
                 </a>
@@ -54,11 +49,6 @@
             <li>
                 <a href="?url=vendor/index" class="<?php echo (strpos($_GET['url'] ?? '', 'vendor') !== false) ? 'active' : ''; ?>">
                     <i class="fas fa-store"></i> Vendors
-                </a>
-            </li>
-            <li>
-                <a href="?url=stock/index" class="<?php echo (strpos($_GET['url'] ?? '', 'stock') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-warehouse"></i> Stock
                 </a>
             </li>
             <li>
@@ -80,16 +70,28 @@
                 <ul class="top-navbar-nav">
                     <li><a href="?url=dashboard/index"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                     <li><a href="?url=asset/index"><i class="fas fa-boxes"></i> Assets</a></li>
-                    <li><a href="?url=product/index"><i class="fas fa-box-open"></i> Products</a></li>
                     <li><a href="?url=assignment/index"><i class="fas fa-exchange-alt"></i> Assignments</a></li>
                     <li><a href="?url=maintenance/index"><i class="fas fa-wrench"></i> Maintenance</a></li>
                     <li><a href="?url=employee/index"><i class="fas fa-users"></i> Employees</a></li>
                     <li><a href="?url=vendor/index"><i class="fas fa-building"></i> Vendors</a></li>
-                    <li><a href="?url=stock/index"><i class="fas fa-warehouse"></i> Stock</a></li>
                 </ul>
             </div>
             <div class="top-navbar-right">
                 
+                <!-- Alert Bell Icon -->
+                <div class="alert-bell" id="alertBellContainer">
+                    <button class="alert-bell-btn" id="alertBellBtn" title="View alerts">
+                        <i class="fas fa-bell"></i>
+                        <span class="alert-badge" id="alertBadge">0</span>
+                    </button>
+                    <div class="alert-dropdown" id="alertDropdown">
+                        <div class="alert-dropdown-header">Alerts</div>
+                        <div class="alert-dropdown-content" id="alertDropdownContent">
+                            <div class="alert-empty">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="user-menu">
                     <div class="user-info user-menu-toggle" id="userMenuToggle">
                     <div class="user-avatar user-avatar-gradient">

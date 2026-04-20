@@ -20,17 +20,25 @@ class Router {
         $method = $parts[1] ?? 'index';
         $params = array_slice($parts, 2);
 
+        // Controllers that don't require authentication
         $publicControllers = ['auth', 'home'];
+        
+        // Controllers accessible to any authenticated user (without role check)
+        $anyAuthControllers = ['alert'];
+        
         if (!in_array($controllerKey, $publicControllers, true)) {
             if (empty($_SESSION['username'])) {
                 header("Location: ?url=auth/login");
                 exit;
             }
 
-            $role = $_SESSION['role'] ?? '';
-            if (!in_array($role, ['Admin', 'Manager'], true)) {
-                http_response_code(403);
-                die('Forbidden');
+            // Only apply role check for controllers NOT in the anyAuthControllers list
+            if (!in_array($controllerKey, $anyAuthControllers, true)) {
+                $role = $_SESSION['role'] ?? '';
+                if (!in_array($role, ['Admin', 'Manager'], true)) {
+                    http_response_code(403);
+                    die('Forbidden');
+                }
             }
         }
 
