@@ -12,7 +12,6 @@
     </div>
     <div class="hero-actions">
       <a class="btn btn-outline-secondary" href="?url=asset/add"><i class="fas fa-plus"></i> New Asset</a>
-      <a class="btn btn-primary" href="?url=product/index"><i class="fas fa-box-open"></i> Product Masterfile</a>
     </div>
   </div>
 

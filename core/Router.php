@@ -24,7 +24,7 @@ class Router {
         $publicControllers = ['auth', 'home'];
         
         // Controllers accessible to any authenticated user (without role check)
-        $anyAuthControllers = ['alert'];
+        $anyAuthControllers = [];
         
         if (!in_array($controllerKey, $publicControllers, true)) {
             if (empty($_SESSION['username'])) {

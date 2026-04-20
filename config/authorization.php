@@ -28,13 +28,6 @@ class AuthorizationHelper {
     }
     
     /**
-     * Check if user is Employee
-     */
-    public static function isEmployee() {
-        return isset($_SESSION['role']) && $_SESSION['role'] === 'Employee';
-    }
-    
-    /**
      * Check if user has specified role
      */
     public static function hasRole($role) {
@@ -57,49 +50,6 @@ class AuthorizationHelper {
             Logger::warning("Unauthorized access attempt", ['user_id' => self::getUserId(), 'role' => $_SESSION['role'] ?? 'unknown']);
             die('Access Denied: Admin role required');
         }
-    }
-    
-    /**
-     * Require Admin or Manager role
-     */
-    public static function requireAdminOrManager() {
-        if (!self::isAdminOrManager()) {
-            http_response_code(403);
-            Logger::warning("Unauthorized access attempt", ['user_id' => self::getUserId(), 'role' => $_SESSION['role'] ?? 'unknown']);
-            die('Access Denied: Admin or Manager role required');
-        }
-    }
-    
-    /**
-     * Check if user is department manager for given department
-     * @param int $department_id Department ID
-     * @return bool
-     */
-    public static function isDepartmentManager($department_id) {
-        // Admins can manage any department
-        if (self::isAdmin()) {
-            return true;
-        }
-        
-        // Managers can only manage their own department (if department_id is set in session)
-        if (self::isManager() && isset($_SESSION['department_id'])) {
-            return $_SESSION['department_id'] == $department_id;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Check if user owns resource (for employee resource ownership)
-     * @param int $resource_owner_id Owner ID from database
-     * @return bool
-     */
-    public static function ownsResource($resource_owner_id) {
-        $user_id = self::getUserId();
-        if (self::isAdmin()) {
-            return true; // Admins can manage all resources
-        }
-        return $user_id == $resource_owner_id;
     }
     
     /**

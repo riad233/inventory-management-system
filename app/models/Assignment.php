@@ -4,7 +4,6 @@ if (!defined('ROOT_PATH')) {
 }
 
 require_once ROOT_PATH . "/core/Model.php";
-require_once ROOT_PATH . "/config/logger.php";
 
 class Assignment extends Model {
 

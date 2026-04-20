@@ -77,21 +77,6 @@
                 </ul>
             </div>
             <div class="top-navbar-right">
-                
-                <!-- Alert Bell Icon -->
-                <div class="alert-bell" id="alertBellContainer">
-                    <button class="alert-bell-btn" id="alertBellBtn" title="View alerts">
-                        <i class="fas fa-bell"></i>
-                        <span class="alert-badge" id="alertBadge">0</span>
-                    </button>
-                    <div class="alert-dropdown" id="alertDropdown">
-                        <div class="alert-dropdown-header">Alerts</div>
-                        <div class="alert-dropdown-content" id="alertDropdownContent">
-                            <div class="alert-empty">Loading...</div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="user-menu">
                     <div class="user-info user-menu-toggle" id="userMenuToggle">
                     <div class="user-avatar user-avatar-gradient">

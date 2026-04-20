@@ -143,19 +143,6 @@ class Validator {
     }
     
     /**
-     * Validate future date
-     */
-    public static function futureDate($field, $value, $label = null) {
-        $date = new \DateTime($value);
-        if ($date <= new \DateTime('today')) {
-            $label = $label ?? ucfirst($field);
-            self::addError($field, "$label must be in the future");
-            return false;
-        }
-        return true;
-    }
-    
-    /**
      * Validate phone number (basic)
      */
     public static function phone($field, $value, $label = null) {
@@ -187,26 +174,6 @@ class Validator {
     public static function sanitizeInt($value) {
         return filter_var($value, FILTER_SANITIZE_NUMBER_INT);
     }
-    
-    /**
-     * Get sanitized POST data with optional fields
-     */
-    public static function getPostData($fields, $optional = []) {
-        $data = [];
-        foreach ($fields as $field) {
-            $value = $_POST[$field] ?? null;
-            if ($value !== null) {
-                // Basic sanitization
-                if (is_string($value)) {
-                    $data[$field] = self::sanitizeString($value);
-                } else {
-                    $data[$field] = $value;
-                }
-            } elseif (!in_array($field, $optional, true)) {
-                $data[$field] = null;
-            }
-        }
-        return $data;
-    }
+
 }
 ?>
