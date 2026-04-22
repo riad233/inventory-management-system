@@ -1,83 +1,166 @@
 <?php
 // Session already started in layout
+$requests = isset($data['requests']) && is_array($data['requests']) ? $data['requests'] : [];
+
+$search       = trim($_GET['search'] ?? '');
+$statusFilter = trim($_GET['status'] ?? '');
+$typeFilter   = trim($_GET['type'] ?? '');
+
+if ($search !== '' || $statusFilter !== '' || $typeFilter !== '') {
+    $requests = array_filter($requests, function($r) use ($search, $statusFilter, $typeFilter) {
+        $matchSearch = $search === '' ||
+            stripos($r['Name'] ?? '', $search) !== false ||
+            stripos((string)$r['Request_ID'], $search) !== false;
+        $matchStatus = $statusFilter === '' || ($r['Status'] ?? '') === $statusFilter;
+        $matchType   = $typeFilter === '' || ($r['Equipment_Type'] ?? '') === $typeFilter;
+        return $matchSearch && $matchStatus && $matchType;
+    });
+}
+$requests = array_values($requests);
+$total = count($requests);
+
+$allTypes    = array_unique(array_filter(array_column(isset($data['requests'])?$data['requests']:[], 'Equipment_Type')));
+$allStatuses = array_unique(array_filter(array_column(isset($data['requests'])?$data['requests']:[], 'Status')));
+sort($allTypes); sort($allStatuses);
+
+$pageSize   = max(1, (int)($_GET['page_size'] ?? 20));
+$totalPages = $total > 0 ? (int)ceil($total / $pageSize) : 1;
+$page       = max(1, min((int)($_GET['page'] ?? 1), $totalPages));
+$offset     = ($page - 1) * $pageSize;
+$pageRows   = array_slice($requests, $offset, $pageSize);
+$from = $total > 0 ? $offset + 1 : 0;
+$to   = min($offset + $pageSize, $total);
+$queryParams = $_GET; unset($queryParams['page']);
+$baseQuery = http_build_query($queryParams);
+$baseQuery = $baseQuery ? $baseQuery . '&' : '';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>View Requests - IMS</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container-fluid mt-4">
-  <div class="page-title"><i class="fas fa-clipboard"></i> Equipment Requests</div>
 
-  <nav class="navbar navbar-expand-lg p-0" style="margin-bottom: 1rem;">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse justify-content-end gap-2">
-        <div style="margin-right: 1rem;">
-          <input type="text" id="requestSearchInput" data-search-table="requestTable" placeholder="Search requests..." style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px;">
-        </div>
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="btn btn-primary btn-sm" href="?url=request/create"><i class="fas fa-plus"></i> New Request</a></li>
-        </ul>
-      </div>
+<div class="list-page-header">
+    <h2><i class="fas fa-clipboard-list"></i> Equipment Requests</h2>
+    <div class="list-header-actions">
+        <a href="?url=request/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Request</a>
     </div>
-  </nav>
-  
-  <?php if(isset($_GET['msg'])): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?php echo e($_GET['msg']); ?>
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-  <?php endif; ?>
-
-  <div class="card shadow">
-    <div class="card-body">
-      <table class="table table-striped table-hover" id="requestTable">
-        <thead class="table-dark">
-          <tr>
-            <th>Request ID</th>
-            <th>Employee</th>
-            <th>Equipment Type</th>
-            <th>Request Date</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if(isset($data['requests']) && is_array($data['requests'])): ?>
-            <?php foreach($data['requests'] as $req): ?>
-              <tr>
-                <td><?php echo e($req['Request_ID']); ?></td>
-                <td><?php echo e($req['Name'] ?? 'N/A'); ?></td>
-                <td><?php echo e($req['Equipment_Type']); ?></td>
-                <td><?php echo e($req['Request_Date']); ?></td>
-                <td>
-                  <?php if($req['Status'] == 'Pending'): ?>
-                    <span class="badge bg-warning">Pending</span>
-                  <?php elseif($req['Status'] == 'Approved'): ?>
-                    <span class="badge bg-success">Approved</span>
-                  <?php else: ?>
-                    <span class="badge bg-danger">Rejected</span>
-                  <?php endif; ?>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <tr>
-              <td colspan="5" class="text-center py-4">No requests found</td>
-            </tr>
-          <?php endif; ?>
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/table-search.js"></script>
-<script src="js/list-search-init.js"></script>
-</body>
-</html>
+<?php if(isset($_GET['msg'])): ?>
+    <div class="alert alert-success alert-dismissible fade show">
+        <?php echo e($_GET['msg']); ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
+
+<form method="GET" action="">
+    <input type="hidden" name="url" value="request/index">
+    <div class="filter-bar">
+        <div class="filter-controls">
+            <input type="text" name="search" class="filter-search" placeholder="Search by employee, request ID..." value="<?php echo e($search); ?>">
+            <select name="type" class="filter-select" onchange="this.form.submit()">
+                <option value="">All Types</option>
+                <?php foreach($allTypes as $t): ?><option value="<?php echo e($t); ?>" <?php echo $typeFilter===$t?'selected':''; ?>><?php echo e($t); ?></option><?php endforeach; ?>
+            </select>
+            <select name="status" class="filter-select" onchange="this.form.submit()">
+                <option value="">All Statuses</option>
+                <?php foreach($allStatuses as $st): ?><option value="<?php echo e($st); ?>" <?php echo $statusFilter===$st?'selected':''; ?>><?php echo e($st); ?></option><?php endforeach; ?>
+            </select>
+            <button type="submit" class="btn btn-secondary btn-sm"><i class="fas fa-search"></i> Search</button>
+            <?php if($search !== '' || $statusFilter !== '' || $typeFilter !== ''): ?><a href="?url=request/index" class="btn btn-outline-secondary btn-sm">Clear</a><?php endif; ?>
+        </div>
+    </div>
+</form>
+
+<?php if($search !== '' || $statusFilter !== '' || $typeFilter !== ''): ?>
+<div class="active-filters-bar">
+    <span class="active-filters-label">Active Filters:</span>
+    <?php if($search !== ''): ?><span class="filter-chip">Search: <?php echo e($search); ?> <a href="?url=request/index&<?php echo http_build_query(array_merge($_GET,['search'=>'','url'=>'request/index'])); ?>" class="filter-chip-remove">×</a></span><?php endif; ?>
+    <?php if($typeFilter !== ''): ?><span class="filter-chip">Type: <?php echo e($typeFilter); ?> <a href="?url=request/index&<?php echo http_build_query(array_merge($_GET,['type'=>'','url'=>'request/index'])); ?>" class="filter-chip-remove">×</a></span><?php endif; ?>
+    <?php if($statusFilter !== ''): ?><span class="filter-chip">Status: <?php echo e($statusFilter); ?> <a href="?url=request/index&<?php echo http_build_query(array_merge($_GET,['status'=>'','url'=>'request/index'])); ?>" class="filter-chip-remove">×</a></span><?php endif; ?>
+    <a href="?url=request/index" class="clear-all-btn">Clear All</a>
+</div>
+<?php endif; ?>
+
+<div class="result-count"><?php echo $total; ?> request(s) found</div>
+
+<div class="list-table-container">
+    <div class="list-table-wrapper">
+        <table class="list-table" id="requestTable">
+            <thead>
+                <tr>
+                    <th class="th-checkbox"><input type="checkbox" class="bulk-checkbox" id="selectAll"></th>
+                    <th class="th-sl">SL</th>
+                    <th>Request ID</th>
+                    <th>Employee</th>
+                    <th>Equipment Type</th>
+                    <th>Request Date</th>
+                    <th>Status</th>
+                    <th class="th-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php if($pageRows): ?>
+                <?php foreach($pageRows as $i => $req): ?>
+                <tr>
+                    <td class="td-checkbox"><input type="checkbox" class="bulk-checkbox row-checkbox" value="<?php echo e($req['Request_ID']); ?>"></td>
+                    <td class="td-sl"><?php echo $offset + $i + 1; ?></td>
+                    <td><strong><?php echo e($req['Request_ID']); ?></strong></td>
+                    <td><?php echo e($req['Name'] ?? '—'); ?></td>
+                    <td><?php echo e($req['Equipment_Type']); ?></td>
+                    <td><?php echo e($req['Request_Date']); ?></td>
+                    <td>
+                        <?php
+                        $rs = $req['Status'] ?? '';
+                        $cls = 'status-default';
+                        if ($rs === 'Pending') $cls = 'status-pending';
+                        elseif ($rs === 'Approved') $cls = 'status-approved';
+                        elseif ($rs === 'Rejected') $cls = 'status-rejected';
+                        ?>
+                        <span class="status-badge <?php echo $cls; ?>"><?php echo e($rs); ?></span>
+                    </td>
+                    <td class="td-actions">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-sync-alt"></i> Status
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <form method="POST" action="?url=request/approve/<?php echo e($req['Request_ID']); ?>">
+                                        <?php echo csrf_field(); ?>
+                                        <button type="submit" class="dropdown-item text-success"><i class="fas fa-check"></i> Approve</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form method="POST" action="?url=request/reject/<?php echo e($req['Request_ID']); ?>">
+                                        <?php echo csrf_field(); ?>
+                                        <button type="submit" class="dropdown-item text-danger"><i class="fas fa-times"></i> Reject</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr><td colspan="8" class="text-center py-4 text-muted">No requests found</td></tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="list-table-footer">
+        <div class="page-size-control">Page Size:
+            <select onchange="window.location='?url=request/index&<?php echo http_build_query(array_diff_key($_GET,['page_size'=>'','page'=>'','url'=>''])); ?>&page_size='+this.value">
+                <?php foreach([10,20,50,100] as $ps): ?><option value="<?php echo $ps; ?>" <?php echo $pageSize==$ps?'selected':''; ?>><?php echo $ps; ?></option><?php endforeach; ?>
+            </select>
+        </div>
+        <div class="record-range"><?php echo $from; ?> to <?php echo $to; ?> of <?php echo $total; ?></div>
+        <div class="list-pagination">
+            <a href="?url=request/index&<?php echo $baseQuery; ?>page=1" class="<?php echo $page<=1?'disabled':''; ?>">«</a>
+            <a href="?url=request/index&<?php echo $baseQuery; ?>page=<?php echo max(1,$page-1); ?>" class="<?php echo $page<=1?'disabled':''; ?>">‹</a>
+            <?php for($p=max(1,$page-2);$p<=min($totalPages,$page+2);$p++): ?><a href="?url=request/index&<?php echo $baseQuery; ?>page=<?php echo $p; ?>" class="<?php echo $p==$page?'active':''; ?>"><?php echo $p; ?></a><?php endfor; ?>
+            <a href="?url=request/index&<?php echo $baseQuery; ?>page=<?php echo min($totalPages,$page+1); ?>" class="<?php echo $page>=$totalPages?'disabled':''; ?>">›</a>
+            <a href="?url=request/index&<?php echo $baseQuery; ?>page=<?php echo $totalPages; ?>" class="<?php echo $page>=$totalPages?'disabled':''; ?>">»</a>
+        </div>
+    </div>
+</div>
+<script>
+document.getElementById('selectAll').addEventListener('change', function() {
+    document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = this.checked);
+});
+</script>

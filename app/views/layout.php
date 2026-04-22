@@ -14,8 +14,12 @@
         <!-- Sidebar Header -->
         <div class="sidebar-header">
             <h5 class="sidebar-title">
-                <i class="fas fa-cube"></i> IMS
+                <i class="fas fa-cube"></i> IMS Admin
             </h5>
+            <p class="sidebar-subtitle">Inventory Management System</p>
+            <span class="role-badge">
+                <?php echo e(isset($_SESSION['role']) && !empty($_SESSION['role']) ? ucfirst((string)$_SESSION['role']) : 'Admin'); ?>
+            </span>
         </div>
 
         <!-- Sidebar Navigation -->
@@ -67,6 +71,14 @@
             </a>
             <?php endif; ?>
         </nav>
+
+        <!-- Sidebar Footer with Logout -->
+        <div class="sidebar-footer">
+            <a href="?url=auth/logout" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="nav-label">Logout</span>
+            </a>
+        </div>
     </div>
 
     <!-- Sidebar Toggle Button - ALWAYS VISIBLE -->
@@ -81,17 +93,6 @@
     <div class="main-content" id="mainContent">
         <!-- Top Navbar -->
         <div class="top-navbar">
-            <div class="menu-section">
-                <ul class="top-navbar-nav">
-                    <li><a href="?url=dashboard/index"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-                    <li><a href="?url=asset/index"><i class="fas fa-boxes"></i> Assets</a></li>
-                    <li><a href="?url=assignment/index"><i class="fas fa-exchange-alt"></i> Assignments</a></li>
-                    <li><a href="?url=maintenance/index"><i class="fas fa-wrench"></i> Maintenance</a></li>
-                    <li><a href="?url=employee/index"><i class="fas fa-users"></i> Employees</a></li>
-                    <li><a href="?url=vendor/index"><i class="fas fa-building"></i> Vendors</a></li>
-                    <li><a href="?url=admin/index"><i class="fas fa-cog"></i> Admin</a></li>
-                </ul>
-            </div>
             <div class="top-navbar-right">
                 <!-- Stock Alerts Bell -->
                 <?php if (isset($data['stock_alerts']) && ($data['stock_alerts']['total_low'] > 0 || $data['stock_alerts']['total_out'] > 0)): ?>
@@ -166,10 +167,6 @@
             ?>
         </div>
         
-        <!-- Footer -->
-        <div class="layout-footer">
-            <p class="layout-footer-text">&copy; 2026 Inventory Management System. All rights reserved.</p>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
