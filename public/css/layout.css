@@ -7,157 +7,248 @@
 body {
     background-color: #f5f5f5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
 }
 
-/* Sidebar Styling */
+/* ============================================
+   SIDEBAR STYLES
+   ============================================ */
+
 .sidebar {
-    width: 250px;
-    height: 100vh;
-    background: #2c3e50;
     position: fixed;
     left: 0;
     top: 0;
-    overflow-y: auto;
-    padding-top: 0;
-    z-index: 1000;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateX(0);
-}
-
-.sidebar.collapsed {
-    transform: translateX(-100%);
-}
-
-.sidebar.show {
-    transform: translateX(0);
-}
-
-.sidebar-brand {
-    padding: 18px 20px;
-    text-align: center;
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     color: white;
+    z-index: 1050;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transform: translateX(0);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Collapsed state - slide off screen to the left */
+.sidebar.collapsed {
+    transform: translateX(-260px);
+}
+
+/* Sidebar header/branding */
+.sidebar-header {
+    padding: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: #1a252f;
-    cursor: grab;
-    user-select: none;
-    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.sidebar-brand:active {
-    cursor: grabbing;
-    background: #0f1419;
-}
-
-.sidebar-brand h4 {
+.sidebar-title {
     margin: 0;
-    font-weight: 700;
     font-size: 1.3em;
-    letter-spacing: 0.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
 }
 
-.sidebar-brand small {
-    opacity: 0.7;
-    font-size: 0.8em;
-    display: block;
-    margin-top: 4px;
-}
-
-.sidebar-logo {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-
+/* Sidebar navigation */
 .sidebar-nav {
-    list-style: none;
-    padding: 10px 0;
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 0;
+    gap: 3px;
 }
 
-.sidebar-nav li {
-    margin: 0;
-}
-
-.sidebar-nav a {
+.nav-item {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px 18px;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    transition: all 0.25s ease;
+    transition: all 0.3s ease;
     border-left: 3px solid transparent;
-    font-weight: 500;
-    font-size: 0.95em;
 }
 
-.sidebar-nav a:hover {
-    background-color: rgba(52, 152, 219, 0.15);
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.08);
     color: white;
-    border-left-color: #3498db;
-    padding-left: 22px;
+    border-left-color: #667eea;
 }
 
-.sidebar-nav a.active {
-    background-color: rgba(52, 152, 219, 0.25);
-    color: white;
-    border-left-color: #3498db;
+.nav-item.active {
+    background: rgba(102, 126, 234, 0.2);
+    color: #a5f3fc;
+    border-left-color: #667eea;
+    font-weight: 600;
 }
 
-.sidebar-nav i {
-    width: 18px;
+.nav-item i {
+    font-size: 1.1em;
+    min-width: 20px;
     text-align: center;
     flex-shrink: 0;
 }
 
-/* Main Content */
+.nav-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Scrollbar styling for sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   TOGGLE BUTTON - ALWAYS VISIBLE
+   ============================================ */
+
+.sidebar-toggle-btn {
+    position: fixed;
+    left: 260px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 48px;
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 6px 6px 0;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1051;
+    font-size: 1em;
+    padding: 0;
+}
+
+/* Button slides left when sidebar collapses */
+.sidebar.collapsed ~ .sidebar-toggle-btn {
+    left: 0;
+}
+
+.sidebar-toggle-btn:hover {
+    background: linear-gradient(135deg, #111827 0%, #0f1419 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-toggle-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+/* Arrow icon rotates 180° when sidebar collapses */
+.sidebar.collapsed ~ .sidebar-toggle-btn i {
+    transform: rotate(180deg);
+}
+
+.sidebar-toggle-btn i {
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   SIDEBAR OVERLAY (Mobile Only)
+   ============================================ */
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.show {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+
 .main-content {
-    margin-left: 250px;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    transition: margin-left 0.3s ease;
+    margin-left: 260px;
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Toggle Button */
-.sidebar-toggle {
-    display: none;
-    background: #667eea;
-    color: white;
-    border: none;
-    padding: 12px 15px;
-    cursor: pointer;
-    font-size: 1.3em;
-    transition: all 0.3s ease;
+/* Adjust margin when sidebar collapses (desktop) */
+@media (min-width: 992px) {
+    .sidebar.collapsed ~ .sidebar-overlay ~ .main-content {
+        margin-left: 0;
+    }
 }
 
-.sidebar-toggle:hover {
-    background: #764ba2;
+/* Hide toggle button on mobile */
+@media (max-width: 991px) {
+    .sidebar-toggle-btn {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        transform: translateX(-260px);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
 }
 
-.sidebar-toggle:active {
-    background: #2c3e50;
-}
-
-/* Top Navigation */
+/* ============================================
+   TOP NAVBAR
+   ============================================ */
 .top-navbar {
     background: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 12px 20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 1100;
     flex-wrap: wrap;
     gap: 15px;
 }
 
 .menu-section {
+    display: none;
     flex: 1;
     min-width: 300px;
 }
@@ -554,19 +645,38 @@ body {
 
 /* Mobile Menu Toggle */
 @media (max-width: 991px) {
-    .sidebar-toggle {
-        display: inline-block;
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 260px;
+        height: 100vh;
+        transform: translateX(-260px);
+        z-index: 1001;
     }
 
     .sidebar.show {
         transform: translateX(0);
     }
 
+    .sidebar.collapsed {
+        transform: translateX(-260px);
+    }
+
+    /* Hide the arrow toggle button on mobile */
+    .sidebar-collapse-btn {
+        display: none;
+    }
+
     .main-content {
+        margin-left: 0 !important;
+    }
+
+    .main-content.sidebar-collapsed {
         margin-left: 0;
     }
 
-    #sidebarOverlay {
+    .sidebar-overlay {
         display: none;
         position: fixed;
         top: 0;
@@ -579,7 +689,7 @@ body {
         transition: opacity 0.3s ease;
     }
 
-    #sidebarOverlay.show {
+    .sidebar-overlay.show {
         display: block;
         opacity: 1;
     }

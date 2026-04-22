@@ -6,6 +6,7 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Model.php";
 
 class Maintenance extends Model {
+    protected $table = 'maintenance';
 
     public function getAll(){
         $sql = "SELECT m.*, a.Asset_Name FROM maintenance m LEFT JOIN asset a ON m.Asset_ID = a.Asset_ID ORDER BY m.Maintenance_ID DESC";
@@ -66,6 +67,42 @@ class Maintenance extends Model {
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $id);
         return $stmt->execute();
+    }
+
+    public function getPendingCount() {
+        $sql = "SELECT COUNT(*) as total FROM maintenance WHERE Status = 'Pending'";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            Logger::error("Query prepare failed", ['error' => $this->conn->error]);
+            return 0;
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total'] ?? 0;
+    }
+
+    public function getRecent($limit = 5) {
+        $sql = "SELECT m.Maintenance_ID, m.Reported_Date, m.Status, m.Cost, a.Asset_Name
+                FROM maintenance m
+                LEFT JOIN asset a ON m.Asset_ID = a.Asset_ID
+                ORDER BY m.Maintenance_ID DESC LIMIT ?";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            Logger::error("Query prepare failed", ['error' => $this->conn->error]);
+            return [];
+        }
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $maintenance = [];
+        
+        if ($result) {
+            while($row = $result->fetch_assoc()) {
+                $maintenance[] = $row;
+            }
+        }
+        return $maintenance;
     }
 }
 ?>

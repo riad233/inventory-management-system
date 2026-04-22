@@ -10,6 +10,18 @@
 
 <div class="card shadow card-max-600">
     <div class="card-body">
+        <?php if(isset($data['errors']) && !empty($data['errors'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Please fix the following errors:</strong>
+                <?php foreach($data['errors'] as $field => $message): ?>
+                    <div class="mt-2">
+                        • <strong><?php echo e($field); ?>:</strong> 
+                        <?php echo e($message); ?>
+                    </div>
+                <?php endforeach; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
         <form method="post" action="?url=employee/add">
             <?php echo csrf_field(); ?>
             <div class="mb-3">

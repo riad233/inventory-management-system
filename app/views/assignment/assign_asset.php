@@ -30,6 +30,18 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
           <h5 class="mb-0"><i class="fas fa-hand-holding-box"></i> Assign Asset</h5>
         </div>
         <div class="card-body">
+          <?php if(isset($data['errors']) && !empty($data['errors'])): ?>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Please fix the following errors:</strong>
+                  <?php foreach($data['errors'] as $field => $message): ?>
+                      <div class="mt-2">
+                          • <strong><?php echo e($field); ?>:</strong> 
+                          <?php echo e($message); ?>
+                      </div>
+                  <?php endforeach; ?>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+          <?php endif; ?>
           <form method="post" action="">
             <?php echo csrf_field(); ?>
             <div class="mb-3">

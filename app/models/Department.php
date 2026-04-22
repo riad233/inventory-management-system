@@ -6,13 +6,22 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Model.php";
 
 class Department extends Model {
+    protected $table = 'department';
+    
     public function getAll() {
         $sql = "SELECT * FROM department";
-        $result = mysqli_query($this->conn, $sql);
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            Logger::error("Query prepare failed", ['error' => $this->conn->error]);
+            return [];
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
         $departments = [];
-        while ($row = mysqli_fetch_assoc($result)) {
+        while ($row = $result->fetch_assoc()) {
             $departments[] = $row;
         }
+        $stmt->close();
         return $departments;
     }
 }

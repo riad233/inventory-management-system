@@ -6,6 +6,7 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Model.php";
 
 class Employee extends Model {
+    protected $table = 'employee';
 
     public function getAll(){
         $sql = "SELECT e.*, d.Department_Name FROM employee e LEFT JOIN department d ON e.Department_ID = d.Department_ID ORDER BY e.User_ID DESC";

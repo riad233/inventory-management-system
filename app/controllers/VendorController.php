@@ -7,6 +7,7 @@ require_once ROOT_PATH . "/core/Controller.php";
 require_once ROOT_PATH . "/config/database.php";
 require_once ROOT_PATH . "/config/validator.php";
 require_once ROOT_PATH . "/config/logger.php";
+require_once ROOT_PATH . "/config/authorization.php";
 
 class VendorController extends Controller {
     
@@ -115,6 +116,7 @@ class VendorController extends Controller {
             exit;
         }
         require_csrf();
+        AuthorizationHelper::requireAdmin();
         $vendorModel = $this->model('Vendor');
         if($vendorModel->delete($id)){
             header("Location: ?url=vendor/index&msg=Vendor deleted");

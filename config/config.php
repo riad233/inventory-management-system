@@ -12,6 +12,23 @@ require_once ROOT_PATH . '/config/validator.php';
 session_start();
 date_default_timezone_set('Asia/Dhaka');
 
+// ✅ ADD SESSION TIMEOUT CHECK (30 minutes)
+$timeout_duration = 1800; // 30 minutes in seconds
+
+if (isset($_SESSION['last_activity'])) {
+    $elapsed_time = time() - $_SESSION['last_activity'];
+    
+    if ($elapsed_time > $timeout_duration) {
+        // Session expired, destroy and redirect
+        session_destroy();
+        header("Location: ?url=auth/login&msg=Session+expired");
+        exit;
+    }
+}
+
+// Update last activity time
+$_SESSION['last_activity'] = time();
+
 function e($value) {
 	return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }

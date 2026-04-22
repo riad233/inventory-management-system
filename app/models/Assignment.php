@@ -6,6 +6,7 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Model.php";
 
 class Assignment extends Model {
+    protected $table = 'assignment';
 
     public function getAll(){
         $sql = "SELECT a.*, ast.Asset_Name, e.Name 
@@ -76,6 +77,56 @@ class Assignment extends Model {
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $id);
         return $stmt->execute();
+    }
+
+    public function getCount() {
+        $sql = "SELECT COUNT(*) as total FROM assignment";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            Logger::error("Query prepare failed", ['error' => $this->conn->error]);
+            return 0;
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total'] ?? 0;
+    }
+
+    public function getPendingCount() {
+        $sql = "SELECT COUNT(*) as total FROM assignment WHERE Actual_Return_Date IS NULL";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            Logger::error("Query prepare failed", ['error' => $this->conn->error]);
+            return 0;
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total'] ?? 0;
+    }
+
+    public function getRecent($limit = 5) {
+        $sql = "SELECT a.Assignment_ID, a.Assigned_Date, a.Expected_Return_Date, a.Actual_Return_Date, ast.Asset_Name, e.Name as Employee_Name
+                FROM assignment a
+                LEFT JOIN asset ast ON a.Asset_ID = ast.Asset_ID
+                LEFT JOIN employee e ON a.User_ID = e.User_ID
+                ORDER BY a.Assignment_ID DESC LIMIT ?";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            Logger::error("Query prepare failed", ['error' => $this->conn->error]);
+            return [];
+        }
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $assignments = [];
+        
+        if ($result) {
+            while($row = $result->fetch_assoc()) {
+                $assignments[] = $row;
+            }
+        }
+        return $assignments;
     }
 }
 ?>

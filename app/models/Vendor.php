@@ -6,6 +6,7 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Model.php";
 
 class Vendor extends Model {
+    protected $table = 'vendor';
 
     public function getAll(){
         $sql = "SELECT * FROM vendor ORDER BY Vendor_ID DESC";

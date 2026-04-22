@@ -17,34 +17,25 @@ class DashboardController extends Controller {
         $assignmentModel = $this->model('Assignment');
         $maintenanceModel = $this->model('Maintenance');
         
-        $assets = $assetModel->getAll();
-        $assignments = $assignmentModel->getAll();
-        $maintenance = $maintenanceModel->getAll();
+        // Use efficient count methods instead of fetching all data
+        $total_assets = $assetModel->getCount();
+        $total_assignments = $assignmentModel->getCount();
+        $total_pending = $assignmentModel->getPendingCount();
+        $total_maintenance = $maintenanceModel->getPendingCount();
         
-        $total_assets = count($assets);
-        $total_pending = 0;
-        $total_maintenance = 0;
-        
-        foreach($assignments as $assign){
-            if($assign['Actual_Return_Date'] == null){
-                $total_pending++;
-            }
-        }
-        
-        foreach($maintenance as $maint){
-            if($maint['Status'] == 'Pending'){
-                $total_maintenance++;
-            }
-        }
+        // Get recent activity for dashboard
+        $recent_assets = $assetModel->getRecent(5);
+        $recent_assignments = $assignmentModel->getRecent(5);
+        $recent_maintenance = $maintenanceModel->getRecent(5);
         
         $data = [
             'total_assets' => $total_assets,
-            'total_assignments' => count($assignments),
+            'total_assignments' => $total_assignments,
             'total_pending' => $total_pending,
             'total_maintenance' => $total_maintenance,
-            'assets' => $assets,
-            'assignments' => $assignments,
-            'maintenance' => $maintenance
+            'recent_assets' => $recent_assets,
+            'recent_assignments' => $recent_assignments,
+            'recent_maintenance' => $recent_maintenance
         ];
         
         $this->view('dashboard/dashboard', $data);

@@ -7,6 +7,7 @@ require_once ROOT_PATH . "/core/Controller.php";
 require_once ROOT_PATH . "/config/database.php";
 require_once ROOT_PATH . "/config/validator.php";
 require_once ROOT_PATH . "/config/logger.php";
+require_once ROOT_PATH . "/config/authorization.php";
 
 class EmployeeController extends Controller {
     
@@ -146,6 +147,7 @@ class EmployeeController extends Controller {
             exit;
         }
         require_csrf();
+        AuthorizationHelper::requireAdmin();
         
         Validator::integer('id', $id, 'Employee ID');
         if (!Validator::passes()) { http_response_code(400); die("Invalid ID"); }
@@ -167,4 +169,4 @@ class EmployeeController extends Controller {
     }
 }
 ?>
-?>
+

@@ -7,6 +7,7 @@ require_once ROOT_PATH . "/core/Controller.php";
 require_once ROOT_PATH . "/config/database.php";
 require_once ROOT_PATH . "/config/validator.php";
 require_once ROOT_PATH . "/config/logger.php";
+require_once ROOT_PATH . "/config/authorization.php";
 
 class RequestController extends Controller {
     
@@ -121,6 +122,7 @@ class RequestController extends Controller {
             exit;
         }
         require_csrf();
+        AuthorizationHelper::requireAdmin();
         $requestModel = $this->model('EquipmentRequest');
         if($requestModel->delete($id)){
             header("Location: ?url=request/index&msg=Request deleted");

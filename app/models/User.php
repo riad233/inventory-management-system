@@ -6,6 +6,7 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Model.php";
 
 class User extends Model {
+    protected $table = 'users';
 
     public function login($username){
         $sql = "SELECT * FROM users WHERE Username = ? LIMIT 1";

@@ -9,67 +9,65 @@
     <link href="css/layout.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- Sidebar -->
+    <!-- Sidebar Container -->
     <div class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <img src="img/ims.png" alt="IMS Logo" class="sidebar-logo">
-            <h4>IMS</h4>
-            <small>Inventory Management System</small>
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <h5 class="sidebar-title">
+                <i class="fas fa-cube"></i> IMS
+            </h5>
         </div>
 
-        <ul class="sidebar-nav">
-            <li>
-                <a href="?url=dashboard/index" class="<?php echo (strpos($_GET['url'] ?? '', 'dashboard') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="?url=asset/index" class="<?php echo (strpos($_GET['url'] ?? '', 'asset') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-cube"></i> Assets
-                </a>
-            </li>
-            <li>
-                <a href="?url=assignment/index" class="<?php echo (strpos($_GET['url'] ?? '', 'assignment') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-exchange-alt"></i> Assignments
-                </a>
-            </li>
-            <li>
-                <a href="?url=maintenance/index" class="<?php echo (strpos($_GET['url'] ?? '', 'maintenance') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-tools"></i> Maintenance
-                </a>
-            </li>
-            <li>
-                <a href="?url=employee/index" class="<?php echo (strpos($_GET['url'] ?? '', 'employee') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-users"></i> Employees
-                </a>
-            </li>
-            <li>
-                <a href="?url=vendor/index" class="<?php echo (strpos($_GET['url'] ?? '', 'vendor') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-store"></i> Vendors
-                </a>
-            </li>
-            <li>
-                <a href="?url=request/index" class="<?php echo (strpos($_GET['url'] ?? '', 'request') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-file-alt"></i> Requests
-                </a>
-            </li>
-        </ul>
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar-nav">
+            <a href="?url=dashboard/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'dashboard') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-chart-line"></i>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="?url=asset/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'asset') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-boxes"></i>
+                <span class="nav-label">Assets</span>
+            </a>
+            <a href="?url=assignment/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'assignment') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-exchange-alt"></i>
+                <span class="nav-label">Assignments</span>
+            </a>
+            <a href="?url=maintenance/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'maintenance') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-wrench"></i>
+                <span class="nav-label">Maintenance</span>
+            </a>
+            <a href="?url=employee/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'employee') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-users"></i>
+                <span class="nav-label">Employees</span>
+            </a>
+            <a href="?url=vendor/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'vendor') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-building"></i>
+                <span class="nav-label">Vendors</span>
+            </a>
+            <a href="?url=request/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'request') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-paper-plane"></i>
+                <span class="nav-label">Requests</span>
+            </a>
+        </nav>
     </div>
+
+    <!-- Sidebar Toggle Button - ALWAYS VISIBLE -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Toggle Sidebar">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <!-- Sidebar Overlay (Mobile Only) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Main Content -->
     <div class="main-content" id="mainContent">
         <!-- Top Navbar -->
         <div class="top-navbar">
-            <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Sidebar">
-                <i class="fas fa-bars"></i>
-            </button>
             <div class="menu-section">
                 <ul class="top-navbar-nav">
                     <li><a href="?url=dashboard/index"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                     <li><a href="?url=asset/index"><i class="fas fa-boxes"></i> Assets</a></li>
+                    <li><a href="?url=product/index"><i class="fas fa-box-open"></i> Products</a></li>
                     <li><a href="?url=assignment/index"><i class="fas fa-exchange-alt"></i> Assignments</a></li>
                     <li><a href="?url=maintenance/index"><i class="fas fa-wrench"></i> Maintenance</a></li>
                     <li><a href="?url=employee/index"><i class="fas fa-users"></i> Employees</a></li>
@@ -77,6 +75,40 @@
                 </ul>
             </div>
             <div class="top-navbar-right">
+                <!-- Stock Alerts Bell -->
+                <?php if (isset($data['stock_alerts']) && ($data['stock_alerts']['total_low'] > 0 || $data['stock_alerts']['total_out'] > 0)): ?>
+                <div class="stock-alerts-dropdown">
+                    <div class="alert-badge alert-badge-danger" data-bs-toggle="dropdown" title="Stock Alerts">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge"><?php echo e($data['stock_alerts']['total_out'] + $data['stock_alerts']['total_low']); ?></span>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 350px;">
+                        <li><h6 class="dropdown-header"><i class="fas fa-exclamation-circle"></i> Stock Alerts</h6></li>
+                        
+                        <?php if ($data['stock_alerts']['total_out'] > 0): ?>
+                        <li><h6 class="dropdown-header" style="font-size: 0.85rem; color: #dc3545;">🚨 Out of Stock (Qty < 3)</h6></li>
+                        <?php foreach (array_slice($data['stock_alerts']['out_items'], 0, 3) as $item): ?>
+                        <li><a class="dropdown-item" href="?url=dashboard/stockAlerts">
+                            <small><i class="fas fa-times-circle" style="color: #dc3545;"></i> <?php echo e($item['Item_Name']); ?> (Qty: <?php echo e($item['Quantity']); ?>)</small>
+                        </a></li>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <?php if ($data['stock_alerts']['total_low'] > 0): ?>
+                        <li><h6 class="dropdown-header" style="font-size: 0.85rem; color: #ff9800;">⚠️ Low Stock (3-10)</h6></li>
+                        <?php foreach (array_slice($data['stock_alerts']['low_items'], 0, 3) as $item): ?>
+                        <li><a class="dropdown-item" href="?url=dashboard/stockAlerts">
+                            <small><i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> <?php echo e($item['Item_Name']); ?> (Qty: <?php echo e($item['Quantity']); ?>)</small>
+                        </a></li>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-center" href="?url=dashboard/stockAlerts">View All Alerts</a></li>
+                    </ul>
+                </div>
+                <?php endif; ?>
+                
                 <div class="user-menu">
                     <div class="user-info user-menu-toggle" id="userMenuToggle">
                     <div class="user-avatar user-avatar-gradient">
@@ -126,5 +158,63 @@
     <script src="js/table-search.js"></script>
     <script src="js/list-search-init.js"></script>
     <script src="js/layout.js"></script>
+    
+    <!-- Stock Alert Notifications -->
+    <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+    
+    <script>
+        // Check for stock alerts and show notifications
+        <?php if (isset($data['stock_alerts'])): ?>
+            const stockAlerts = <?php echo json_encode($data['stock_alerts']); ?>;
+            
+            function showNotification(title, message, type = 'warning', icon = 'fas fa-bell') {
+                const container = document.getElementById('notificationContainer');
+                const toastId = 'alert-' + Date.now();
+                
+                const toastHtml = `
+                    <div id="${toastId}" class="toast" role="alert" style="min-width: 350px; border-left: 5px solid ${type === 'danger' ? '#dc3545' : '#ff9800'};">
+                        <div class="toast-header bg-light">
+                            <i class="fas ${icon}" style="color: ${type === 'danger' ? '#dc3545' : '#ff9800'}; margin-right: 8px;"></i>
+                            <strong class="me-auto">${title}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                `;
+                
+                container.insertAdjacentHTML('beforeend', toastHtml);
+                const toastElement = document.getElementById(toastId);
+                const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 10000 });
+                toast.show();
+                
+                // Remove from DOM after hiding
+                toastElement.addEventListener('hidden.bs.toast', () => {
+                    toastElement.remove();
+                });
+            }
+            
+            // Show emergency alert if out of stock items exist
+            if (stockAlerts.total_out > 0) {
+                showNotification(
+                    '🚨 EMERGENCY ALERT',
+                    `${stockAlerts.total_out} item(s) are out of stock (Qty < 3). Immediate action required! <br><a href="?url=dashboard/stockAlerts" style="color: #dc3545; font-weight: bold;">View & Request Now</a>`,
+                    'danger',
+                    'fa-bell'
+                );
+            }
+            
+            // Show low stock alert if applicable
+            if (stockAlerts.total_low > 0 && stockAlerts.total_out === 0) {
+                showNotification(
+                    '⚠️ LOW STOCK WARNING',
+                    `${stockAlerts.total_low} item(s) are running low (Qty 3-10). <br><a href="?url=dashboard/stockAlerts" style="color: #ff9800; font-weight: bold;">View & Request Now</a>`,
+                    'warning',
+                    'fa-exclamation-triangle'
+                );
+            }
+        <?php endif; ?>
+    </script>
 </body>
 </html>
