@@ -48,6 +48,24 @@
                 <i class="fas fa-paper-plane"></i>
                 <span class="nav-label">Requests</span>
             </a>
+            
+            <!-- Admin Section - Only visible to Admin users -->
+            <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
+            <hr class="sidebar-divider">
+            <div class="sidebar-section-title">Administration</div>
+            <a href="?url=admin/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'admin') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-cog"></i>
+                <span class="nav-label">Settings</span>
+            </a>
+            <a href="?url=admin/users" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'admin/users') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-user-tie"></i>
+                <span class="nav-label">User Management</span>
+            </a>
+            <a href="?url=admin/logs" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'admin/logs') === 0) ? 'active' : ''; ?>">
+                <i class="fas fa-history"></i>
+                <span class="nav-label">Activity Logs</span>
+            </a>
+            <?php endif; ?>
         </nav>
     </div>
 
@@ -67,11 +85,11 @@
                 <ul class="top-navbar-nav">
                     <li><a href="?url=dashboard/index"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                     <li><a href="?url=asset/index"><i class="fas fa-boxes"></i> Assets</a></li>
-                    <li><a href="?url=product/index"><i class="fas fa-box-open"></i> Products</a></li>
                     <li><a href="?url=assignment/index"><i class="fas fa-exchange-alt"></i> Assignments</a></li>
                     <li><a href="?url=maintenance/index"><i class="fas fa-wrench"></i> Maintenance</a></li>
                     <li><a href="?url=employee/index"><i class="fas fa-users"></i> Employees</a></li>
                     <li><a href="?url=vendor/index"><i class="fas fa-building"></i> Vendors</a></li>
+                    <li><a href="?url=admin/index"><i class="fas fa-cog"></i> Admin</a></li>
                 </ul>
             </div>
             <div class="top-navbar-right">
