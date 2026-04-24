@@ -71,7 +71,7 @@ class MaintenanceController extends Controller {
             Validator::reset();
             Validator::required('maintenance_id', $_POST['maintenance_id'] ?? '', 'Maintenance ID');
             Validator::required('status', $_POST['status'] ?? '', 'Status');
-            $validStatuses = ['Pending', 'In Progress', 'Completed'];
+            $validStatuses = ['Pending', 'In Progress', 'Approved', 'Rejected', 'Completed'];
             if (!in_array($_POST['status'] ?? '', $validStatuses)) {
                 Validator::addError('status', 'Invalid status selected');
             }

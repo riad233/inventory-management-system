@@ -1,25 +1,32 @@
 <?php
-// Session already started in layout
 require_once __DIR__ . '/../../../config/dropdown_helper.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Maintenance - IMS</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card shadow">
-        <div class="card-header bg-warning text-dark">
-          <h5 class="mb-0"><i class="fas fa-tools"></i> Add Maintenance Record</h5>
-        </div>
-        <div class="card-body">
+
+<div class="list-page-header">
+    <h2><i class="fas fa-tools"></i> Add Maintenance Record</h2>
+    <div class="list-header-actions">
+        <a href="?url=maintenance/index" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<?php if(isset($data['errors']) && !empty($data['errors'])): ?>
+<div class="alert alert-danger alert-dismissible fade show">
+    <strong>Please fix the following errors:</strong>
+    <ul class="mb-0 mt-1">
+        <?php foreach($data['errors'] as $field => $errMsg): ?><li><?php echo e($errMsg); ?></li><?php endforeach; ?>
+    </ul>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<?php endif; ?>
+
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-5">
+    <div class="form-page-card">
+      <div class="form-page-card-header" style="background:#fef9c3;">
+        <i class="fas fa-tools" style="color:#92400e;"></i>
+        <h5>Add Maintenance Record</h5>
+      </div>
+      <div class="card-body p-4">
           <form method="post" action="">
             <?php echo csrf_field(); ?>
             <div class="mb-3">
@@ -60,18 +67,14 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
               <label class="form-label">Estimated Cost</label>
               <input type="number" step="0.01" name="cost" class="form-control" required>
             </div>
-            <div class="text-end">
-              <button type="submit" name="submit" class="btn btn-warning">
-                <i class="fas fa-save"></i> Add Record
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <a href="?url=maintenance/index" class="btn btn-sm btn-light"><i class="fas fa-times"></i> Cancel</a>
+              <button type="submit" name="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-save me-1"></i> Add Record
               </button>
             </div>
           </form>
-        </div>
       </div>
     </div>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

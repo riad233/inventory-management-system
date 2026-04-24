@@ -115,25 +115,12 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                         <span class="status-badge <?php echo $cls; ?>"><?php echo e($rs); ?></span>
                     </td>
                     <td class="td-actions">
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-sync-alt"></i> Status
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <form method="POST" action="?url=request/approve/<?php echo e($req['Request_ID']); ?>">
-                                        <?php echo csrf_field(); ?>
-                                        <button type="submit" class="dropdown-item text-success"><i class="fas fa-check"></i> Approve</button>
-                                    </form>
-                                </li>
-                                <li>
-                                    <form method="POST" action="?url=request/reject/<?php echo e($req['Request_ID']); ?>">
-                                        <?php echo csrf_field(); ?>
-                                        <button type="submit" class="dropdown-item text-danger"><i class="fas fa-times"></i> Reject</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
+                        <?php if(($req['Status'] ?? '') === 'Pending'): ?>
+                            <button type="button" class="btn-approve" onclick="openRequestModal('approve','<?php echo e($req['Request_ID']); ?>','<?php echo e(addslashes($req['Name'] ?? '')); ?>')"><i class="fas fa-check"></i> Approve</button>
+                            <button type="button" class="btn-reject" onclick="openRequestModal('reject','<?php echo e($req['Request_ID']); ?>','<?php echo e(addslashes($req['Name'] ?? '')); ?>')"><i class="fas fa-times"></i> Reject</button>
+                        <?php else: ?>
+                            <a href="?url=request/edit/<?php echo e($req['Request_ID']); ?>" class="btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -163,4 +150,36 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
 document.getElementById('selectAll').addEventListener('change', function() {
     document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = this.checked);
 });
+function openRequestModal(action, id, name) {
+    var isApprove = action === 'approve';
+    document.getElementById('requestActionForm').action = '?url=request/' + action + '/' + id;
+    document.getElementById('requestActionIcon').className = isApprove ? 'fas fa-check-circle' : 'fas fa-times-circle';
+    document.getElementById('requestActionIcon').style.color = isApprove ? '#16a34a' : '#dc2626';
+    document.getElementById('requestActionTitle').textContent = isApprove ? 'Approve Request?' : 'Reject Request?';
+    document.getElementById('requestActionMsg').textContent = (isApprove ? 'Approve' : 'Reject') + ' request from "' + name + '"?';
+    document.getElementById('requestActionBtn').className = isApprove ? 'btn btn-sm btn-success' : 'btn btn-sm btn-danger';
+    document.getElementById('requestActionBtn').innerHTML = isApprove ? '<i class="fas fa-check me-1"></i>Approve' : '<i class="fas fa-times me-1"></i>Reject';
+    new bootstrap.Modal(document.getElementById('requestActionModal')).show();
+}
 </script>
+
+<!-- Approve/Reject Confirmation Modal -->
+<div class="modal fade ims-confirm-modal" id="requestActionModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:360px;">
+    <div class="modal-content" style="border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.15);overflow:hidden;">
+      <div class="modal-body">
+        <div class="modal-confirm-icon"><i id="requestActionIcon" class="fas fa-check-circle" style="color:#16a34a;"></i></div>
+        <div class="modal-confirm-title" id="requestActionTitle">Approve Request?</div>
+        <p class="modal-confirm-msg" id="requestActionMsg"></p>
+        <form id="requestActionForm" method="POST">
+          <?php echo csrf_field(); ?>
+          <div class="modal-confirm-actions">
+            <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" id="requestActionBtn" class="btn btn-sm btn-success"><i class="fas fa-check me-1"></i>Approve</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

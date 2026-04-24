@@ -76,14 +76,58 @@ class AssignmentController extends Controller {
         $this->view('assignment/return_asset', ['assignments' => $assignments]);
     }
     
-    public function delete($id){
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            exit;
-        }
-        require_csrf();
-        AuthorizationHelper::requireAdmin();
+    public function edit($id){
+        Validator::integer('id', $id, 'Assignment ID');
+        if (!Validator::passes()) { http_response_code(400); die("Invalid ID"); }
+
         $assignmentModel = $this->model('Assignment');
+        $assignment = $assignmentModel->getById($id);
+        if (!$assignment) { http_response_code(404); die("Assignment not found"); }
+
+        $errors = [];
+        if(isset($_POST['submit'])){
+            require_csrf();
+
+            $data = [
+                'asset_id'        => Validator::sanitizeInt($_POST['asset_id'] ?? ''),
+                'user_id'         => Validator::sanitizeInt($_POST['user_id'] ?? ''),
+                'dept_id'         => Validator::sanitizeInt($_POST['dept_id'] ?? ''),
+                'exp_return_date' => Validator::sanitizeString($_POST['exp_return_date'] ?? '')
+            ];
+
+            Validator::reset();
+            Validator::required('asset_id',        $data['asset_id'],        'Asset');
+            Validator::required('user_id',         $data['user_id'],         'Employee');
+            Validator::required('dept_id',         $data['dept_id'],         'Department');
+            Validator::required('exp_return_date', $data['exp_return_date'], 'Return Date');
+            Validator::date('exp_return_date',     $data['exp_return_date'], 'Return Date');
+
+            if (Validator::passes()) {
+                if($assignmentModel->update($id, $data)){
+                    header("Location: ?url=assignment/index&msg=Assignment updated successfully");
+                    exit;
+                } else {
+                    $errors['general'] = "Failed to update assignment";
+                }
+            } else {
+                $errors = Validator::getErrors();
+            }
+        }
+
+        $assetModel      = $this->model('Asset');
+        $employeeModel   = $this->model('Employee');
+        $departmentModel = $this->model('Department');
+
+        $this->view('assignment/edit_assignment', [
+            'assignment'  => $assignment,
+            'assets'      => $assetModel->getAll(),
+            'employees'   => $employeeModel->getAll(),
+            'departments' => $departmentModel->getAll(),
+            'errors'      => $errors
+        ]);
+    }
+
+    public function delete($id){
         if($assignmentModel->delete($id)){
             header("Location: ?url=assignment/index&msg=Assignment deleted");
         }

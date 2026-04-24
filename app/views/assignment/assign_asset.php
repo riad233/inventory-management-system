@@ -1,52 +1,37 @@
 <?php
-// Session already started in layout
 require_once __DIR__ . '/../../../config/dropdown_helper.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Assign Asset - IMS</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg content-action-bar p-0">
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="btn btn-outline-secondary btn-sm" href="?url=assignment/index"><i class="fas fa-arrow-left"></i> Back to Assignments</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
 
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0"><i class="fas fa-hand-holding-box"></i> Assign Asset</h5>
-        </div>
-        <div class="card-body">
-          <?php if(isset($data['errors']) && !empty($data['errors'])): ?>
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>Please fix the following errors:</strong>
-                  <?php foreach($data['errors'] as $field => $message): ?>
-                      <div class="mt-2">
-                          • <strong><?php echo e($field); ?>:</strong> 
-                          <?php echo e($message); ?>
-                      </div>
-                  <?php endforeach; ?>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              </div>
-          <?php endif; ?>
+<div class="list-page-header">
+    <h2><i class="fas fa-exchange-alt"></i> Assign Asset</h2>
+    <div class="list-header-actions">
+        <a href="?url=assignment/index" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<?php if(isset($data['errors']) && !empty($data['errors'])): ?>
+<div class="alert alert-danger alert-dismissible fade show">
+    <strong>Please fix the following errors:</strong>
+    <ul class="mb-0 mt-1">
+        <?php foreach($data['errors'] as $field => $errMsg): ?><li><?php echo e($errMsg); ?></li><?php endforeach; ?>
+    </ul>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<?php endif; ?>
+
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-5">
+    <div class="form-page-card">
+      <div class="form-page-card-header" style="background:#eff6ff;">
+        <i class="fas fa-hand-holding-box" style="color:#1d4ed8;"></i>
+        <h5>Assign Asset</h5>
+      </div>
+      <div class="card-body p-4">
           <form method="post" action="">
             <?php echo csrf_field(); ?>
             <div class="mb-3">
               <label class="form-label">Asset</label>
-              <select name="asset_id" class="form-control" required>
+              <select name="asset_id" class="form-select form-select-sm" required>
                 <option value="">Select Asset</option>
                 <?php if(isset($data['assets']) && is_array($data['assets'])): ?>
                   <?php foreach($data['assets'] as $asset): ?>
@@ -57,7 +42,7 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
             </div>
             <div class="mb-3">
               <label class="form-label">Employee</label>
-              <select name="user_id" class="form-control" required>
+              <select name="user_id" class="form-select form-select-sm" required>
                 <option value="">Select Employee</option>
                 <?php if(isset($data['employees']) && is_array($data['employees'])): ?>
                   <?php foreach($data['employees'] as $emp): ?>
@@ -68,25 +53,23 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
             </div>
             <div class="mb-3">
               <label class="form-label">Department</label>
-              <select name="dept_id" class="form-control" required>
+              <select name="dept_id" class="form-select form-select-sm" required>
                 <option value="">Select Department</option>
                 <?php echo DropdownHelper::renderOptions('departments'); ?>
               </select>
             </div>
             <div class="mb-3">
               <label class="form-label">Expected Return Date</label>
-              <input type="date" name="exp_return_date" class="form-control" required>
+              <input type="date" name="exp_return_date" class="form-control form-control-sm" required>
             </div>
-            <div class="text-end">
-              <button type="submit" name="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Assign
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <a href="?url=assignment/index" class="btn btn-sm btn-light"><i class="fas fa-times"></i> Cancel</a>
+              <button type="submit" name="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-save me-1"></i> Assign Asset
               </button>
             </div>
           </form>
-        </div>
       </div>
     </div>
   </div>
 </div>
-</body>
-</html>

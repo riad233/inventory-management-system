@@ -24,6 +24,8 @@
   "maintenance_status": [
     { "id": "Pending", "name": "Pending" },
     { "id": "In Progress", "name": "In Progress" },
+    { "id": "Approved", "name": "Approved" },
+    { "id": "Rejected", "name": "Rejected" },
     { "id": "Completed", "name": "Completed" }
   ],
   "disposal_reasons": [

@@ -84,7 +84,7 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                     <th>Resolved Date</th>
                     <th>Cost</th>
                     <th>Status</th>
-                    <th class="th-actions">Actions</th>
+                    <th class="th-actions" style="width:220px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -109,7 +109,14 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                         <span class="status-badge <?php echo $cls; ?>"><?php echo e($maint['Status']); ?></span>
                     </td>
                     <td class="td-actions">
-                        <a href="?url=maintenance/edit/<?php echo e($maint['Maintenance_ID']); ?>" class="btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                        <button type="button" class="btn-status"
+                            onclick="openStatusModal(
+                                '<?php echo e($maint['Maintenance_ID']); ?>',
+                                '<?php echo addslashes(e($maint['Asset_Name'] ?? 'Record #'.$maint['Maintenance_ID'])); ?>',
+                                '<?php echo e($maint['Status']); ?>'
+                            )">
+                            <i class="fas fa-sync-alt"></i> Status
+                        </button>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -139,4 +146,95 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
 document.getElementById('selectAll').addEventListener('change', function() {
     document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = this.checked);
 });
+</script>
+
+<!-- ============================================================
+     STATUS UPDATE MODAL
+     ============================================================ -->
+<div class="modal fade ims-modal" id="maintenanceStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:420px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">
+                    <i class="fas fa-sync-alt text-primary"></i> Update Maintenance Status
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-record-info" id="modal_record_info"></div>
+                <form id="maintenanceStatusForm" method="POST" action="?url=maintenance/updateStatus">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="maintenance_id" id="modal_maint_id">
+                    <div class="mb-3">
+                        <label class="form-label">New Status</label>
+                        <select name="status" id="modal_status" class="form-select form-select-sm" required>
+                            <option value="">— Select Status —</option>
+                            <option value="Pending">⏳ Pending</option>
+                            <option value="In Progress">🔧 In Progress</option>
+                            <option value="Approved">✅ Approved</option>
+                            <option value="Rejected">❌ Rejected</option>
+                            <option value="Completed">✔️ Completed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">
+                            End / Resolved Date
+                            <span class="text-muted fw-normal" style="font-size:0.9em;">(optional)</span>
+                        </label>
+                        <input type="date" name="end_date" id="modal_end_date" class="form-control form-control-sm">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="maintenanceStatusForm" name="submit" class="btn btn-sm btn-primary">
+                    <i class="fas fa-check me-1"></i>Update Status
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     DELETE CONFIRMATION MODAL
+     ============================================================ -->
+<div class="modal fade ims-confirm-modal" id="maintenanceDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:360px;">
+        <div class="modal-content" style="border:none; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.15); overflow:hidden;">
+            <div class="modal-body">
+                <div class="modal-confirm-icon" style="color:#dc2626;">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <div class="modal-confirm-title">Delete Maintenance Record?</div>
+                <p class="modal-confirm-msg" id="deleteModalMessage"></p>
+                <form id="maintenanceDeleteForm" method="POST">
+                    <?php echo csrf_field(); ?>
+                    <div class="modal-confirm-actions">
+                        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash-alt me-1"></i>Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openStatusModal(id, assetName, currentStatus) {
+    document.getElementById('modal_maint_id').value = id;
+    document.getElementById('modal_record_info').innerHTML =
+        '<strong>Asset:</strong> ' + assetName +
+        '&nbsp;&nbsp;|&nbsp;&nbsp;<strong>ID:</strong> #' + id +
+        '&nbsp;&nbsp;|&nbsp;&nbsp;<strong>Current:</strong> ' + currentStatus;
+    var sel = document.getElementById('modal_status');
+    sel.value = currentStatus;
+    document.getElementById('modal_end_date').value = '';
+    new bootstrap.Modal(document.getElementById('maintenanceStatusModal')).show();
+}
+
+function openDeleteModal(id, assetName) {
+    // delete removed from UI - kept for reference only
+}
 </script>
