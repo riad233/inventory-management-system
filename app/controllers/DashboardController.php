@@ -35,27 +35,24 @@ class DashboardController extends Controller {
             $recent_assets = $assetModel->getRecent(5);
             $recent_assignments = $assignmentModel->getRecent(5);
             $recent_maintenance = $maintenanceModel->getRecent(5);
-            
-            // Get stock alerts (simulated)
-            $stock_alerts = [
-                'total_out' => 0,
-                'total_low' => 0,
-                'out_items' => [],
-                'low_items' => []
-            ];
+
+            // Chart data
+            $asset_status_counts     = $assetModel->getStatusCounts();
+            $maintenance_status_counts = $maintenanceModel->getStatusCounts();
             
             $data = [
-                'total_assets' => $total_assets,
+                'total_assets'      => $total_assets,
                 'total_assignments' => $total_assignments,
-                'total_pending' => $total_pending,
+                'total_pending'     => $total_pending,
                 'total_maintenance' => $total_maintenance,
-                'total_employees' => $total_employees,
-                'total_vendors' => $total_vendors,
-                'total_users' => $total_users,
-                'recent_assets' => $recent_assets,
-                'recent_assignments' => $recent_assignments,
-                'recent_maintenance' => $recent_maintenance,
-                'stock_alerts' => $stock_alerts
+                'total_employees'   => $total_employees,
+                'total_vendors'     => $total_vendors,
+                'total_users'       => $total_users,
+                'recent_assets'          => $recent_assets,
+                'recent_assignments'     => $recent_assignments,
+                'recent_maintenance'     => $recent_maintenance,
+                'asset_status_counts'    => $asset_status_counts,
+                'maintenance_status_counts' => $maintenance_status_counts,
             ];
             
             $this->view('dashboard/dashboard', $data);

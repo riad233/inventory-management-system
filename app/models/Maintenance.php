@@ -104,5 +104,18 @@ class Maintenance extends Model {
         }
         return $maintenance;
     }
+
+    public function getStatusCounts() {
+        $sql = "SELECT Status, COUNT(*) as cnt FROM maintenance GROUP BY Status";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) return [];
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $counts = [];
+        while ($row = $result->fetch_assoc()) {
+            $counts[$row['Status']] = (int)$row['cnt'];
+        }
+        return $counts;
+    }
 }
 ?>
