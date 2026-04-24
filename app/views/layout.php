@@ -57,17 +57,9 @@
             <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
             <hr class="sidebar-divider">
             <div class="sidebar-section-title">Administration</div>
-            <a href="?url=admin/index" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'admin') === 0) ? 'active' : ''; ?>">
-                <i class="fas fa-cog"></i>
-                <span class="nav-label">Settings</span>
-            </a>
             <a href="?url=admin/users" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'admin/users') === 0) ? 'active' : ''; ?>">
                 <i class="fas fa-user-tie"></i>
                 <span class="nav-label">User Management</span>
-            </a>
-            <a href="?url=admin/logs" class="nav-item <?php echo (strpos($_GET['url'] ?? '', 'admin/logs') === 0) ? 'active' : ''; ?>">
-                <i class="fas fa-history"></i>
-                <span class="nav-label">Activity Logs</span>
             </a>
             <?php endif; ?>
         </nav>
