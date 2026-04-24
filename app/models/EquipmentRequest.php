@@ -62,6 +62,20 @@ class EquipmentRequest extends Model {
         return $stmt->execute();
     }
 
+    public function updateStatus($id, $status, $approved_by = null){
+        if ($status === 'Approved') {
+            $approval_date = date('Y-m-d');
+            $sql = "UPDATE equipment_request SET Status = ?, Approval_Date = ?, Approved_By = ? WHERE Request_ID = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ssii", $status, $approval_date, $approved_by, $id);
+        } else {
+            $sql = "UPDATE equipment_request SET Status = ? WHERE Request_ID = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("si", $status, $id);
+        }
+        return $stmt->execute();
+    }
+
     public function update($id, $data){
         $sql = "UPDATE equipment_request SET Equipment_Type = ?, Description = ?, Vendor_ID = ? WHERE Request_ID = ?";
         $stmt = $this->conn->prepare($sql);

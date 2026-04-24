@@ -67,6 +67,7 @@ class AssignmentController extends Controller {
             
             if($assignmentModel->returnAsset($id, $data)){
                 header("Location: ?url=assignment/index&msg=Asset returned successfully");
+                exit;
             }
         }
         
@@ -74,6 +75,38 @@ class AssignmentController extends Controller {
         $assignments = $assignmentModel->getAll();
         
         $this->view('assignment/return_asset', ['assignments' => $assignments]);
+    }
+
+    public function markReturn($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
+        $condition = Validator::sanitizeString($_POST['condition'] ?? 'Good');
+        $assignmentModel = $this->model('Assignment');
+        $data = ['condition' => $condition];
+        if($assignmentModel->returnAsset($id, $data)){
+            header("Location: ?url=assignment/index&msg=Asset marked as returned successfully");
+            exit;
+        }
+        header("Location: ?url=assignment/index&msg=Failed to mark as returned");
+        exit;
+    }
+
+    public function undoReturn($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
+        $assignmentModel = $this->model('Assignment');
+        if($assignmentModel->undoReturn($id)){
+            header("Location: ?url=assignment/index&msg=Assignment status reset to Assigned");
+            exit;
+        }
+        header("Location: ?url=assignment/index&msg=Failed to update status");
+        exit;
     }
     
     public function edit($id){

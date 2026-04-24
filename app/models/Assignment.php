@@ -65,6 +65,13 @@ class Assignment extends Model {
         return $stmt->execute();
     }
 
+    public function undoReturn($id){
+        $sql = "UPDATE assignment SET Actual_Return_Date = NULL, Condition_on_Return = NULL WHERE Assignment_ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
+    }
+
     public function update($id, $data){
         $sql = "UPDATE assignment SET Asset_ID = ?, User_ID = ?, Department_ID = ?, Expected_Return_Date = ? WHERE Assignment_ID = ?";
         $stmt = $this->conn->prepare($sql);

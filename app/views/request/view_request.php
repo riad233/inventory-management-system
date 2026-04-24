@@ -119,7 +119,7 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                             <button type="button" class="btn-approve" onclick="openRequestModal('approve','<?php echo e($req['Request_ID']); ?>','<?php echo e(addslashes($req['Name'] ?? '')); ?>')"><i class="fas fa-check"></i> Approve</button>
                             <button type="button" class="btn-reject" onclick="openRequestModal('reject','<?php echo e($req['Request_ID']); ?>','<?php echo e(addslashes($req['Name'] ?? '')); ?>')"><i class="fas fa-times"></i> Reject</button>
                         <?php else: ?>
-                            <a href="?url=request/edit/<?php echo e($req['Request_ID']); ?>" class="btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                            <button type="button" class="btn-status" onclick="openStatusUpdateModal('<?php echo e($req['Request_ID']); ?>','<?php echo e(addslashes($req['Status'] ?? '')); ?>','<?php echo e(addslashes($req['Name'] ?? '')); ?>')"><i class="fas fa-sync-alt"></i> Status</button>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -161,7 +161,40 @@ function openRequestModal(action, id, name) {
     document.getElementById('requestActionBtn').innerHTML = isApprove ? '<i class="fas fa-check me-1"></i>Approve' : '<i class="fas fa-times me-1"></i>Reject';
     new bootstrap.Modal(document.getElementById('requestActionModal')).show();
 }
+function openStatusUpdateModal(id, currentStatus, name) {
+    document.getElementById('statusUpdateForm').action = '?url=request/updateStatus/' + id;
+    document.getElementById('statusUpdateSelect').value = currentStatus;
+    document.getElementById('statusUpdateEmployee').textContent = name;
+    new bootstrap.Modal(document.getElementById('requestStatusUpdateModal')).show();
+}
 </script>
+
+<!-- Status Update Modal -->
+<div class="modal fade ims-confirm-modal" id="requestStatusUpdateModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:380px;">
+    <div class="modal-content" style="border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.15);overflow:hidden;">
+      <div class="modal-body">
+        <div class="modal-confirm-icon"><i class="fas fa-sync-alt" style="color:#7c3aed;"></i></div>
+        <div class="modal-confirm-title">Update Request Status</div>
+        <p class="modal-confirm-msg">Change status for request by <strong id="statusUpdateEmployee"></strong></p>
+        <form id="statusUpdateForm" method="POST">
+          <?php echo csrf_field(); ?>
+          <div class="mb-3">
+            <select name="status" id="statusUpdateSelect" class="form-select form-select-sm">
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="modal-confirm-actions">
+            <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save me-1"></i>Update Status</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Approve/Reject Confirmation Modal -->
 <div class="modal fade ims-confirm-modal" id="requestActionModal" tabindex="-1" aria-hidden="true">

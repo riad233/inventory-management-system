@@ -100,7 +100,10 @@ class RequestController extends Controller {
         
         if($requestModel->approve($id, $approved_by)){
             header("Location: ?url=request/index&msg=Request approved");
+            exit;
         }
+        header("Location: ?url=request/index&msg=Failed to approve request");
+        exit;
     }
     
     public function reject($id){
@@ -113,7 +116,32 @@ class RequestController extends Controller {
         
         if($requestModel->reject($id)){
             header("Location: ?url=request/index&msg=Request rejected");
+            exit;
         }
+        header("Location: ?url=request/index&msg=Failed to reject request");
+        exit;
+    }
+
+    public function updateStatus($id){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+        require_csrf();
+        $status = $_POST['status'] ?? '';
+        $allowed = ['Pending', 'Approved', 'Rejected'];
+        if (!in_array($status, $allowed, true)) {
+            http_response_code(400);
+            exit;
+        }
+        $requestModel = $this->model('EquipmentRequest');
+        $approved_by = $_SESSION['user_id'] ?? 1;
+        if($requestModel->updateStatus($id, $status, $approved_by)){
+            header("Location: ?url=request/index&msg=Status updated to " . urlencode($status));
+            exit;
+        }
+        header("Location: ?url=request/index&msg=Failed to update status");
+        exit;
     }
     
     public function delete($id){

@@ -85,6 +85,7 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                     <th>Assigned Date</th>
                     <th>Expected Return</th>
                     <th>Actual Return</th>
+                    <th>Condition</th>
                     <th>Status</th>
                     <th class="th-actions">Actions</th>
                 </tr>
@@ -102,6 +103,19 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                     <td><?php echo e($assign['Expected_Return_Date']); ?></td>
                     <td><?php echo $assign['Actual_Return_Date'] ? e($assign['Actual_Return_Date']) : '—'; ?></td>
                     <td>
+                        <?php
+                        $cond = $assign['Condition_on_Return'] ?? '';
+                        if ($cond) {
+                            $condClass = 'status-default';
+                            if ($cond === 'Good')    $condClass = 'status-approved';
+                            elseif ($cond === 'Fair')    $condClass = 'status-pending';
+                            elseif ($cond === 'Damaged') $condClass = 'status-rejected';
+                            elseif ($cond === 'Lost')    $condClass = 'status-inactive';
+                            echo '<span class="status-badge ' . $condClass . '">' . e($cond) . '</span>';
+                        } else { echo '—'; }
+                        ?>
+                    </td>
+                    <td>
                         <?php if($assign['Actual_Return_Date']): ?>
                             <span class="status-badge status-returned">Returned</span>
                         <?php else: ?>
@@ -110,11 +124,16 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                     </td>
                     <td class="td-actions">
                         <a href="?url=assignment/edit/<?php echo e($assign['Assignment_ID']); ?>" class="btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                        <?php if(!$assign['Actual_Return_Date']): ?>
+                            <button type="button" class="btn-status" onclick="openReturnModal('<?php echo e($assign['Assignment_ID']); ?>','<?php echo e(addslashes($assign['Asset_Name'] ?? '')); ?>','<?php echo e(addslashes($assign['Name'] ?? '')); ?>')"><i class="fas fa-undo"></i> Return</button>
+                        <?php else: ?>
+                            <button type="button" class="btn-approve" onclick="openUndoModal('<?php echo e($assign['Assignment_ID']); ?>','<?php echo e(addslashes($assign['Asset_Name'] ?? '')); ?>','<?php echo e(addslashes($assign['Name'] ?? '')); ?>')"><i class="fas fa-redo"></i> Re-Assign</button>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
             <?php else: ?>
-                <tr><td colspan="10" class="text-center py-4 text-muted">No assignments found</td></tr>
+                <tr><td colspan="11" class="text-center py-4 text-muted">No assignments found</td></tr>
             <?php endif; ?>
             </tbody>
         </table>
@@ -139,4 +158,66 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
 document.getElementById('selectAll').addEventListener('change', function() {
     document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = this.checked);
 });
+function openReturnModal(id, assetName, employeeName) {
+    document.getElementById('returnForm').action = '?url=assignment/markReturn/' + id;
+    document.getElementById('returnAssetName').textContent = assetName;
+    document.getElementById('returnEmployeeName').textContent = employeeName;
+    document.getElementById('returnCondition').value = 'Good';
+    new bootstrap.Modal(document.getElementById('assignmentReturnModal')).show();
+}
+function openUndoModal(id, assetName, employeeName) {
+    document.getElementById('undoReturnForm').action = '?url=assignment/undoReturn/' + id;
+    document.getElementById('undoAssetName').textContent = assetName;
+    document.getElementById('undoEmployeeName').textContent = employeeName;
+    new bootstrap.Modal(document.getElementById('assignmentUndoModal')).show();
+}
 </script>
+
+<!-- Return Asset Modal -->
+<div class="modal fade ims-confirm-modal" id="assignmentReturnModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:380px;">
+    <div class="modal-content" style="border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.15);overflow:hidden;">
+      <div class="modal-body">
+        <div class="modal-confirm-icon"><i class="fas fa-undo" style="color:#7c3aed;"></i></div>
+        <div class="modal-confirm-title">Mark Asset as Returned</div>
+        <p class="modal-confirm-msg">Asset: <strong id="returnAssetName"></strong><br>Employee: <strong id="returnEmployeeName"></strong></p>
+        <form id="returnForm" method="POST">
+          <?php echo csrf_field(); ?>
+          <div class="mb-3">
+            <label class="form-label">Condition on Return</label>
+            <select name="condition" id="returnCondition" class="form-select form-select-sm">
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+              <option value="Damaged">Damaged</option>
+              <option value="Lost">Lost</option>
+            </select>
+          </div>
+          <div class="modal-confirm-actions">
+            <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-undo me-1"></i>Mark Returned</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Re-Assign (Undo Return) Modal -->
+<div class="modal fade ims-confirm-modal" id="assignmentUndoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:380px;">
+    <div class="modal-content" style="border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.15);overflow:hidden;">
+      <div class="modal-body">
+        <div class="modal-confirm-icon"><i class="fas fa-redo" style="color:#16a34a;"></i></div>
+        <div class="modal-confirm-title">Reset to Assigned?</div>
+        <p class="modal-confirm-msg">This will clear the return date for:<br>Asset: <strong id="undoAssetName"></strong><br>Employee: <strong id="undoEmployeeName"></strong></p>
+        <form id="undoReturnForm" method="POST">
+          <?php echo csrf_field(); ?>
+          <div class="modal-confirm-actions">
+            <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-redo me-1"></i>Re-Assign</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
