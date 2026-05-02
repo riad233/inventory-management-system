@@ -21,22 +21,24 @@ class AssignmentController extends Controller {
         $errors = [];
         if(isset($_POST['submit'])){
             require_csrf();
-            
-            if (!$this->validateAssignment()) {
+
+            // Sanitise FIRST, then validate sanitised data
+            $data = [
+                'asset_id'        => Validator::sanitizeInt($_POST['asset_id'] ?? ''),
+                'user_id'         => Validator::sanitizeInt($_POST['user_id'] ?? ''),
+                'dept_id'         => Validator::sanitizeInt($_POST['dept_id'] ?? ''),
+                'exp_return_date' => trim($_POST['exp_return_date'] ?? '')
+            ];
+
+            if (!$this->validateAssignment($data)) {
                 $errors = Validator::getErrors();
             } else {
                 $assignmentModel = $this->model('Assignment');
-                
-                $data = [
-                    'asset_id' => Validator::sanitizeInt($_POST['asset_id']),
-                    'user_id' => Validator::sanitizeInt($_POST['user_id']),
-                    'dept_id' => Validator::sanitizeInt($_POST['dept_id']),
-                    'exp_return_date' => Validator::sanitizeString($_POST['exp_return_date'])
-                ];
-                
                 if($assignmentModel->create($data)){
                     header("Location: ?url=assignment/index&msg=Asset assigned successfully");
                     exit;
+                } else {
+                    $errors['general'] = "Failed to create assignment. Please try again.";
                 }
             }
         }
@@ -58,13 +60,18 @@ class AssignmentController extends Controller {
     public function returnAsset(){
         if(isset($_POST['submit'])){
             require_csrf();
+
+            // Validate assignment_id from POST before use
+            $id = filter_var($_POST['assignment_id'] ?? 0, FILTER_VALIDATE_INT);
+            if ($id === false || $id <= 0) {
+                http_response_code(400);
+                die("Invalid assignment ID");
+            }
+
             $assignmentModel = $this->model('Assignment');
-            $id = $_POST['assignment_id'];
-            
-            $data = [
-                'condition' => $_POST['condition']
-            ];
-            
+            $condition = Validator::sanitizeString($_POST['condition'] ?? '');
+            $data = ['condition' => $condition];
+
             if($assignmentModel->returnAsset($id, $data)){
                 header("Location: ?url=assignment/index&msg=Asset returned successfully");
                 exit;
@@ -161,18 +168,33 @@ class AssignmentController extends Controller {
     }
 
     public function delete($id){
-        if($assignmentModel->delete($id)){
-            header("Location: ?url=assignment/index&msg=Assignment deleted");
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
         }
+        require_csrf();
+        // Router enforces Admin-only via ACL; defence-in-depth check here too
+        AuthorizationHelper::requireAdmin();
+
+        Validator::integer('id', $id, 'Assignment ID');
+        if (!Validator::passes()) { http_response_code(400); die("Invalid ID"); }
+
+        $assignmentModel = $this->model('Assignment');
+        if($assignmentModel->delete($id)){
+            header("Location: ?url=assignment/index&msg=Assignment deleted successfully");
+            exit;
+        }
+        header("Location: ?url=assignment/index&msg=Failed to delete assignment");
+        exit;
     }
     
-    private function validateAssignment() {
+    private function validateAssignment(array $data) {
         Validator::reset();
-        Validator::required('asset_id', $_POST['asset_id'] ?? '', 'Asset');
-        Validator::required('user_id', $_POST['user_id'] ?? '', 'Employee');
-        Validator::required('dept_id', $_POST['dept_id'] ?? '', 'Department');
-        Validator::required('exp_return_date', $_POST['exp_return_date'] ?? '', 'Return Date');
-        Validator::date('exp_return_date', $_POST['exp_return_date'] ?? '', 'Return Date');
+        Validator::required('asset_id',        $data['asset_id'] ?? '',        'Asset');
+        Validator::required('user_id',         $data['user_id'] ?? '',         'Employee');
+        Validator::required('dept_id',         $data['dept_id'] ?? '',         'Department');
+        Validator::required('exp_return_date', $data['exp_return_date'] ?? '', 'Return Date');
+        Validator::date('exp_return_date',     $data['exp_return_date'] ?? '', 'Return Date');
         return Validator::passes();
     }
 }

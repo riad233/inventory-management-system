@@ -143,10 +143,11 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                         <?php
                         $s = strtolower($asset['Status'] ?? '');
                         $cls = 'status-default';
-                        if ($s === 'active') $cls = 'status-active';
+                        if ($s === 'available')   $cls = 'status-available';
                         elseif ($s === 'assigned') $cls = 'status-assigned';
-                        elseif ($s === 'inactive') $cls = 'status-inactive';
-                        elseif (strpos($s,'maintenance') !== false) $cls = 'status-under-maintenance';
+                        elseif ($s === 'under repair') $cls = 'status-under-repair';
+                        elseif ($s === 'damaged')  $cls = 'status-damaged';
+                        elseif ($s === 'disposed') $cls = 'status-disposed';
                         ?>
                         <span class="status-badge <?php echo $cls; ?>"><?php echo e($asset['Status']); ?></span>
                     </td>

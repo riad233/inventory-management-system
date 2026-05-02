@@ -40,7 +40,7 @@ class MaintenanceController extends Controller {
             ];
             $data['asset_id'] = Validator::sanitizeInt($data['asset_id']);
             $data['maintenance_status'] = Validator::sanitizeString($data['maintenance_status']);
-            $data['cost'] = Validator::sanitizeInt($data['cost']);
+            $data['cost'] = Validator::sanitizeFloat($data['cost']); // float: form uses step="0.01"
             if($this->validateMaintenance($data)) {
                 try {
                     $maintenanceModel = $this->model('Maintenance');
@@ -60,7 +60,12 @@ class MaintenanceController extends Controller {
             }
         }
         $assetModel = $this->model('Asset');
-        $this->view('maintenance/maintenance_record', ['assets' => $assetModel->getAll(), 'errors' => $errors]);
+        $vendorModel = $this->model('Vendor');
+        $this->view('maintenance/maintenance_record', [
+            'assets'  => $assetModel->getAll(),
+            'vendors' => $vendorModel->getAll(),
+            'errors'  => $errors
+        ]);
     }
     
     public function updateStatus(){

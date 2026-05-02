@@ -33,8 +33,8 @@ class AssetController extends Controller {
             Validator::date('warranty', $data['warranty'], 'Warranty Expiry');
         }
         
-        $validStatuses = ['Active', 'Inactive', 'Repair', 'Disposal'];
-        Validator::in('status', $data['status'] ?? 'Active', $validStatuses, 'Status');
+        $validStatuses = ['Available', 'Assigned', 'Under Repair', 'Damaged', 'Disposed'];
+        Validator::in('status', $data['status'] ?? 'Available', $validStatuses, 'Status');
         
         if (!empty($data['vendor_id'])) {
             Validator::integer('vendor_id', $data['vendor_id'], 'Vendor ID');
@@ -78,6 +78,8 @@ class AssetController extends Controller {
                     $data[$key] = Validator::sanitizeString($value);
                 }
             }
+            // Convert empty vendor_id to null to avoid FK violation
+            if (empty($data['vendor_id'])) $data['vendor_id'] = null;
             
             // Validate data
             if($this->validateAssetData($data)) {
@@ -100,7 +102,8 @@ class AssetController extends Controller {
             }
         }
         
-        $this->view("asset/add_asset", ['errors' => $errors]);
+        $vendorModel = $this->model('Vendor');
+        $this->view("asset/add_asset", ['errors' => $errors, 'vendors' => $vendorModel->getAll()]);
     }
 
     public function edit($id){
@@ -141,6 +144,8 @@ class AssetController extends Controller {
                     $data[$key] = Validator::sanitizeString($value);
                 }
             }
+            // Convert empty vendor_id to null to avoid FK violation
+            if (empty($data['vendor_id'])) $data['vendor_id'] = null;
             
             // Validate data
             if($this->validateAssetData($data)) {
@@ -162,7 +167,12 @@ class AssetController extends Controller {
             }
         }
         
-        $this->view("asset/edit_asset", ['asset' => $assetData, 'errors' => $errors]);
+        $vendorModel = $this->model('Vendor');
+        $this->view("asset/edit_asset", [
+            'asset'   => $assetData,
+            'errors'  => $errors,
+            'vendors' => $vendorModel->getAll()
+        ]);
     }
 
     public function delete($id){

@@ -123,13 +123,12 @@ class AdminController extends Controller {
             if (empty($errors)) {
                 try {
                     $userModel = $this->model('User');
-                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                     
                     if ($userModel->create([
-                        'Username' => $username,
-                        'Email' => $email,
-                        'Password' => $hashedPassword,
-                        'Role' => $role
+                        'username' => $username,
+                        'email' => $email,
+                        'password' => $password,
+                        'role' => $role
                     ])) {
                         Logger::info("New user created", ['created_by' => $_SESSION['username'], 'username' => $username, 'role' => $role]);
                         header("Location: ?url=admin/users&msg=User created successfully");

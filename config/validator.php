@@ -29,9 +29,9 @@ class Validator {
     }
     
     /**
-     * Add a validation error
+     * Add a validation error (public so controllers can inject custom errors)
      */
-    private static function addError($field, $message) {
+    public static function addError($field, $message) {
         self::$errors[$field] = $message;
     }
     
@@ -110,7 +110,7 @@ class Validator {
      * Validate integer value
      */
     public static function integer($field, $value, $label = null) {
-        if (!filter_var($value, FILTER_VALIDATE_INT)) {
+        if (filter_var($value, FILTER_VALIDATE_INT) === false) {
             $label = $label ?? ucfirst($field);
             self::addError($field, "$label must be an integer");
             return false;
@@ -143,22 +143,31 @@ class Validator {
     }
     
     /**
-     * Validate phone number (basic)
+     * Validate phone number — must be exactly 11 numeric digits
      */
     public static function phone($field, $value, $label = null) {
-        if (!preg_match('/^[\d\s\-\+\(\)]{10,}$/', $value)) {
+        if (!preg_match('/^\d{11}$/', $value)) {
             $label = $label ?? ucfirst($field);
-            self::addError($field, "$label must be a valid phone number");
+            self::addError($field, "$label must be exactly 11 digits (numeric only)");
             return false;
         }
         return true;
     }
     
     /**
-     * Sanitize string input
+     * Sanitize string input for database storage.
+     * NOTE: Do NOT apply htmlspecialchars here — that is done at output time via e().
+     *       Encoding before DB storage causes double-encoding on display.
      */
     public static function sanitizeString($value) {
-        return trim(htmlspecialchars($value, ENT_QUOTES, 'UTF-8'));
+        return trim(strip_tags((string)$value));
+    }
+
+    /**
+     * Sanitize float/decimal input (e.g. price, cost)
+     */
+    public static function sanitizeFloat($value) {
+        return (float)filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     }
     
     /**

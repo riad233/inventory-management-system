@@ -15,6 +15,15 @@
         <h5>Edit Employee</h5>
       </div>
       <div class="card-body p-4">
+        <?php if(!empty($data['errors'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0 mt-1">
+                <?php foreach($data['errors'] as $msg): ?><li><?php echo e($msg); ?></li><?php endforeach; ?>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php endif; ?>
         <?php if(!isset($data['employee']) || empty($data['employee'])): ?>
             <div class="alert alert-danger">Employee not found!</div>
             <a href="?url=employee/index" class="btn btn-sm btn-secondary">Go Back</a>
@@ -44,7 +53,10 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Contact Number</label>
-                <input type="text" name="contact" class="form-control form-control-sm" value="<?php echo e($emp['Contact_Number']); ?>" required>
+                <input type="tel" name="contact" class="form-control form-control-sm"
+                       value="<?php echo e($emp['Contact_Number']); ?>"
+                       pattern="\d{11}" maxlength="11"
+                       title="Contact number must be exactly 11 numeric digits" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Email Address</label>

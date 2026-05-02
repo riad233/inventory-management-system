@@ -16,4 +16,3 @@ if(empty($url)) {
 }
 
 Router::route($url);
-?>

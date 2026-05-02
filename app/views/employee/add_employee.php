@@ -50,7 +50,9 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Contact Number</label>
-                <input type="text" name="contact" class="form-control form-control-sm" required>
+                <input type="tel" name="contact" class="form-control form-control-sm"
+                       pattern="\d{11}" maxlength="11"
+                       title="Contact number must be exactly 11 numeric digits" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Email Address</label>

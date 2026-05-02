@@ -62,25 +62,5 @@ class DashboardController extends Controller {
         }
     }
 
-    /**
-     * Stock alerts page
-     */
-    public function stockAlerts(){
-        if(!isset($_SESSION['username'])){
-            header("Location: ?url=auth/login");
-        }
-        
-        try {
-            $data = [
-                'title' => 'Stock Alerts',
-                'alerts' => []
-            ];
-            
-            $this->view('dashboard/stock_alerts', $data);
-        } catch (Exception $e) {
-            Logger::error("Error in DashboardController::stockAlerts", ['error' => $e->getMessage()]);
-            die("Error loading stock alerts");
-        }
-    }
 }
 ?>

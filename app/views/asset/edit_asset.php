@@ -11,6 +11,17 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
 
 <div class="row justify-content-center">
   <div class="col-md-8 col-lg-6">
+
+    <?php if(isset($data['errors']) && !empty($data['errors'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show mb-3">
+        <strong><i class="fas fa-exclamation-circle me-1"></i> Please fix the following errors:</strong>
+        <ul class="mb-0 mt-1">
+            <?php foreach($data['errors'] as $field => $msg): ?><li><?php echo e($msg); ?></li><?php endforeach; ?>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php endif; ?>
+
     <div class="form-page-card">
       <div class="form-page-card-header" style="background:#fef9c3;">
         <i class="fas fa-edit" style="color:#92400e;"></i>
@@ -59,20 +70,19 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
                 <input type="date" name="warranty" class="form-control form-control-sm" value="<?php echo isset($data['asset']) ? e($data['asset']['Warranty_Expiry']) : ''; ?>" required>
               </div>
               <div class="col-12 mb-3">
-                <label class="form-label">Vendor</label>
+                <label class="form-label">Vendor <span class="text-muted fw-normal" style="font-size:0.9em;">(optional)</span></label>
                 <select name="vendor_id" class="form-select form-select-sm">
                   <option value="">Select Vendor</option>
-                  <option value="1" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 1 ? 'selected' : ''; ?>>Tech Solutions Ltd</option>
-                  <option value="2" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 2 ? 'selected' : ''; ?>>Global IT Suppliers</option>
-                  <option value="3" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 3 ? 'selected' : ''; ?>>Digital World Bangladesh</option>
-                  <option value="4" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 4 ? 'selected' : ''; ?>>Office Solutions Inc</option>
-                  <option value="5" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 5 ? 'selected' : ''; ?>>Enterprise Systems Ltd</option>
-                  <option value="6" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 6 ? 'selected' : ''; ?>>Future Tech Co</option>
-                  <option value="7" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 7 ? 'selected' : ''; ?>>Premium Services Group</option>
-                  <option value="8" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 8 ? 'selected' : ''; ?>>Regional IT Partners</option>
-                  <option value="9" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 9 ? 'selected' : ''; ?>>Growth Solutions</option>
-                  <option value="10" <?php echo isset($data['asset']) && $data['asset']['Vendor_ID'] == 10 ? 'selected' : ''; ?>>Smart Systems Bangladesh</option>
+                  <?php if(isset($data['vendors']) && is_array($data['vendors'])): ?>
+                    <?php foreach($data['vendors'] as $vendor): ?>
+                      <option value="<?php echo e($vendor['Vendor_ID']); ?>"
+                        <?php echo (isset($data['asset']) && $data['asset']['Vendor_ID'] == $vendor['Vendor_ID']) ? 'selected' : ''; ?>>
+                        <?php echo e($vendor['Vendor_Name']); ?>
+                      </option>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
                 </select>
+              </div>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-2">
               <a href="?url=asset/index" class="btn btn-sm btn-light"><i class="fas fa-times"></i> Cancel</a>

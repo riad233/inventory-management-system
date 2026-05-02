@@ -16,7 +16,8 @@ class Controller {
         $viewPath = ROOT_PATH . "/app/views/" . $view . ".php";
         
         if (!file_exists($viewPath)) {
-            die("View not found: $view");
+            http_response_code(404);
+            die("Page not found.");
         }
         
         // Load layout with view
@@ -28,7 +29,8 @@ class Controller {
         $viewPath = ROOT_PATH . "/app/views/" . $view . ".php";
         
         if (!file_exists($viewPath)) {
-            die("View not found: $view");
+            http_response_code(404);
+            die("Page not found.");
         }
         
         require_once $viewPath;

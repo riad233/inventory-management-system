@@ -1136,6 +1136,11 @@ body {
 .status-completed { background: #d1fae5; color: #065f46; }
 .status-under-maintenance { background: #fef3c7; color: #92400e; }
 .status-default   { background: #f3f4f6; color: #374151; }
+/* Asset-specific statuses */
+.status-available  { background: #d1fae5; color: #065f46; }
+.status-under-repair { background: #fef3c7; color: #92400e; }
+.status-damaged    { background: #fee2e2; color: #991b1b; }
+.status-disposed   { background: #f3f4f6; color: #6b7280; }
 
 /* Action buttons */
 .btn-view {

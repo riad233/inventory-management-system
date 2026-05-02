@@ -41,16 +41,11 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
               <label class="form-label">Preferred Vendor <span class="text-muted fw-normal" style="font-size:0.9em;">(optional)</span></label>
               <select name="vendor_id" class="form-select form-select-sm">
                 <option value="">Select Vendor</option>
-                <option value="1">Tech Solutions Ltd</option>
-                <option value="2">Global IT Suppliers</option>
-                <option value="3">Digital World Bangladesh</option>
-                <option value="4">Office Solutions Inc</option>
-                <option value="5">Enterprise Systems Ltd</option>
-                <option value="6">Future Tech Co</option>
-                <option value="7">Premium Services Group</option>
-                <option value="8">Regional IT Partners</option>
-                <option value="9">Growth Solutions</option>
-                <option value="10">Smart Systems Bangladesh</option>
+                <?php if(isset($data['vendors']) && is_array($data['vendors'])): ?>
+                  <?php foreach($data['vendors'] as $vendor): ?>
+                    <option value="<?php echo e($vendor['Vendor_ID']); ?>"><?php echo e($vendor['Vendor_Name']); ?></option>
+                  <?php endforeach; ?>
+                <?php endif; ?>
               </select>
             </div>
             <div class="mb-3">

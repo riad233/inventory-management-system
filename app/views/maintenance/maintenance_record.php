@@ -31,7 +31,7 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
             <?php echo csrf_field(); ?>
             <div class="mb-3">
               <label class="form-label">Asset</label>
-              <select name="asset_id" class="form-control" required>
+              <select name="asset_id" class="form-select form-select-sm" required>
                 <option value="">Select Asset</option>
                 <?php if(isset($data['assets']) && is_array($data['assets'])): ?>
                   <?php foreach($data['assets'] as $asset): ?>
@@ -42,30 +42,25 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
             </div>
             <div class="mb-3">
               <label class="form-label">Maintenance Status</label>
-              <select name="maintenance_status" class="form-control" required>
+              <select name="maintenance_status" class="form-select form-select-sm" required>
                 <option value="">Select Status</option>
                 <?php echo DropdownHelper::renderOptions('maintenance_status'); ?>
               </select>
             </div>
             <div class="mb-3">
               <label class="form-label">Vendor</label>
-              <select name="vendor_id" class="form-control">
-                <option value="">Select Vendor</option>
-                <option value="1">Tech Solutions Ltd</option>
-                <option value="2">Global IT Suppliers</option>
-                <option value="3">Digital World Bangladesh</option>
-                <option value="4">Office Solutions Inc</option>
-                <option value="5">Enterprise Systems Ltd</option>
-                <option value="6">Future Tech Co</option>
-                <option value="7">Premium Services Group</option>
-                <option value="8">Regional IT Partners</option>
-                <option value="9">Growth Solutions</option>
-                <option value="10">Smart Systems Bangladesh</option>
+              <select name="vendor_id" class="form-select form-select-sm">
+                <option value="">Select Vendor (optional)</option>
+                <?php if(isset($data['vendors']) && is_array($data['vendors'])): ?>
+                  <?php foreach($data['vendors'] as $vendor): ?>
+                    <option value="<?php echo e($vendor['Vendor_ID']); ?>"><?php echo e($vendor['Vendor_Name']); ?></option>
+                  <?php endforeach; ?>
+                <?php endif; ?>
               </select>
             </div>
             <div class="mb-3">
               <label class="form-label">Estimated Cost</label>
-              <input type="number" step="0.01" name="cost" class="form-control" required>
+              <input type="number" step="0.01" name="cost" class="form-control form-control-sm" required>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-3">
               <a href="?url=maintenance/index" class="btn btn-sm btn-light"><i class="fas fa-times"></i> Cancel</a>

@@ -38,10 +38,24 @@ class Employee extends Model {
     }
 
     public function create($data){
-        // First create a user account for the employee
-        $username = strtolower(str_replace(' ', '.', $data['name']));
+        // Generate a unique username from the employee's name
+        $baseUsername = strtolower(str_replace([' ', "'"], ['.', ''], $data['name']));
+        $username = $baseUsername;
+        $counter = 1;
+
+        // Check for username collisions and append a counter if needed
+        while (true) {
+            $checkStmt = $this->conn->prepare("SELECT User_ID FROM users WHERE Username = ? LIMIT 1");
+            $checkStmt->bind_param("s", $username);
+            $checkStmt->execute();
+            $checkStmt->store_result();
+            if ($checkStmt->num_rows === 0) { $checkStmt->close(); break; }
+            $checkStmt->close();
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
+
         $default_password = password_hash('password123', PASSWORD_BCRYPT);
-        
         $userSql = "INSERT INTO users (Username, Password, Email, Role) VALUES (?, ?, ?, 'Employee')";
         $userStmt = $this->conn->prepare($userSql);
         $userStmt->bind_param("sss", $username, $default_password, $data['email']);
@@ -69,10 +83,27 @@ class Employee extends Model {
     }
 
     public function delete($id){
-        $sql = "DELETE FROM employee WHERE User_ID = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $id);
-        return $stmt->execute();
+        // Use a transaction so both rows are removed atomically.
+        // If only employee is deleted the users record becomes an orphan.
+        $this->conn->begin_transaction();
+        try {
+            $stmt = $this->conn->prepare("DELETE FROM employee WHERE User_ID = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+
+            $stmt = $this->conn->prepare("DELETE FROM users WHERE User_ID = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+
+            $this->conn->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            Logger::error("Employee delete failed", ['id' => $id, 'error' => $e->getMessage()]);
+            return false;
+        }
     }
 }
 ?>

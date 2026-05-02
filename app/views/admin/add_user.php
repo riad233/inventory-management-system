@@ -1,142 +1,62 @@
-<div class="admin-add-user">
-  <div class="breadcrumb-nav">
-    <a href="?url=dashboard/index">Dashboard</a> / <a href="?url=admin/index">Admin</a> / <a href="?url=admin/users">Users</a> / Add User
-  </div>
-
-  <div class="form-header">
-    <h1><i class="fas fa-user-plus"></i> Add New User</h1>
-  </div>
-
-  <div class="form-container">
-    <?php if(!empty($data['errors'])): ?>
-      <div class="alert alert-danger">
-        <strong>Validation Errors:</strong>
-        <ul>
-          <?php foreach($data['errors'] as $error): ?>
-            <li><?php echo e($error); ?></li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-    <?php endif; ?>
-
-    <form method="POST" class="user-form">
-      <?php echo csrf_field(); ?>
-      
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" class="form-control" required>
-        <small class="form-text text-muted">Minimum 3 characters</small>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" class="form-control" required>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" class="form-control" required>
-        <small class="form-text text-muted">Minimum 6 characters</small>
-      </div>
-
-      <div class="form-group">
-        <label for="confirm_password">Confirm Password</label>
-        <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
-      </div>
-
-      <div class="form-group">
-        <label for="role">Role</label>
-        <select id="role" name="role" class="form-control" required>
-          <?php foreach($data['roles'] as $role): ?>
-            <option value="<?php echo e($role); ?>"><?php echo e($role); ?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" name="submit" class="btn btn-primary">
-          <i class="fas fa-save"></i> Add User
-        </button>
-        <a href="?url=admin/users" class="btn btn-secondary">
-          <i class="fas fa-times"></i> Cancel
-        </a>
-      </div>
-    </form>
-  </div>
+<div class="list-page-header">
+    <h2><i class="fas fa-user-plus"></i> Add New User</h2>
+    <div class="list-header-actions">
+        <a href="?url=admin/users" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
 </div>
 
-<style>
-.admin-add-user {
-  padding: 20px;
-}
+<?php if(!empty($data['errors'])): ?>
+<div class="alert alert-danger alert-dismissible fade show">
+    <strong>Please fix the following errors:</strong>
+    <ul class="mb-0 mt-1">
+        <?php foreach($data['errors'] as $field => $error): ?><li><?php echo e($error); ?></li><?php endforeach; ?>
+    </ul>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<?php endif; ?>
 
-.form-header {
-  margin-bottom: 30px;
-}
-
-.form-header h1 {
-  color: #333;
-}
-
-.form-container {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  max-width: 500px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.user-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.form-group .form-control {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.form-group .form-control:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.form-text {
-  font-size: 0.85rem;
-  margin-top: 5px;
-}
-
-.form-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.form-actions .btn {
-  flex: 1;
-  padding: 10px;
-}
-
-.alert {
-  margin-bottom: 20px;
-}
-
-.alert ul {
-  margin: 10px 0 0 20px;
-}
-</style>
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-5">
+    <div class="form-page-card">
+      <div class="form-page-card-header" style="background:#f0f9ff;">
+        <i class="fas fa-user-plus" style="color:#0369a1;"></i>
+        <h5>New System User</h5>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST" action="">
+          <?php echo csrf_field(); ?>
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control form-control-sm" placeholder="Minimum 3 characters" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-control form-control-sm" placeholder="user@example.com" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control form-control-sm" placeholder="Minimum 6 characters" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" name="confirm_password" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Role</label>
+            <select name="role" class="form-select form-select-sm" required>
+              <?php foreach($data['roles'] as $role): ?>
+                <option value="<?php echo e($role); ?>"><?php echo e($role); ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <a href="?url=admin/users" class="btn btn-sm btn-light"><i class="fas fa-times"></i> Cancel</a>
+            <button type="submit" name="submit" class="btn btn-primary btn-sm">
+              <i class="fas fa-save me-1"></i> Add User
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

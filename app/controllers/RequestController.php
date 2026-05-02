@@ -60,32 +60,65 @@ class RequestController extends Controller {
             }
         }
         $employeeModel = $this->model('Employee');
-        $this->view('request/request_equipment', ['employees' => $employeeModel->getAll(), 'errors' => $errors]);
+        $vendorModel = $this->model('Vendor');
+        $this->view('request/request_equipment', [
+            'employees' => $employeeModel->getAll(),
+            'vendors'   => $vendorModel->getAll(),
+            'errors'    => $errors
+        ]);
     }
     
     public function edit($id){
+        // Validate route param
+        Validator::integer('id', $id, 'Request ID');
+        if (!Validator::passes()) { http_response_code(400); die("Invalid request ID"); }
+
         $requestModel = $this->model('EquipmentRequest');
-        
+        $request = $requestModel->getById($id);
+        if (!$request) { http_response_code(404); die("Request not found"); }
+
+        $errors = [];
         if(isset($_POST['submit'])){
             require_csrf();
+
             $data = [
-                'equipment_type' => $_POST['equipment_type'],
-                'description' => $_POST['description'],
-                'vendor_id' => $_POST['vendor_id'] ?? null
+                'equipment_type' => Validator::sanitizeString($_POST['equipment_type'] ?? ''),
+                'description'    => Validator::sanitizeString($_POST['description'] ?? ''),
+                'vendor_id'      => !empty($_POST['vendor_id']) ? Validator::sanitizeInt($_POST['vendor_id']) : null
             ];
-            
-            if($requestModel->update($id, $data)){
-                header("Location: ?url=request/index&msg=Request updated successfully");
-                exit;
+
+            Validator::reset();
+            Validator::required('equipment_type', $data['equipment_type'], 'Equipment Type');
+            Validator::maxLength('equipment_type', $data['equipment_type'], 255, 'Equipment Type');
+            Validator::required('description', $data['description'], 'Description');
+            Validator::maxLength('description', $data['description'], 1000, 'Description');
+
+            if (Validator::passes()) {
+                try {
+                    if($requestModel->update($id, $data)){
+                        Logger::info("Equipment request updated", ['request_id' => $id]);
+                        header("Location: ?url=request/index&msg=Request updated successfully");
+                        exit;
+                    } else {
+                        $errors['general'] = "Failed to update request";
+                    }
+                } catch (Exception $e) {
+                    Logger::error("Error updating request", ['request_id' => $id, 'error' => $e->getMessage()]);
+                    $errors['general'] = "An error occurred";
+                }
+            } else {
+                $errors = Validator::getErrors();
             }
         }
-        
-        $request = $requestModel->getById($id);
+
         $employeeModel = $this->model('Employee');
-        
+        $vendorModel   = $this->model('Vendor');
+
         $this->view('request/edit_request', [
-            'request' => $request, 
-            'employees' => $employeeModel->getAll()
+            'request'   => $request,
+            'employees' => $employeeModel->getAll(),
+            'vendors'   => $vendorModel->getAll(),
+            'errors'    => $errors
         ]);
     }
     

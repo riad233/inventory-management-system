@@ -17,6 +17,15 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
         <h5>Edit Equipment Request</h5>
       </div>
       <div class="card-body p-4">
+        <?php if(!empty($data['errors'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show mb-3">
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0 mt-1">
+                <?php foreach($data['errors'] as $msg): ?><li><?php echo e($msg); ?></li><?php endforeach; ?>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php endif; ?>
         <?php if(!isset($data['request']) || empty($data['request'])): ?>
           <div class="alert alert-danger">Request not found!</div>
           <a href="?url=request/index" class="btn btn-sm btn-secondary">Go Back</a>
@@ -37,6 +46,20 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
               <select name="equipment_type" class="form-select form-select-sm" required>
                 <option value="">Select Equipment Type</option>
                 <?php echo DropdownHelper::renderOptions('asset_categories', $req['Equipment_Type']); ?>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Preferred Vendor <span class="text-muted fw-normal" style="font-size:0.9em;">(optional)</span></label>
+              <select name="vendor_id" class="form-select form-select-sm">
+                <option value="">Select Vendor</option>
+                <?php if(!empty($data['vendors'])): ?>
+                  <?php foreach($data['vendors'] as $vendor): ?>
+                    <option value="<?php echo e($vendor['Vendor_ID']); ?>"
+                      <?php echo ($req['Vendor_ID'] == $vendor['Vendor_ID']) ? 'selected' : ''; ?>>
+                      <?php echo e($vendor['Vendor_Name']); ?>
+                    </option>
+                  <?php endforeach; ?>
+                <?php endif; ?>
               </select>
             </div>
             <div class="mb-3">

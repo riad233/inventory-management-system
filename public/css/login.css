@@ -1,7 +1,5 @@
 body {
-  background: url('/i_m_s/public/img/ims_background.webp') no-repeat center center;
-  background-size: cover;
-  background-attachment: fixed;
+  background: #f0f2f5;
   min-height: 100vh;
   display: flex;
   align-items: center;

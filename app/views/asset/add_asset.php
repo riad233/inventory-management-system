@@ -11,6 +11,17 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
 
 <div class="row justify-content-center">
   <div class="col-md-8 col-lg-6">
+
+    <?php if(isset($data['errors']) && !empty($data['errors'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show mb-3">
+        <strong><i class="fas fa-exclamation-circle me-1"></i> Please fix the following errors:</strong>
+        <ul class="mb-0 mt-1">
+            <?php foreach($data['errors'] as $field => $msg): ?><li><?php echo e($msg); ?></li><?php endforeach; ?>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php endif; ?>
+
     <div class="form-page-card">
       <div class="form-page-card-header" style="background:#eff6ff;">
         <i class="fas fa-plus" style="color:#1d4ed8;"></i>
@@ -61,17 +72,12 @@ require_once __DIR__ . '/../../../config/dropdown_helper.php';
               <div class="col-12 mb-3">
                 <label class="form-label">Vendor</label>
                 <select name="vendor_id" class="form-select form-select-sm">
-                  <option value="">Select Vendor</option>
-                  <option value="1">Tech Solutions Ltd</option>
-                  <option value="2">Global IT Suppliers</option>
-                  <option value="3">Digital World Bangladesh</option>
-                  <option value="4">Office Solutions Inc</option>
-                  <option value="5">Enterprise Systems Ltd</option>
-                  <option value="6">Future Tech Co</option>
-                  <option value="7">Premium Services Group</option>
-                  <option value="8">Regional IT Partners</option>
-                  <option value="9">Growth Solutions</option>
-                  <option value="10">Smart Systems Bangladesh</option>
+                  <option value="">Select Vendor (optional)</option>
+                  <?php if(isset($data['vendors']) && is_array($data['vendors'])): ?>
+                    <?php foreach($data['vendors'] as $vendor): ?>
+                      <option value="<?php echo e($vendor['Vendor_ID']); ?>"><?php echo e($vendor['Vendor_Name']); ?></option>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
                 </select>
               </div>
             </div>
