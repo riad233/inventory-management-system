@@ -288,38 +288,71 @@ class AdminController extends Controller {
     }
     
     /**
-     * Activity Logs Page
+     * Activity Logs Page — reads from storage/logs/app.log
      */
     public function logs(){
         $this->checkAdminAccess();
-        
-        try {
-            $data = [
-                'title' => 'Activity Logs',
-                'logs' => [
-                    [
-                        'timestamp' => date('Y-m-d H:i:s', strtotime('-1 hour')),
-                        'user' => $_SESSION['username'] ?? 'admin',
-                        'action' => 'Dashboard accessed',
-                        'module' => 'Dashboard',
-                        'status' => 'success'
-                    ],
-                    [
-                        'timestamp' => date('Y-m-d H:i:s', strtotime('-2 hours')),
-                        'user' => 'manager1',
-                        'action' => 'Asset created',
-                        'module' => 'Assets',
-                        'status' => 'success'
-                    ]
-                ]
-            ];
-            
-            Logger::info("Admin logs page accessed", ['admin_user' => $_SESSION['username'] ?? 'unknown']);
-            $this->view('admin/logs', $data);
-        } catch (Exception $e) {
-            Logger::error("Error in AdminController::logs", ['error' => $e->getMessage()]);
-            die("Error loading logs");
+
+        $logFile  = ROOT_PATH . '/storage/logs/app.log';
+        $allLogs  = [];
+
+        if (file_exists($logFile)) {
+            $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            if ($lines === false) $lines = [];
+
+            foreach (array_reverse($lines) as $line) {
+                // Format: [2026-05-04 12:00:00] LEVEL: message | {"key":"val"}
+                if (!preg_match('/^\[([^\]]+)\]\s+(\w+):\s+(.+?)(?:\s+\|\s+(\{.*\}))?$/', $line, $m)) {
+                    continue;
+                }
+                $ctx  = [];
+                if (!empty($m[4])) {
+                    $decoded = json_decode($m[4], true);
+                    if (is_array($decoded)) $ctx = $decoded;
+                }
+                $allLogs[] = [
+                    'timestamp' => $m[1],
+                    'level'     => strtolower($m[2]),
+                    'message'   => $m[3],
+                    'context'   => $ctx,
+                    'user'      => $ctx['username'] ?? $ctx['admin_user'] ?? $ctx['updated_by'] ?? $ctx['by'] ?? '—',
+                ];
+            }
         }
+
+        // Search / level filter
+        $search      = trim($_GET['search'] ?? '');
+        $levelFilter = trim($_GET['level']  ?? '');
+        if ($search !== '' || $levelFilter !== '') {
+            $allLogs = array_values(array_filter($allLogs, function($l) use ($search, $levelFilter) {
+                $matchSearch = $search === '' ||
+                    stripos($l['message'],   $search) !== false ||
+                    stripos($l['user'],      $search) !== false ||
+                    stripos($l['timestamp'], $search) !== false;
+                $matchLevel = $levelFilter === '' || $l['level'] === $levelFilter;
+                return $matchSearch && $matchLevel;
+            }));
+        }
+
+        // Pagination
+        $pageSize   = 50;
+        $total      = count($allLogs);
+        $totalPages = max(1, (int)ceil($total / $pageSize));
+        $page       = max(1, min((int)($_GET['page'] ?? 1), $totalPages));
+        $offset     = ($page - 1) * $pageSize;
+        $logs       = array_slice($allLogs, $offset, $pageSize);
+
+        Logger::info("Admin logs page accessed", ['admin_user' => $_SESSION['username'] ?? 'unknown']);
+        $this->view('admin/logs', [
+            'title'       => 'Activity Logs',
+            'logs'        => $logs,
+            'total'       => $total,
+            'page'        => $page,
+            'totalPages'  => $totalPages,
+            'pageSize'    => $pageSize,
+            'search'      => $search,
+            'levelFilter' => $levelFilter,
+        ]);
     }
 
     /**

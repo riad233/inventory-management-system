@@ -130,5 +130,14 @@ class Asset extends Model {
         }
         return $counts;
     }
+
+    /** Number of assets with Status = 'Available'. */
+    public function getAvailableCount(): int {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM asset WHERE Status = 'Available'");
+        if (!$stmt) return 0;
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        return (int)($row['total'] ?? 0);
+    }
 }
 ?>

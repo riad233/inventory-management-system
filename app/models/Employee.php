@@ -38,41 +38,61 @@ class Employee extends Model {
     }
 
     public function create($data){
-        // Generate a unique username from the employee's name
-        $baseUsername = strtolower(str_replace([' ', "'"], ['.', ''], $data['name']));
-        $username = $baseUsername;
-        $counter = 1;
+        // Wrap both INSERTs in a transaction so an orphan user record can never
+        // be left behind if the employee INSERT fails.
+        $this->conn->begin_transaction();
 
-        // Check for username collisions and append a counter if needed
-        while (true) {
-            $checkStmt = $this->conn->prepare("SELECT User_ID FROM users WHERE Username = ? LIMIT 1");
-            $checkStmt->bind_param("s", $username);
-            $checkStmt->execute();
-            $checkStmt->store_result();
-            if ($checkStmt->num_rows === 0) { $checkStmt->close(); break; }
-            $checkStmt->close();
-            $username = $baseUsername . $counter;
-            $counter++;
-        }
+        try {
+            // Generate a unique username from the employee's name
+            $baseUsername = strtolower(str_replace([' ', "'"], ['.', ''], $data['name']));
+            $username = $baseUsername;
+            $counter  = 1;
 
-        $default_password = password_hash('password123', PASSWORD_BCRYPT);
-        $userSql = "INSERT INTO users (Username, Password, Email, Role) VALUES (?, ?, ?, 'Employee')";
-        $userStmt = $this->conn->prepare($userSql);
-        $userStmt->bind_param("sss", $username, $default_password, $data['email']);
-        
-        if(!$userStmt->execute()) {
+            while (true) {
+                $checkStmt = $this->conn->prepare("SELECT User_ID FROM users WHERE Username = ? LIMIT 1");
+                $checkStmt->bind_param("s", $username);
+                $checkStmt->execute();
+                $checkStmt->store_result();
+                $exists = $checkStmt->num_rows > 0;
+                $checkStmt->close();
+                if (!$exists) break;
+                $username = $baseUsername . $counter;
+                $counter++;
+            }
+
+            $default_password = password_hash('password123', PASSWORD_BCRYPT);
+            $userStmt = $this->conn->prepare(
+                "INSERT INTO users (Username, Password, Email, Role) VALUES (?, ?, ?, 'Employee')"
+            );
+            $userStmt->bind_param("sss", $username, $default_password, $data['email']);
+            $userStmt->execute();
+            $userStmt->close();
+
+            $userId = $this->conn->insert_id;
+
+            $empStmt = $this->conn->prepare(
+                "INSERT INTO employee (User_ID, Name, Designation, Contact_Number, Email, Department_ID)
+                 VALUES (?, ?, ?, ?, ?, ?)"
+            );
+            $empStmt->bind_param(
+                "issssi",
+                $userId,
+                $data['name'],
+                $data['designation'],
+                $data['contact'],
+                $data['email'],
+                $data['dept_id']
+            );
+            $empStmt->execute();
+            $empStmt->close();
+
+            $this->conn->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            Logger::error("Employee create failed", ['error' => $e->getMessage()]);
             return false;
         }
-        
-        // Get the newly created user ID
-        $userId = $this->conn->insert_id;
-        
-        // Now create the employee record with the new user ID
-        $sql = "INSERT INTO employee (User_ID, Name, Designation, Contact_Number, Email, Department_ID) 
-                VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("issssi", $userId, $data['name'], $data['designation'], $data['contact'], $data['email'], $data['dept_id']);
-        return $stmt->execute();
     }
 
     public function update($id, $data){

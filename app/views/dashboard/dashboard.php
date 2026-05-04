@@ -200,18 +200,25 @@ else:
             <div class="kpi-label">Total Assets</div>
         </div>
     </a>
+    <a href="?url=asset/index&status=Available" class="kpi-card kpi-teal">
+        <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value"><?php echo e($data['available_assets'] ?? 0); ?></div>
+            <div class="kpi-label">Available</div>
+        </div>
+    </a>
     <a href="?url=assignment/index" class="kpi-card kpi-blue">
         <div class="kpi-icon"><i class="fas fa-exchange-alt"></i></div>
         <div class="kpi-body">
-            <div class="kpi-value"><?php echo e($data['total_assignments'] ?? 0); ?></div>
-            <div class="kpi-label">Assignments</div>
+            <div class="kpi-value"><?php echo e($data['total_pending'] ?? 0); ?></div>
+            <div class="kpi-label">Active Assignments</div>
         </div>
     </a>
-    <a href="?url=assignment/index" class="kpi-card kpi-orange">
-        <div class="kpi-icon"><i class="fas fa-hourglass-half"></i></div>
+    <a href="?url=assignment/index" class="kpi-card <?php echo ($data['overdue_count'] ?? 0) > 0 ? 'kpi-danger' : 'kpi-orange'; ?>">
+        <div class="kpi-icon"><i class="fas fa-clock"></i></div>
         <div class="kpi-body">
-            <div class="kpi-value"><?php echo e($data['total_pending'] ?? 0); ?></div>
-            <div class="kpi-label">Pending Returns</div>
+            <div class="kpi-value"><?php echo e($data['overdue_count'] ?? 0); ?></div>
+            <div class="kpi-label">Overdue Returns</div>
         </div>
     </a>
     <a href="?url=maintenance/index" class="kpi-card kpi-red">
@@ -221,7 +228,22 @@ else:
             <div class="kpi-label">Pending Maintenance</div>
         </div>
     </a>
+    <a href="?url=request/index" class="kpi-card kpi-purple">
+        <div class="kpi-icon"><i class="fas fa-clipboard-list"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value"><?php echo e($data['pending_requests'] ?? 0); ?></div>
+            <div class="kpi-label">Pending Requests</div>
+        </div>
+    </a>
 </div>
+
+<?php if (($data['overdue_count'] ?? 0) > 0): ?>
+<div class="alert alert-warning d-flex align-items-center gap-2 mb-3">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span><strong><?php echo e($data['overdue_count']); ?> assignment<?php echo $data['overdue_count'] > 1 ? 's are' : ' is'; ?> overdue.</strong>
+    <a href="?url=assignment/index" class="alert-link ms-1">Review now →</a></span>
+</div>
+<?php endif; ?>
 
 <div class="secondary-stats">
     <div class="stat-pill">

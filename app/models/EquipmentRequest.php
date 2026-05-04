@@ -90,5 +90,15 @@ class EquipmentRequest extends Model {
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
+
+    public function getPendingCount(): int {
+        $stmt = $this->conn->prepare(
+            "SELECT COUNT(*) as total FROM equipment_request WHERE Status = 'Pending'"
+        );
+        if (!$stmt) return 0;
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        return (int)($row['total'] ?? 0);
+    }
 }
 ?>

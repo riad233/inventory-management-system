@@ -19,39 +19,43 @@ class DashboardController extends Controller {
         $employeeModel = $this->model('Employee');
         $vendorModel = $this->model('Vendor');
         $userModel = $this->model('User');
+        $requestModel = $this->model('EquipmentRequest');
         
         try {
-            // Use efficient count methods instead of fetching all data
-            $total_assets = $assetModel->getCount();
+            $total_assets      = $assetModel->getCount();
+            $available_assets  = $assetModel->getAvailableCount();
             $total_assignments = $assignmentModel->getCount();
-            $total_pending = $assignmentModel->getPendingCount();
+            $total_pending     = $assignmentModel->getPendingCount();
+            $overdue_count     = $assignmentModel->getOverdueCount();
             $total_maintenance = $maintenanceModel->getPendingCount();
-            $total_employees = count($employeeModel->getAll() ?? []);
-            $total_vendors = count($vendorModel->getAll() ?? []);
-            $total_users = count($userModel->getAll() ?? []);
+            $pending_requests  = $requestModel->getPendingCount();
+            $total_employees   = count($employeeModel->getAll() ?? []);
+            $total_vendors     = count($vendorModel->getAll() ?? []);
+            $total_users       = count($userModel->getAll() ?? []);
             
-            // Get recent activity for dashboard
-            $recent_assets = $assetModel->getRecent(5);
+            $recent_assets      = $assetModel->getRecent(5);
             $recent_assignments = $assignmentModel->getRecent(5);
             $recent_maintenance = $maintenanceModel->getRecent(5);
 
-            // Chart data
-            $asset_status_counts     = $assetModel->getStatusCounts();
+            $asset_status_counts       = $assetModel->getStatusCounts();
             $maintenance_status_counts = $maintenanceModel->getStatusCounts();
             
             $data = [
-                'total_assets'      => $total_assets,
-                'total_assignments' => $total_assignments,
-                'total_pending'     => $total_pending,
-                'total_maintenance' => $total_maintenance,
-                'total_employees'   => $total_employees,
-                'total_vendors'     => $total_vendors,
-                'total_users'       => $total_users,
-                'recent_assets'          => $recent_assets,
-                'recent_assignments'     => $recent_assignments,
-                'recent_maintenance'     => $recent_maintenance,
-                'asset_status_counts'    => $asset_status_counts,
-                'maintenance_status_counts' => $maintenance_status_counts,
+                'total_assets'             => $total_assets,
+                'available_assets'         => $available_assets,
+                'total_assignments'        => $total_assignments,
+                'total_pending'            => $total_pending,
+                'overdue_count'            => $overdue_count,
+                'total_maintenance'        => $total_maintenance,
+                'pending_requests'         => $pending_requests,
+                'total_employees'          => $total_employees,
+                'total_vendors'            => $total_vendors,
+                'total_users'              => $total_users,
+                'recent_assets'            => $recent_assets,
+                'recent_assignments'       => $recent_assignments,
+                'recent_maintenance'       => $recent_maintenance,
+                'asset_status_counts'      => $asset_status_counts,
+                'maintenance_status_counts'=> $maintenance_status_counts,
             ];
             
             $this->view('dashboard/dashboard', $data);

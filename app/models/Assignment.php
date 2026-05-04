@@ -112,6 +112,19 @@ class Assignment extends Model {
         return $row['total'] ?? 0;
     }
 
+    /** Assignments past their expected return date that have not been returned. */
+    public function getOverdueCount(): int {
+        $today = date('Y-m-d');
+        $sql = "SELECT COUNT(*) as total FROM assignment
+                WHERE Actual_Return_Date IS NULL AND Expected_Return_Date < ?";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) return 0;
+        $stmt->bind_param('s', $today);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        return (int)($row['total'] ?? 0);
+    }
+
     public function getRecent($limit = 5) {
         $sql = "SELECT a.Assignment_ID, a.Assigned_Date, a.Expected_Return_Date, a.Actual_Return_Date, ast.Asset_Name, e.Name as Employee_Name
                 FROM assignment a
