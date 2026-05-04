@@ -33,7 +33,12 @@ class AuthController extends Controller {
                         $_SESSION['user_id'] = $user['User_ID'];
                         $_SESSION['role'] = $user['Role'];
                         Logger::info("User login", ['username' => $username, 'role' => $user['Role']]);
-                        header("Location: ?url=dashboard/index");
+                        $base = defined('APP_BASE') ? APP_BASE : '';
+                        if (in_array($user['Role'], ['SuperAdmin', 'Admin'], true)) {
+                            header('Location: ' . $base . '/admin/index');
+                        } else {
+                            header('Location: ' . $base . '/dashboard/index');
+                        }
                         exit;
                     }
 
@@ -51,8 +56,28 @@ class AuthController extends Controller {
     public function logout() {
         $username = $_SESSION['username'] ?? 'unknown';
         Logger::info("User logout", ['username' => $username]);
+
+        // 1. Wipe all session variables
+        $_SESSION = [];
+
+        // 2. Clear the session cookie from the browser
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(), '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
+
+        // 3. Destroy server-side session data
         session_destroy();
-        header("Location: ?url=home/index");
+
+        $base = defined('APP_BASE') ? APP_BASE : '';
+        header('Location: ' . $base . '/home/index');
         exit;
     }
 

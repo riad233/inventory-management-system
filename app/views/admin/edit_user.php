@@ -22,15 +22,29 @@
     <form method="POST" class="user-form">
       <?php echo csrf_field(); ?>
       
+      <?php if (!empty($data['is_superadmin'])): ?>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control" value="<?php echo e($data['user']['Username']); ?>" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" class="form-control" value="<?php echo e($data['user']['Email']); ?>" required>
+      </div>
+      <div class="form-group">
+        <label for="password">New Password <small class="text-muted">(leave blank to keep current)</small></label>
+        <input type="password" id="password" name="password" class="form-control" autocomplete="new-password">
+      </div>
+      <?php else: ?>
       <div class="form-group">
         <label>Username</label>
         <p class="form-value"><?php echo e($data['user']['Username']); ?></p>
       </div>
-
       <div class="form-group">
         <label>Email Address</label>
         <p class="form-value"><?php echo e($data['user']['Email']); ?></p>
       </div>
+      <?php endif; ?>
 
       <div class="form-group">
         <label for="role">Role</label>

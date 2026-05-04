@@ -10,10 +10,9 @@ require_once ROOT_PATH . "/config/logger.php";
 class DashboardController extends Controller {
     
     public function index(){
-        if(!isset($_SESSION['username'])){
-            header("Location: ?url=auth/login");
-        }
-        
+        // Authentication is enforced by the Router (first layer) before dispatch.
+        // No redundant check needed here.
+
         $assetModel = $this->model('Asset');
         $assignmentModel = $this->model('Assignment');
         $maintenanceModel = $this->model('Maintenance');

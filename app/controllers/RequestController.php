@@ -123,6 +123,7 @@ class RequestController extends Controller {
     }
     
     public function approve($id){
+        Middleware::permission('request.approve'); // Second-layer defence
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             exit;
@@ -140,6 +141,7 @@ class RequestController extends Controller {
     }
     
     public function reject($id){
+        Middleware::permission('request.approve'); // Second-layer defence
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             exit;
@@ -156,6 +158,7 @@ class RequestController extends Controller {
     }
 
     public function updateStatus($id){
+        Middleware::permission('request.approve'); // Second-layer defence
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             exit;
@@ -187,6 +190,7 @@ class RequestController extends Controller {
         $requestModel = $this->model('EquipmentRequest');
         if($requestModel->delete($id)){
             header("Location: ?url=request/index&msg=Request deleted");
+            exit;
         }
     }
 }

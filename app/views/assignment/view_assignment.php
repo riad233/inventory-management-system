@@ -34,8 +34,12 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
 <div class="list-page-header">
     <h2><i class="fas fa-exchange-alt"></i> Assignments</h2>
     <div class="list-header-actions">
+        <?php if (AuthorizationHelper::hasPermission('assignment.create')): ?>
         <a href="?url=assignment/assign" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Assign Asset</a>
+        <?php endif; ?>
+        <?php if (AuthorizationHelper::hasPermission('assignment.return')): ?>
         <a href="?url=assignment/returnAsset" class="btn btn-outline-secondary btn-sm"><i class="fas fa-undo"></i> Return Asset</a>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -123,7 +127,9 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                         <?php endif; ?>
                     </td>
                     <td class="td-actions">
+                        <?php if (AuthorizationHelper::hasPermission('assignment.edit')): ?>
                         <a href="?url=assignment/edit/<?php echo e($assign['Assignment_ID']); ?>" class="btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                        <?php endif; ?>
                         <?php if(!$assign['Actual_Return_Date']): ?>
                             <button type="button" class="btn-status" onclick="openReturnModal('<?php echo e($assign['Assignment_ID']); ?>','<?php echo e(addslashes($assign['Asset_Name'] ?? '')); ?>','<?php echo e(addslashes($assign['Name'] ?? '')); ?>')"><i class="fas fa-undo"></i> Return</button>
                         <?php else: ?>

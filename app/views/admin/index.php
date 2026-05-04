@@ -83,6 +83,13 @@
         <span>Dashboard</span>
         <small>View system overview</small>
       </a>
+      <?php if (AuthorizationHelper::isSuperAdmin()): ?>
+      <a href="?url=admin/permissions" class="admin-link">
+        <i class="fas fa-key"></i>
+        <span>Permissions</span>
+        <small>Manage role permissions</small>
+      </a>
+      <?php endif; ?>
     </div>
   </div>
 </div>

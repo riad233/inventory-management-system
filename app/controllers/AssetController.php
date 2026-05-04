@@ -55,6 +55,7 @@ class AssetController extends Controller {
     }
 
     public function add(){
+        Middleware::permission('asset.create'); // Second-layer defence
         $errors = [];
         
         if(isset($_POST['submit'])){
@@ -107,6 +108,7 @@ class AssetController extends Controller {
     }
 
     public function edit($id){
+        Middleware::permission('asset.edit'); // Second-layer defence
         Validator::integer('id', $id, 'Asset ID');
         if (!Validator::passes()) {
             http_response_code(400);

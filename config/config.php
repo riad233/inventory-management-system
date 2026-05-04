@@ -2,6 +2,14 @@
 // Define root path for absolute path resolution
 define('ROOT_PATH', dirname(dirname(__FILE__)));
 
+// Base URL pointing at the public folder (where CSS/JS live)
+// Derived from SCRIPT_NAME so it works on any server path
+if (!defined('BASE_URL')) {
+    $scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '/');
+    define('BASE_URL', rtrim(dirname($scriptName), '/'));   // e.g. /i_m_s/public
+    define('APP_BASE', rtrim(dirname(BASE_URL), '/'));       // e.g. /i_m_s
+}
+
 // Debug mode - set to true for development
 define('DEBUG_MODE', false);
 
@@ -21,7 +29,7 @@ if (isset($_SESSION['last_activity'])) {
     if ($elapsed_time > $timeout_duration) {
         // Session expired, destroy and redirect
         session_destroy();
-        header("Location: ?url=auth/login&msg=Session+expired");
+        header('Location: ' . APP_BASE . '/auth/login?msg=Session+expired');
         exit;
     }
 }

@@ -14,6 +14,15 @@
 
 class AuthorizationHelper {
 
+    /** All application roles in one place. SuperAdmin is handled separately. */
+    public const ROLES = ['SuperAdmin', 'Admin', 'Manager', 'Staff', 'Employee'];
+
+    /** The SuperAdmin role name — bypasses all permission checks. */
+    public const SUPERADMIN_ROLE = 'SuperAdmin';
+
+    /** Per-request permission cache: role → [permission_key, ...] */
+    private static array $cache = [];
+
     public static function getRole(): string {
         return (string)($_SESSION['role'] ?? '');
     }
@@ -23,7 +32,7 @@ class AuthorizationHelper {
     }
 
     public static function isSuperAdmin(): bool {
-        return self::getRole() === 'SuperAdmin';
+        return self::getRole() === self::SUPERADMIN_ROLE;
     }
 
     public static function hasRole(string $role): bool {
@@ -35,39 +44,56 @@ class AuthorizationHelper {
     }
 
     /**
+     * Return the permission keys granted to $role.
+     * Result is cached for the lifetime of the request.
+     * This is the single source-of-truth used by both the Router and controllers.
+     */
+    public static function loadForRole(string $role): array {
+        if ($role === self::SUPERADMIN_ROLE) {
+            return ['*'];   // SuperAdmin has everything
+        }
+
+        if (isset(self::$cache[$role])) {
+            return self::$cache[$role];
+        }
+
+        global $conn;
+        if (!$conn) {
+            require_once ROOT_PATH . '/config/database.php';
+            global $conn;
+        }
+
+        $stmt = $conn->prepare(
+            "SELECT permission_key FROM role_permissions WHERE role = ?"
+        );
+
+        if (!$stmt) {
+            self::$cache[$role] = [];
+            return [];
+        }
+
+        $stmt->bind_param('s', $role);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        self::$cache[$role] = array_column($rows, 'permission_key');
+        return self::$cache[$role];
+    }
+
+    /**
      * Check if the current user's role has a specific permission.
-     * SuperAdmin always returns true. Queries the DB (cached per request).
+     * SuperAdmin always returns true.
      */
     public static function hasPermission(string $permissionKey): bool {
         $role = self::getRole();
 
-        if ($role === 'SuperAdmin') {
+        if ($role === self::SUPERADMIN_ROLE) {
             return true;
         }
 
-        global $conn;
-        static $cache = [];
-
-        if (!isset($cache[$role])) {
-            if (!$conn) {
-                require_once ROOT_PATH . '/config/database.php';
-                global $conn;
-            }
-            $stmt = $conn->prepare(
-                "SELECT permission_key FROM role_permissions WHERE role = ?"
-            );
-            if (!$stmt) {
-                $cache[$role] = [];
-            } else {
-                $stmt->bind_param('s', $role);
-                $stmt->execute();
-                $rows        = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-                $stmt->close();
-                $cache[$role] = array_column($rows, 'permission_key');
-            }
-        }
-
-        return in_array($permissionKey, $cache[$role], true);
+        $perms = self::loadForRole($role);
+        return in_array($permissionKey, $perms, true);
     }
 
     /**

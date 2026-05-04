@@ -6,7 +6,7 @@
     <title><?php echo isset($data['title']) ? $data['title'] : 'IMS - Inventory Management System'; ?></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/layout.css" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/css/layout.css" rel="stylesheet">
 </head>
 <body>
     <!-- Sidebar Container -->
@@ -124,29 +124,13 @@
                 <span class="nav-label">Activity Logs</span>
             </a>
             <?php endif; ?>
-            <?php endif; ?>
-
-            <!-- ── SuperAdmin Section ──────────────────── -->
             <?php if ($isSA): ?>
-            <hr class="sidebar-divider">
-            <div class="sidebar-section-title">SuperAdmin</div>
-            <a href="?url=superadmin/index"
-               class="nav-item <?php echo strpos($currentUrl, 'superadmin/index') === 0 || $currentUrl === 'superadmin' ? 'active' : ''; ?>">
-                <i class="fas fa-shield-alt"></i>
-                <span class="nav-label">SA Panel</span>
-            </a>
-            <a href="?url=superadmin/permissions"
-               class="nav-item <?php echo strpos($currentUrl, 'superadmin/permissions') === 0 ? 'active' : ''; ?>">
+            <a href="?url=admin/permissions"
+               class="nav-item <?php echo strpos($currentUrl, 'admin/permissions') === 0 ? 'active' : ''; ?>">
                 <i class="fas fa-key"></i>
                 <span class="nav-label">Permissions</span>
             </a>
-            <a href="?url=superadmin/users"
-               class="nav-item <?php echo strpos($currentUrl, 'superadmin/users') === 0
-                                        || strpos($currentUrl, 'superadmin/addUser') === 0
-                                        || strpos($currentUrl, 'superadmin/editUser') === 0 ? 'active' : ''; ?>">
-                <i class="fas fa-users-cog"></i>
-                <span class="nav-label">All Users</span>
-            </a>
+            <?php endif; ?>
             <?php endif; ?>
         </nav>
 
@@ -214,8 +198,8 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="js/table-search.js"></script>
-    <script src="js/list-search-init.js"></script>
-    <script src="js/layout.js"></script>
+    <script src="<?php echo BASE_URL; ?>/js/table-search.js"></script>
+    <script src="<?php echo BASE_URL; ?>/js/list-search-init.js"></script>
+    <script src="<?php echo BASE_URL; ?>/js/layout.js"></script>
 </body>
 </html>

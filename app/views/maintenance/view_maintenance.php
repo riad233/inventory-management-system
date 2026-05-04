@@ -35,7 +35,9 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
 <div class="list-page-header">
     <h2><i class="fas fa-wrench"></i> Maintenance Records</h2>
     <div class="list-header-actions">
+        <?php if (AuthorizationHelper::hasPermission('maintenance.create')): ?>
         <a href="?url=maintenance/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Maintenance</a>
+        <?php endif; ?>
     </div>
 </div>
 

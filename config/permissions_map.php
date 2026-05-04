@@ -57,23 +57,14 @@ return [
     'request/updatestatus'     => 'request.approve',
     'request/delete'           => 'request.delete',
 
-    // ── Admin panel (Admin role) ──────────────────────────────
+    // ── Admin panel (Admin + SuperAdmin) ─────────────────────────────
     'admin/index'              => 'admin.panel',
     'admin/logs'               => 'admin.panel',
+    'admin/permissions'        => 'admin.panel',   // SuperAdmin-only guard enforced in controller
     'admin/users'              => 'admin.users',
     'admin/adduser'            => 'admin.users',
     'admin/edituser'           => 'admin.users',
     'admin/deleteuser'         => 'admin.users',
-
-    // ── SuperAdmin panel ─────────────────────────────────────
-    // Handled by Router before this map is consulted (SuperAdmin bypass)
-    // Listed here only for completeness – key is unused
-    'superadmin/index'         => null,
-    'superadmin/permissions'   => null,
-    'superadmin/users'         => null,
-    'superadmin/adduser'       => null,
-    'superadmin/edituser'      => null,
-    'superadmin/deleteuser'    => null,
 
     // ── Auth – available to every authenticated user ──────────
     'auth/changepassword'      => null,

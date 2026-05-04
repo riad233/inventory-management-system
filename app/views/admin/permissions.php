@@ -1,11 +1,10 @@
 <?php
-$grouped       = $data['grouped']       ?? [];   // module => [perms]
-$rolePerms     = $data['rolePerms']     ?? [];   // role   => [keys]
+$grouped       = $data['grouped']       ?? [];
+$rolePerms     = $data['rolePerms']     ?? [];
 $editableRoles = $data['editableRoles'] ?? [];
 $success       = $data['success']       ?? null;
 $error         = $data['error']         ?? null;
 
-// Helper: is $key currently on for $role?
 $has = function(string $role, string $key) use ($rolePerms): bool {
     return in_array($key, $rolePerms[$role] ?? [], true);
 };
@@ -13,13 +12,13 @@ $has = function(string $role, string $key) use ($rolePerms): bool {
 
 <div class="breadcrumb-nav">
     <a href="?url=dashboard/index">Dashboard</a> /
-    <a href="?url=superadmin/index">SuperAdmin</a> / Permission Matrix
+    <a href="?url=admin/index">Admin</a> / Permission Matrix
 </div>
 
 <div class="list-page-header">
     <h2><i class="fas fa-key"></i> Permission Matrix</h2>
     <p class="text-muted mb-0" style="font-size:.9rem">
-        Toggle permissions for each role. <strong>SuperAdmin</strong> always has full access and cannot be edited here.
+        Toggle permissions for each role. <strong>SuperAdmin</strong> always has full access.
     </p>
 </div>
 
@@ -78,13 +77,12 @@ $has = function(string $role, string $key) use ($rolePerms): bool {
                                    value="<?php echo e($perm['permission_key']); ?>"
                                    class="perm-checkbox"
                                    <?php echo $has($role, $perm['permission_key']) ? 'checked' : ''; ?>>
-                            <span class="perm-checkmark"></span>
                         </label>
                     </td>
                     <?php endforeach; ?>
-                    <!-- SuperAdmin: always locked on -->
                     <td class="perm-check-cell">
-                        <i class="fas fa-lock-open" style="color:#6f42c1;opacity:.7;" title="SuperAdmin always has this"></i>
+                        <i class="fas fa-lock-open" style="color:#6f42c1;opacity:.7;"
+                           title="SuperAdmin always has this permission"></i>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -94,9 +92,9 @@ $has = function(string $role, string $key) use ($rolePerms): bool {
     </div>
 
     <div class="perm-matrix-footer">
-        <div class="perm-legend">
-            <span><i class="fas fa-info-circle me-1 text-muted"></i>Check a box to grant the permission to that role.</span>
-        </div>
+        <span style="font-size:.85rem;color:#6b7280;">
+            <i class="fas fa-info-circle me-1"></i>Check a box to grant the permission to that role.
+        </span>
         <button type="submit" class="btn btn-primary">
             <i class="fas fa-save me-1"></i> Save Permissions
         </button>
@@ -118,17 +116,14 @@ $has = function(string $role, string $key) use ($rolePerms): bool {
 .perm-key{font-family:monospace;font-size:.82rem;color:#0369a1;}
 .perm-label{font-size:.8rem;color:#6b7280;}
 .perm-check-cell{text-align:center;}
-/* Custom checkbox */
 .perm-checkbox-wrap{display:inline-flex;cursor:pointer;}
 .perm-checkbox{width:18px;height:18px;accent-color:#6f42c1;cursor:pointer;}
-/* Role pills */
 .role-pill{display:inline-block;border-radius:20px;padding:3px 12px;font-weight:600;font-size:.8rem;}
 .role-pill-admin    {background:#fdecea;color:#c0392b;border:1px solid #f5c6cb;}
 .role-pill-manager  {background:#fff3cd;color:#856404;border:1px solid #ffc107;}
+.role-pill-staff    {background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;}
 .role-pill-employee {background:#d1ecf1;color:#0c5460;border:1px solid #bee5eb;}
 .role-pill-superadmin{background:#ede9fe;color:#6d28d9;border:1px solid #c4b5fd;}
-/* Footer */
 .perm-matrix-footer{display:flex;justify-content:space-between;align-items:center;
   margin-top:18px;flex-wrap:wrap;gap:10px;}
-.perm-legend{font-size:.85rem;color:#6b7280;}
 </style>

@@ -39,7 +39,9 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
 <div class="list-page-header">
     <h2><i class="fas fa-users"></i> Employees</h2>
     <div class="list-header-actions">
+        <?php if (AuthorizationHelper::hasPermission('employee.create')): ?>
         <a href="?url=employee/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Employee</a>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -116,7 +118,9 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                     <td><?php echo e($emp['Contact_Number']); ?></td>
                     <td><?php echo e($emp['Email']); ?></td>
                     <td class="td-actions">
+                        <?php if (AuthorizationHelper::hasPermission('employee.edit')): ?>
                         <a href="?url=employee/edit/<?php echo e($emp['User_ID']); ?>" class="btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

@@ -5,9 +5,15 @@ $assetLabels  = array_keys($assetCounts);
 $assetValues  = array_values($assetCounts);
 $maintLabels  = array_keys($maintCounts);
 $maintValues  = array_values($maintCounts);
+
+// Determine role for conditional rendering
+$dashRole = (string)($_SESSION['role'] ?? '');
+$isFullAdmin = in_array($dashRole, ['SuperAdmin', 'Admin', 'Manager'], true);
 ?>
-<link href="css/dashboard.css" rel="stylesheet">
+<link href="<?php echo BASE_URL; ?>/css/dashboard.css" rel="stylesheet">
+<?php if ($isFullAdmin): ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<?php endif; ?>
 
 <div class="list-page-header">
     <h2><i class="fas fa-chart-line"></i> Dashboard</h2>
@@ -15,6 +21,169 @@ $maintValues  = array_values($maintCounts);
         <span class="dash-date"><i class="fas fa-calendar-alt me-1"></i><?php echo date('D, d M Y'); ?></span>
     </div>
 </div>
+
+<?php
+// ── Employee dashboard (view + submit requests only) ─────────────────
+if ($dashRole === 'Employee'):
+?>
+<div class="alert alert-info d-flex align-items-center gap-2 mb-3">
+    <i class="fas fa-info-circle"></i>
+    <span>Welcome, <strong><?php echo e($_SESSION['username'] ?? ''); ?></strong>. You can view and submit equipment requests.</span>
+</div>
+
+<div class="kpi-grid" style="--kpi-cols:2;">
+    <a href="?url=request/index" class="kpi-card kpi-blue">
+        <div class="kpi-icon"><i class="fas fa-clipboard-list"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value"><?php echo e($data['total_assignments'] ?? 0); ?></div>
+            <div class="kpi-label">My Requests</div>
+        </div>
+    </a>
+    <a href="?url=request/create" class="kpi-card kpi-green">
+        <div class="kpi-icon"><i class="fas fa-plus-circle"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value"><i class="fas fa-plus"></i></div>
+            <div class="kpi-label">New Request</div>
+        </div>
+    </a>
+</div>
+
+<div class="recent-grid" style="grid-template-columns: 1fr;">
+    <div class="recent-card">
+        <div class="recent-header">
+            <span><i class="fas fa-paper-plane me-1"></i> My Equipment Requests</span>
+            <a href="?url=request/index" class="recent-view-all">View All</a>
+        </div>
+        <p class="p-3 mb-0 text-muted small">
+            Use the <a href="?url=request/create">New Request</a> button or the Requests link in the sidebar to submit and track your equipment requests.
+        </p>
+    </div>
+</div>
+
+<?php
+// ── Staff dashboard (limited data entry) ─────────────────────────────
+elseif ($dashRole === 'Staff'):
+?>
+<div class="alert alert-info d-flex align-items-center gap-2 mb-3">
+    <i class="fas fa-info-circle"></i>
+    <span>Welcome, <strong><?php echo e($_SESSION['username'] ?? ''); ?></strong>. You have access to add and view assets, maintenance, employees, vendors, and requests.</span>
+</div>
+
+<div class="kpi-grid">
+    <a href="?url=asset/index" class="kpi-card kpi-green">
+        <div class="kpi-icon"><i class="fas fa-boxes"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value"><?php echo e($data['total_assets'] ?? 0); ?></div>
+            <div class="kpi-label">Total Assets</div>
+        </div>
+    </a>
+    <a href="?url=maintenance/index" class="kpi-card kpi-red">
+        <div class="kpi-icon"><i class="fas fa-wrench"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value"><?php echo e($data['total_maintenance'] ?? 0); ?></div>
+            <div class="kpi-label">Pending Maintenance</div>
+        </div>
+    </a>
+    <a href="?url=employee/index" class="kpi-card kpi-blue">
+        <div class="kpi-icon"><i class="fas fa-users"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value"><?php echo e($data['total_employees'] ?? 0); ?></div>
+            <div class="kpi-label">Employees</div>
+        </div>
+    </a>
+    <a href="?url=request/index" class="kpi-card kpi-orange">
+        <div class="kpi-icon"><i class="fas fa-clipboard-list"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value"><?php echo e($data['total_assignments'] ?? 0); ?></div>
+            <div class="kpi-label">Requests</div>
+        </div>
+    </a>
+</div>
+
+<div class="secondary-stats">
+    <a href="?url=asset/add" class="stat-pill text-decoration-none">
+        <i class="fas fa-plus-circle text-success"></i>
+        <span class="stat-pill-lbl">Add Asset</span>
+    </a>
+    <a href="?url=maintenance/add" class="stat-pill text-decoration-none">
+        <i class="fas fa-plus-circle text-warning"></i>
+        <span class="stat-pill-lbl">Log Maintenance</span>
+    </a>
+    <a href="?url=employee/add" class="stat-pill text-decoration-none">
+        <i class="fas fa-plus-circle text-primary"></i>
+        <span class="stat-pill-lbl">Add Employee</span>
+    </a>
+    <a href="?url=vendor/add" class="stat-pill text-decoration-none">
+        <i class="fas fa-plus-circle text-info"></i>
+        <span class="stat-pill-lbl">Add Vendor</span>
+    </a>
+    <a href="?url=request/create" class="stat-pill text-decoration-none">
+        <i class="fas fa-plus-circle text-secondary"></i>
+        <span class="stat-pill-lbl">New Request</span>
+    </a>
+</div>
+
+<div class="recent-grid">
+    <div class="recent-card">
+        <div class="recent-header">
+            <span><i class="fas fa-box me-1"></i> Recent Assets</span>
+            <a href="?url=asset/index" class="recent-view-all">View All</a>
+        </div>
+        <table class="recent-table">
+            <thead><tr><th>Name</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+            <?php if(!empty($data['recent_assets'])): ?>
+                <?php foreach($data['recent_assets'] as $asset): ?>
+                <tr>
+                    <td><?php echo e($asset['Asset_Name']); ?></td>
+                    <td><?php
+                        $st = $asset['Status'];
+                        $sc = $st === 'Available' ? 'status-active' : ($st === 'Under Maintenance' ? 'status-pending' : 'status-assigned');
+                        echo '<span class="status-badge '.$sc.'">'.e($st).'</span>';
+                    ?></td>
+                    <td><?php echo !empty($asset['Purchase_Date']) ? date('d M Y', strtotime($asset['Purchase_Date'])) : '—'; ?></td>
+                </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr><td colspan="3" class="recent-empty">No recent assets</td></tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="recent-card">
+        <div class="recent-header">
+            <span><i class="fas fa-tools me-1"></i> Recent Maintenance</span>
+            <a href="?url=maintenance/index" class="recent-view-all">View All</a>
+        </div>
+        <table class="recent-table">
+            <thead><tr><th>Asset</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+            <?php if(!empty($data['recent_maintenance'])): ?>
+                <?php foreach($data['recent_maintenance'] as $m): ?>
+                <tr>
+                    <td><?php echo e($m['Asset_Name'] ?? '—'); ?></td>
+                    <td><?php
+                        $ms = $m['Status'];
+                        $mc = $ms === 'Pending' ? 'status-pending' : ($ms === 'Completed' ? 'status-approved' : 'status-assigned');
+                        echo '<span class="status-badge '.$mc.'">'.e($ms).'</span>';
+                    ?></td>
+                    <td><?php echo !empty($m['Reported_Date']) ? date('d M Y', strtotime($m['Reported_Date'])) : '—'; ?></td>
+                </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr><td colspan="3" class="recent-empty">No recent maintenance</td></tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<?php
+// ── Full Admin / Manager / SuperAdmin dashboard ───────────────────────
+else:
+?>
+
 
 <?php if(isset($_GET['msg'])): ?>
     <div class="alert alert-success alert-dismissible fade show">
@@ -238,4 +407,7 @@ $maintValues  = array_values($maintCounts);
 <?php endif; ?>
 })();
 </script>
-<?php endif; ?>
+<?php endif; // end charts block
+
+endif; // end $isFullAdmin block (else branch)
+?>

@@ -38,7 +38,9 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
 <div class="list-page-header">
     <h2><i class="fas fa-clipboard-list"></i> Equipment Requests</h2>
     <div class="list-header-actions">
+        <?php if (AuthorizationHelper::hasPermission('request.create')): ?>
         <a href="?url=request/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Request</a>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -115,12 +117,14 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                         <span class="status-badge <?php echo $cls; ?>"><?php echo e($rs); ?></span>
                     </td>
                     <td class="td-actions">
+                        <?php if (AuthorizationHelper::hasPermission('request.approve')): ?>
                         <?php if(($req['Status'] ?? '') === 'Pending'): ?>
                             <button type="button" class="btn-approve" onclick="openRequestModal('approve','<?php echo e($req['Request_ID']); ?>','<?php echo e(addslashes($req['Name'] ?? '')); ?>')"><i class="fas fa-check"></i> Approve</button>
                             <button type="button" class="btn-reject" onclick="openRequestModal('reject','<?php echo e($req['Request_ID']); ?>','<?php echo e(addslashes($req['Name'] ?? '')); ?>')"><i class="fas fa-times"></i> Reject</button>
                         <?php else: ?>
                             <button type="button" class="btn-status" onclick="openStatusUpdateModal('<?php echo e($req['Request_ID']); ?>','<?php echo e(addslashes($req['Status'] ?? '')); ?>','<?php echo e(addslashes($req['Name'] ?? '')); ?>')"><i class="fas fa-sync-alt"></i> Status</button>
                         <?php endif; ?>
+                        <?php endif; // request.approve ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

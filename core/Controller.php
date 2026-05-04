@@ -3,8 +3,9 @@ if (!defined('ROOT_PATH')) {
     define('ROOT_PATH', dirname(dirname(__FILE__)));
 }
 
-// Load authorization helper
+// Load authorization and middleware helpers
 require_once ROOT_PATH . "/config/authorization.php";
+require_once ROOT_PATH . "/core/Middleware.php";
 
 class Controller {
     public function model($model) {

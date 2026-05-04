@@ -114,6 +114,7 @@ class MaintenanceController extends Controller {
         $maintenanceModel = $this->model('Maintenance');
         if($maintenanceModel->delete($id)){
             header("Location: ?url=maintenance/index&msg=Maintenance deleted");
+            exit;
         }
     }
 }

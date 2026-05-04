@@ -46,7 +46,9 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
 <div class="list-page-header">
     <h2><i class="fas fa-cube"></i> Assets</h2>
     <div class="list-header-actions">
+        <?php if (AuthorizationHelper::hasPermission('asset.create')): ?>
         <a href="?url=asset/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Asset</a>
+        <?php endif; ?>
         <a href="?url=asset/index&export=csv<?php echo $baseQuery ? '&' . http_build_query(array_diff_key($_GET, ['export'=>''])) : ''; ?>" class="btn btn-success btn-sm"><i class="fas fa-file-csv"></i> Export CSV</a>
     </div>
 </div>
@@ -152,7 +154,9 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                         <span class="status-badge <?php echo $cls; ?>"><?php echo e($asset['Status']); ?></span>
                     </td>
                     <td class="td-actions">
+                        <?php if (AuthorizationHelper::hasPermission('asset.edit')): ?>
                         <a href="?url=asset/edit/<?php echo e($asset['Asset_ID']); ?>" class="btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

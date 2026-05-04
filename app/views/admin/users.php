@@ -105,6 +105,12 @@ $baseQuery = $baseQuery ? $baseQuery . '&' : '';
                     </td>
                     <td class="td-actions">
                         <a href="?url=admin/editUser/<?php echo e($user['User_ID']); ?>" class="btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                        <?php if (AuthorizationHelper::isSuperAdmin() && ($user['User_ID'] ?? 0) != ($_SESSION['user_id'] ?? -1)): ?>
+                        <form method="POST" action="?url=admin/deleteUser/<?php echo e($user['User_ID']); ?>" style="display:inline;" onsubmit="return confirm('Delete user <?php echo e($user['Username']); ?>?');">
+                            <?php echo csrf_field(); ?>
+                            <button type="submit" class="btn-delete"><i class="fas fa-trash"></i> Delete</button>
+                        </form>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
