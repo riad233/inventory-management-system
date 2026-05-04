@@ -17,6 +17,15 @@ define('DEBUG_MODE', false);
 require_once ROOT_PATH . '/config/logger.php';
 require_once ROOT_PATH . '/config/validator.php';
 
+// Secure session cookie: HttpOnly, SameSite=Strict, no JS access
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path'     => '/',
+    'domain'   => '',
+    'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'httponly' => true,
+    'samesite' => 'Strict',
+]);
 session_start();
 date_default_timezone_set('Asia/Dhaka');
 

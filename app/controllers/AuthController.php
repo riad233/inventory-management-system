@@ -34,11 +34,15 @@ class AuthController extends Controller {
                         $_SESSION['role'] = $user['Role'];
                         Logger::info("User login", ['username' => $username, 'role' => $user['Role']]);
                         $base = defined('APP_BASE') ? APP_BASE : '';
-                        if (in_array($user['Role'], ['SuperAdmin', 'Admin'], true)) {
-                            header('Location: ' . $base . '/admin/index');
-                        } else {
-                            header('Location: ' . $base . '/dashboard/index');
-                        }
+                        $roleRedirects = [
+                            'SuperAdmin' => $base . '/admin/index',
+                            'Admin'      => $base . '/admin/index',
+                            'Manager'    => $base . '/dashboard/index',
+                            'Staff'      => $base . '/staff',
+                            'Employee'   => $base . '/employee',
+                        ];
+                        $redirect = $roleRedirects[$user['Role']] ?? $base . '/dashboard/index';
+                        header('Location: ' . $redirect);
                         exit;
                     }
 

@@ -16,6 +16,17 @@ class Router {
     // The SuperAdmin role name – bypasses all permission checks
     private const SUPERADMIN_ROLE = 'SuperAdmin';
 
+    /**
+     * Role-based friendly URL aliases.
+     * These short URLs redirect to the real route so bookmarks like
+     * /staff or /employee always land on the correct page.
+     * Auth is enforced at the destination.
+     */
+    private const ROLE_ALIASES = [
+        'staff'    => '/dashboard/index',
+        'employee' => '/dashboard/index',
+    ];
+
     public static function route(string $url): void {
         $parts = array_values(array_filter(explode('/', trim($url, '/'))));
 
@@ -30,7 +41,15 @@ class Router {
         $params         = array_slice($parts, 2);
         $routeKey       = $controllerKey . '/' . $method;
 
-        // ── 0. Validate controller + method exist BEFORE any auth redirect ───
+        // ── 0a. Role-based URL aliases (/staff, /employee) ──────────────────
+        // Resolve before file-existence check so they never generate a 404.
+        if (isset(self::ROLE_ALIASES[$controllerKey])) {
+            $base = defined('APP_BASE') ? APP_BASE : '';
+            header('Location: ' . $base . self::ROLE_ALIASES[$controllerKey]);
+            exit;
+        }
+
+        // ── 0b. Validate controller + method exist BEFORE any auth redirect ──
         // Invalid routes always get a 404 – never a login redirect.
         $controllerPath = ROOT_PATH . "/app/controllers/$controllerName.php";
 
