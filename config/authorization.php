@@ -12,6 +12,9 @@
  *   Employee   – configurable via SuperAdmin permission matrix (minimal defaults)
  */
 
+// ========== STEP 2: Exception handling ==========
+require_once dirname(__FILE__) . '/../core/Exceptions/AuthorizationException.php';
+
 class AuthorizationHelper {
 
     /** All application roles in one place. SuperAdmin is handled separately. */
@@ -101,7 +104,7 @@ class AuthorizationHelper {
      */
     public static function requireAdmin(): void {
         if (!self::hasAnyRole(['Admin', 'SuperAdmin'])) {
-            self::deny('Admin role required');
+            throw new AuthorizationException('Admin role required', self::getRole());
         }
     }
 
@@ -111,7 +114,10 @@ class AuthorizationHelper {
      */
     public static function requireRole(array $roles): void {
         if (!self::isSuperAdmin() && !self::hasAnyRole($roles)) {
-            self::deny('Required role: ' . implode(' or ', $roles));
+            throw new AuthorizationException(
+                'Required role: ' . implode(' or ', $roles),
+                self::getRole()
+            );
         }
     }
 
@@ -120,22 +126,12 @@ class AuthorizationHelper {
      */
     public static function requirePermission(string $permissionKey): void {
         if (!self::hasPermission($permissionKey)) {
-            self::deny("Permission required: $permissionKey");
+            throw new AuthorizationException($permissionKey, self::getRole());
         }
     }
 
     // ── Internal ─────────────────────────────────────────────────────
 
-    private static function deny(string $reason = ''): void {
-        Logger::warning('Authorization denied: ' . $reason, [
-            'user_id' => self::getUserId(),
-            'role'    => self::getRole(),
-        ]);
-        http_response_code(403);
-        $view = 'errors/403';
-        $data = ['title' => '403 – Access Denied'];
-        require ROOT_PATH . '/app/views/layout.php';
-        exit;
-    }
+    // Note: Previous deny() method removed - using AuthorizationException instead
 }
 ?>

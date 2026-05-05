@@ -1,0 +1,133 @@
+version: '3.9'
+
+services:
+  # PHP Application Server
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: runtime
+    container_name: ims-app
+    image: ims:latest
+    restart: unless-stopped
+    working_dir: /var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME:-ims_db}
+      - DB_USER=${DB_USER:-ims_user}
+      - DB_PASSWORD=${DB_PASSWORD:-secure_password}
+      - CACHE_DRIVER=redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=false
+    volumes:
+      - ./:/var/www/html
+      - /var/www/html/vendor
+      - ./storage/logs:/var/www/html/storage/logs
+      - ./public/uploads:/var/www/html/public/uploads
+    ports:
+      - "80:80"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ims-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/health/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # MySQL Database Server
+  db:
+    image: mariadb:11.3
+    container_name: ims-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-ims_db}
+      MYSQL_USER: ${DB_USER:-ims_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secure_password}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+      MYSQL_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/ims_database.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/rbac_migration.sql:/docker-entrypoint-initdb.d/02-rbac.sql
+      - ./database/acl_migration.sql:/docker-entrypoint-initdb.d/03-acl.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - ims-network
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  # Redis Cache Server
+  redis:
+    image: redis:7.2-alpine
+    container_name: ims-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password}
+    volumes:
+      - redis_data:/data
+      - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    networks:
+      - ims-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Development Server (Optional - only with docker-compose.dev.yml)
+  adminer:
+    image: adminer:4.8.1
+    container_name: ims-adminer
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    ports:
+      - "8081:8080"
+    networks:
+      - ims-network
+    depends_on:
+      - db
+    profiles:
+      - dev
+
+  # Mail Server (Optional - for development email testing)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: ims-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - ims-network
+    profiles:
+      - dev
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  ims-network:
+    driver: bridge

@@ -1,0 +1,149 @@
+name: CI - Unit and Integration Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mariadb:11.3
+        env:
+          MYSQL_DATABASE: ims_test
+          MYSQL_USER: ims_user
+          MYSQL_PASSWORD: test_password
+          MYSQL_ROOT_PASSWORD: root_password
+        options: >-
+          --health-cmd="mariadb-admin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        ports:
+          - 3306:3306
+      
+      redis:
+        image: redis:7.2-alpine
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli, pdo_mysql, zip, redis
+          coverage: xdebug
+          ini-values: >-
+            error_reporting=E_ALL,
+            display_errors=On,
+            memory_limit=512M
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Dependencies
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+          fi
+
+      - name: Create Test Environment File
+        run: |
+          cp .env.test .env 2>/dev/null || cat > .env << EOF
+          APP_ENV=testing
+          APP_DEBUG=true
+          DB_HOST=127.0.0.1
+          DB_PORT=3306
+          DB_NAME=ims_test
+          DB_USER=ims_user
+          DB_PASSWORD=test_password
+          CACHE_DRIVER=redis
+          REDIS_HOST=127.0.0.1
+          REDIS_PORT=6379
+          EOF
+
+      - name: Generate Application Key
+        run: echo "APP_KEY=$(openssl rand -hex 32)" >> .env
+
+      - name: Run Database Migrations
+        run: |
+          mysql -h 127.0.0.1 -u ims_user -ptest_password ims_test < database/ims_database.sql
+          mysql -h 127.0.0.1 -u ims_user -ptest_password ims_test < database/rbac_migration.sql
+          mysql -h 127.0.0.1 -u ims_user -ptest_password ims_test < database/acl_migration.sql
+
+      - name: Run PHPUnit Tests
+        run: |
+          if [ -f phpunit.xml ]; then
+            php vendor/bin/phpunit --coverage-clover coverage.xml
+          else
+            echo "No tests configured yet"
+          fi
+
+      - name: Run PHP Code Sniffer
+        continue-on-error: true
+        run: |
+          if [ -f vendor/bin/phpcs ]; then
+            php vendor/bin/phpcs --standard=PSR12 app/ core/ --warning-severity=0
+          fi
+
+      - name: Run PHP Static Analysis
+        continue-on-error: true
+        run: |
+          if [ -f vendor/bin/psalm ]; then
+            php vendor/bin/psalm --show-info=false
+          fi
+
+      - name: Upload Coverage Reports
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Check PHP Syntax
+        run: |
+          find app core config public/index.php -name "*.php" -exec php -l {} \;
+
+      - name: Validate JSON Files
+        run: |
+          find . -name "*.json" -not -path "./node_modules/*" -not -path "./vendor/*" | while read f; do
+            echo "Validating $f"
+            php -r "json_decode(file_get_contents('$f')); if (json_last_error()) exit(1);"
+          done

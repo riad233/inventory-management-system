@@ -1,0 +1,49 @@
+version: '3.9'
+
+# Development override for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    environment:
+      - APP_ENV=development
+      - APP_DEBUG=true
+    volumes:
+      - ./:/var/www/html
+      - /var/www/html/vendor
+      - ./storage/logs:/var/www/html/storage/logs
+      - ./public/uploads:/var/www/html/public/uploads
+    ports:
+      - "80:80"
+      - "443:443"
+    cap_add:
+      - SYS_PTRACE
+
+  db:
+    environment:
+      - MYSQL_INITDB_SKIP_TZINFO=1
+    ports:
+      - "3306:3306"
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --log-queries-not-using-indexes
+      - --slow-query-log
+      - --slow-query-log-file=/var/log/mysql-slow.log
+      - --long-query-time=2
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  adminer:
+    profiles:
+      - ""
+
+  mailhog:
+    profiles:
+      - ""

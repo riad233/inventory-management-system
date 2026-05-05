@@ -12,10 +12,62 @@ if (!defined('BASE_URL')) {
 
 // Debug mode - set to true for development
 define('DEBUG_MODE', false);
+define('APP_DEBUG', DEBUG_MODE); // For exception handler
 
-// Include helper classes
+// ========== STEP 2: Register Global Exception Handler ==========
+// Register BEFORE any other code that might throw exceptions
+require_once ROOT_PATH . '/core/ExceptionHandler.php';
+// ExceptionHandler::register() is called automatically in ExceptionHandler.php
+
+// ========== STEP 3: Register Repository Autoloader ==========
+// Automatically loads repositories on demand
+require_once ROOT_PATH . '/core/Repositories/RepositoryAutoloader.php';
+
+// ========== STEP 4: Register Service Autoloader ==========
+// Automatically loads services on demand
+require_once ROOT_PATH . '/core/Services/ServiceAutoloader.php';
+
+// ========== STEP 5: Register API Autoloader ==========
+// Automatically loads API controller classes on demand
+require_once ROOT_PATH . '/core/Api/ApiAutoloader.php';
+// Include API response helper
+require_once ROOT_PATH . '/core/Api/ApiResponse.php';
+
+// ========== Include helper classes (needed by other components) ==========
 require_once ROOT_PATH . '/config/logger.php';
 require_once ROOT_PATH . '/config/validator.php';
+
+// ========== STEP 6: Register Cache Autoloader ==========
+// Automatically loads cache classes on demand
+require_once ROOT_PATH . '/core/Cache/CacheAutoloader.php';
+// Initialize cache manager (creates storage directory)
+if (!is_dir(ROOT_PATH . '/storage/cache')) {
+    mkdir(ROOT_PATH . '/storage/cache', 0755, true);
+}
+// Safely initialize cache manager with error handling
+try {
+    $cacheManager = CacheManager::getInstance(); // Initialize cache
+} catch (Exception $e) {
+    // Cache initialization failed, continue with file cache as fallback
+    error_log("Cache initialization warning: " . $e->getMessage());
+}
+
+// ========== STEP 7: Register Performance & Monitoring Autoloaders ==========
+// Automatically loads monitoring classes on demand
+require_once ROOT_PATH . '/core/Monitoring/MonitoringAutoloader.php';
+// Automatically loads performance classes on demand
+require_once ROOT_PATH . '/core/Performance/PerformanceAutoloader.php';
+
+// Load PerformanceMetrics explicitly before calling init()
+require_once ROOT_PATH . '/core/Performance/PerformanceMetrics.php';
+
+// Safely initialize performance metrics tracking with error handling
+try {
+    PerformanceMetrics::init();
+} catch (Exception $e) {
+    // Performance metrics initialization failed, continue without it
+    error_log("Performance metrics initialization warning: " . $e->getMessage());
+}
 
 // Secure session cookie: HttpOnly, SameSite=Strict, no JS access
 session_set_cookie_params([
