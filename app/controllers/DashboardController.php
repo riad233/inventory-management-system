@@ -6,51 +6,51 @@ if (!defined('ROOT_PATH')) {
 require_once ROOT_PATH . "/core/Controller.php";
 require_once ROOT_PATH . "/config/database.php";
 require_once ROOT_PATH . "/config/logger.php";
-require_once ROOT_PATH . "/app/models/Asset.php";
-require_once ROOT_PATH . "/app/models/Assignment.php";
-require_once ROOT_PATH . "/app/models/Maintenance.php";
-require_once ROOT_PATH . "/app/models/Employee.php";
-require_once ROOT_PATH . "/app/models/Vendor.php";
-require_once ROOT_PATH . "/app/models/EquipmentRequest.php";
 
 class DashboardController extends Controller {
     
     public function index(){
-        try {
-            // Use Models directly (compatible with database schema)
-            $asset = new Asset();
-            $assignment = new Assignment();
-            $maintenance = new Maintenance();
-            $employee = new Employee();
-            $vendor = new Vendor();
-            $request = new EquipmentRequest();
-            
-            // Fetch data using models (simple, works with database schema)
-            $total_assets      = $asset->count();
-            $total_assignments = $assignment->count();
-            $total_pending     = 0;  // TODO: Add countPending to Assignment model
-            $total_maintenance = $maintenance->count();
-            $pending_requests  = 0;  // TODO: Add countPending to EquipmentRequest model
-            $total_employees   = $employee->count();
-            $total_vendors     = $vendor->count();
-            
-            // Recent records
-            $recent_assets      = $asset->getAll();  // Get all for now
-            $recent_assignments = $assignment->getAll();
-            $recent_maintenance = $maintenance->getAll();
+        // Authentication is enforced by the Router (first layer) before dispatch.
+        // No redundant check needed here.
 
-            // Status counts
-            $asset_status_counts       = [];
-            $maintenance_status_counts = [];
+        $assetModel = $this->model('Asset');
+        $assignmentModel = $this->model('Assignment');
+        $maintenanceModel = $this->model('Maintenance');
+        $employeeModel = $this->model('Employee');
+        $vendorModel = $this->model('Vendor');
+        $userModel = $this->model('User');
+        $requestModel = $this->model('EquipmentRequest');
+        
+        try {
+            $total_assets      = $assetModel->getCount();
+            $available_assets  = $assetModel->getAvailableCount();
+            $total_assignments = $assignmentModel->getCount();
+            $total_pending     = $assignmentModel->getPendingCount();
+            $overdue_count     = $assignmentModel->getOverdueCount();
+            $total_maintenance = $maintenanceModel->getPendingCount();
+            $pending_requests  = $requestModel->getPendingCount();
+            $total_employees   = count($employeeModel->getAll() ?? []);
+            $total_vendors     = count($vendorModel->getAll() ?? []);
+            $total_users       = count($userModel->getAll() ?? []);
+            
+            $recent_assets      = $assetModel->getRecent(5);
+            $recent_assignments = $assignmentModel->getRecent(5);
+            $recent_maintenance = $maintenanceModel->getRecent(5);
+
+            $asset_status_counts       = $assetModel->getStatusCounts();
+            $maintenance_status_counts = $maintenanceModel->getStatusCounts();
             
             $data = [
                 'total_assets'             => $total_assets,
+                'available_assets'         => $available_assets,
                 'total_assignments'        => $total_assignments,
                 'total_pending'            => $total_pending,
+                'overdue_count'            => $overdue_count,
                 'total_maintenance'        => $total_maintenance,
                 'pending_requests'         => $pending_requests,
                 'total_employees'          => $total_employees,
                 'total_vendors'            => $total_vendors,
+                'total_users'              => $total_users,
                 'recent_assets'            => $recent_assets,
                 'recent_assignments'       => $recent_assignments,
                 'recent_maintenance'       => $recent_maintenance,
@@ -61,10 +61,9 @@ class DashboardController extends Controller {
             $this->view('dashboard/dashboard', $data);
         } catch (Exception $e) {
             Logger::error("Error in DashboardController::index", ['error' => $e->getMessage()]);
-            throw $e; // Let ExceptionHandler render the error page
+            die("Error loading dashboard: " . $e->getMessage());
         }
     }
 
 }
-
 ?>

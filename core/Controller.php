@@ -22,9 +22,6 @@ class Controller {
         }
         
         // Load layout with view
-        // Important: extract $data to make variables available in the view
-        extract($data);
-        
         $layoutPath = ROOT_PATH . "/app/views/layout.php";
         require_once $layoutPath;
     }
